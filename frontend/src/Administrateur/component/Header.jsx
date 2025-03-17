@@ -1,23 +1,6 @@
-import React from 'react'
+import React from "react"
 import { useState, useRef, useEffect } from "react"
-import {
-  Bell,
-  HelpCircle,
-  Settings,
-  Search,
-  User,
-  LogOut,
-  Moon,
-  Globe,
-  CreditCard,
-  Lock,
-  ChevronDown,
-  Check,
-  FileText,
-  MessageSquare,
-  Video,
-  BookOpen,
-  LifeBuoy,
+import {Bell,HelpCircle,Settings,Search,User,LogOut,Moon,Globe,CreditCard,Lock,ChevronDown,Check,FileText,MessageSquare,Video,BookOpen,LifeBuoy,
 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { fetchNotifications, markAsRead, markAllAsRead } from "./Notifications"
@@ -214,7 +197,7 @@ export default function Header() {
                   </div>
                 </div>
               </div>
-             
+
               <Link
                 to="/projects"
                 className={`px-3 py-2 rounded flex items-center ${
@@ -222,7 +205,6 @@ export default function Header() {
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
-                onClick={() => handleTabClick("projects")}
               >
                 Projects
               </Link>
@@ -233,9 +215,7 @@ export default function Header() {
                   activeTab === "dashboards"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => handleTabClick("dashboards")}
-              >
+                }`}              >
                 Dashboards
               </Link>
               <Link
@@ -244,9 +224,7 @@ export default function Header() {
                   activeTab === "clients"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => handleTabClick("clients")}
-              >
+                }`}              >
                 Clients
               </Link>
               <Link
@@ -255,9 +233,7 @@ export default function Header() {
                   activeTab === "status"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:bg-gray-100"
-                }`}
-                onClick={() => handleTabClick("taks")}
-              >
+                }`}              >
                 Tasks
               </Link>
             </nav>
@@ -265,9 +241,12 @@ export default function Header() {
 
           {/* Right side - Actions */}
           <div className="flex items-center space-x-2">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700">
+            <Link
+              to="/create"
+              className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700"
+            >
               Create
-            </button>
+            </Link>
 
             <div className="relative hidden md:block w-64">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -364,33 +343,15 @@ export default function Header() {
                 <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-50 border border-gray-200">
                   <div className="py-1">
                     <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">
-                      Help & Resources
+                      Help?
                     </div>
 
                     <Link
                       to="/help/documentation"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
+                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                       <FileText className="h-4 w-4 mr-2" />
                       Documentation
                     </Link>
-
-                    <Link
-                      to="/help/tutorials"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
-                      <Video className="h-4 w-4 mr-2" />
-                      Video tutorials
-                    </Link>
-
-                    <Link
-                      to="/help/guides"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
-                      <BookOpen className="h-4 w-4 mr-2" />
-                      User guides
-                    </Link>
-
                     <div className="border-t border-gray-200 mt-1"></div>
 
                     <Link
@@ -403,8 +364,7 @@ export default function Header() {
 
                     <Link
                       to="/help/chat"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
+                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" >
                       <MessageSquare className="h-4 w-4 mr-2" />
                       Live chat
                     </Link>
@@ -417,8 +377,7 @@ export default function Header() {
             <div className="relative" ref={settingsMenuRef}>
               <button
                 onClick={toggleSettingsMenu}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none"
-              >
+                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none">
                 <Settings className="h-5 w-5" />
               </button>
 
@@ -429,42 +388,16 @@ export default function Header() {
 
                     <Link
                       to="/settings/profile"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
+                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                       <User className="h-4 w-4 mr-2" />
                       Profile settings
                     </Link>
 
                     <Link
-                      to="/settings/appearance"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
-                      <Moon className="h-4 w-4 mr-2" />
-                      Appearance
-                    </Link>
-
-                    <Link
                       to="/settings/language"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
+                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                       <Globe className="h-4 w-4 mr-2" />
                       Language & region
-                    </Link>
-
-                    <Link
-                      to="/settings/security"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
-                      <Lock className="h-4 w-4 mr-2" />
-                      Security
-                    </Link>
-
-                    <Link
-                      to="/settings/billing"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
-                      <CreditCard className="h-4 w-4 mr-2" />
-                      Billing
                     </Link>
                   </div>
                 </div>
@@ -506,10 +439,12 @@ export default function Header() {
 
                     <div className="border-t border-gray-200 mt-1"></div>
 
-                    <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
+                    <Link
+                      to="/login"
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign out
-                    </button>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -561,21 +496,16 @@ export default function Header() {
                 activeTab === "projects"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}
-              onClick={() => handleTabClick("projects")}
-            >
+              }`} >
               Projects
             </Link>
-
             <Link
               to="/dashboards"
               className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
                 activeTab === "dashboards"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}
-              onClick={() => handleTabClick("dashboards")}
-            >
+              }`}>
               Dashboards
             </Link>
             <Link
@@ -584,26 +514,24 @@ export default function Header() {
                 activeTab === "clients"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}
-              onClick={() => handleTabClick("clients")}
-            >
+              }`} >
               Clients
             </Link>
             <Link
-              to="/status"
+              to="/tasks"
               className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
                 activeTab === "status"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}
-              onClick={() => handleTabClick("status")}
-            >
-              Status
+              }`}>
+              Taches
             </Link>
 
-            <button className="w-full mt-2 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700">
+            <Link
+              to="/create"
+              className="w-full mt-2 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700">
               Create
-            </button>
+            </Link>
             <div className="relative mt-3">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-gray-400" />

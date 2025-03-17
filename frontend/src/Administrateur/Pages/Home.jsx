@@ -1,10 +1,11 @@
 import React from 'react'
-import Header from '../component/Header'
+import HomeBody from '../component/Home_body'
 
 function Home() {
   return (
     <div>
-        <Header />   
+        
+        <HomeBody />  
     </div>
   )
 }
