@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from "react"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
@@ -117,136 +116,165 @@ const mockTasks = [
 
 // Create a copy of the mock data to work with
 let tasksData = [...mockTasks]
-=======
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Search, Plus, Filter, Edit, Trash2, ChevronDown, Calendar } from "lucide-react";
-import Header from "../component/Header";
-import Footer from "../component/Footer";
-import TaskFilter from "../component/TaskFilter";
->>>>>>> 9254bab80c11dd4f676651952c91521dfb7e6bc7
 
 const TasksPage = () => {
-  const [tasks, setTasks] = useState([]);
-  const [filteredTasks, setFilteredTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
+  const [tasks, setTasks] = useState([])
+  const [filteredTasks, setFilteredTasks] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState({
-    statut: "all",
+    status: "all",
     project: "all",
-    priorite: "all",
+    priority: "all",
     assignedTo: "all",
     dueDate: "all",
-  });
+  })
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [taskToDelete, setTaskToDelete] = useState(null)
 
   useEffect(() => {
-    loadTasks();
-  }, []);
+    loadTasks()
+  }, [])
 
   useEffect(() => {
-    filterTasks();
-  }, [searchTerm, filters, tasks]);
+    filterTasks()
+  }, [searchTerm, filters, tasks])
 
   const loadTasks = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("http://127.0.0.1:8000/taches");
-      const data = await response.json();
-      setTasks(data);
-      setFilteredTasks(data);
-    } catch (error) {
-      console.error("Erreur lors du chargement des tâches:", error);
-    }
-    setLoading(false);
-  };
+    setLoading(true)
+    // Simulate API delay
+    setTimeout(() => {
+      setTasks([...tasksData])
+      setFilteredTasks([...tasksData])
+      setLoading(false)
+    }, 800)
+  }
 
   const filterTasks = () => {
-    let result = [...tasks];
-  
-   
+    let result = [...tasks]
+
+    // Apply search filter
     if (searchTerm) {
       result = result.filter(
         (task) =>
-          task.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          task.projet.nom.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-  
-    if (filters.statut !== "all") {
-      result = result.filter((task) => task.statut === filters.statut);
-    }
-  
-    if (filters.project !== "all") {
-      result = result.filter((task) => task.projet.nom === filters.project);
+          task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          task.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          task.project.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
     }
 
-    if (filters.priorite !== "all") {
-      result = result.filter((task) => task.priorite === filters.priorite);
+    // Apply status filter
+    if (filters.status !== "all") {
+      result = result.filter((task) => task.status === filters.status)
     }
-  
-    
+
+    // Apply project filter
+    if (filters.project !== "all") {
+      result = result.filter((task) => task.project === filters.project)
+    }
+
+    // Apply priority filter
+    if (filters.priority !== "all") {
+      result = result.filter((task) => task.priority === filters.priority)
+    }
+
+    // Apply assignedTo filter
     if (filters.assignedTo !== "all") {
-      result = result.filter((task) => task.user.nom === filters.assignedTo);
+      result = result.filter((task) => task.assignedTo === filters.assignedTo)
     }
-  
+
+    // Apply due date filter
     if (filters.dueDate !== "all") {
-      result = result.filter((task) => task.dateFin === filters.dueDate);
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+
+      const nextWeek = new Date(today)
+      nextWeek.setDate(nextWeek.getDate() + 7)
+
+      if (filters.dueDate === "overdue") {
+        result = result.filter((task) => new Date(task.dueDate) < today && task.status !== "completed")
+      } else if (filters.dueDate === "today") {
+        result = result.filter((task) => new Date(task.dueDate).toDateString() === today.toDateString())
+      } else if (filters.dueDate === "tomorrow") {
+        result = result.filter((task) => new Date(task.dueDate).toDateString() === tomorrow.toDateString())
+      } else if (filters.dueDate === "week") {
+        result = result.filter((task) => new Date(task.dueDate) <= nextWeek && new Date(task.dueDate) >= today)
+      }
     }
-  
-    setFilteredTasks(result);
-  };
-  
+
+    setFilteredTasks(result)
+  }
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+    setSearchTerm(e.target.value)
+  }
 
   const handleFilterChange = (name, value) => {
     setFilters({
       ...filters,
       [name]: value,
-    });
-  };
+    })
+  }
 
-  const getStatusColor = (statut) => {
-    switch (statut) {
-      case "en attente":
-        return "bg-gray-100 text-gray-800";
-      case "en cours":
-        return "bg-blue-100 text-blue-800";
-      case "terminé":
-        return "bg-green-100 text-green-800";
-      case "annulee":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
+  const handleDeleteClick = (task) => {
+    setTaskToDelete(task)
+    setShowDeleteModal(true)
+  }
 
-  const getPriorityColor = (priorite) => {
-    switch (priorite) {
-      case "critique":
-        return "bg-red-100 text-red-800";
-      case "haute":
-        return "bg-orange-100 text-orange-800";
-      case "moyenne":
-        return "bg-yellow-100 text-yellow-800";
-      case "basse":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+  const confirmDelete = async () => {
+    if (taskToDelete) {
+      // Simulate API delay
+      setTimeout(() => {
+        // Remove from local data
+        tasksData = tasksData.filter((t) => t.id !== taskToDelete.id)
+        // Update state
+        setTasks(tasksData)
+        setShowDeleteModal(false)
+        setTaskToDelete(null)
+      }, 800)
     }
-  };
+  }
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "completed":
+        return "bg-green-100 text-green-800"
+      case "in-progress":
+        return "bg-blue-100 text-blue-800"
+      case "blocked":
+        return "bg-red-100 text-red-800"
+      case "not-started":
+        return "bg-gray-100 text-gray-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "urgent":
+        return "bg-red-100 text-red-800"
+      case "high":
+        return "bg-orange-100 text-orange-800"
+      case "medium":
+        return "bg-yellow-100 text-yellow-800"
+      case "low":
+        return "bg-green-100 text-green-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
+    const date = new Date(dateString)
+    return date.toLocaleDateString()
+  }
 
-  const isOverdue = (dateFin, statut) => {
-    return new Date(dateFin) < new Date() && statut !== "terminé";
-  };
+  const isOverdue = (dueDate, status) => {
+    return new Date(dueDate) < new Date() && status !== "completed"
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -296,8 +324,8 @@ const TasksPage = () => {
                 <TaskFilter
                   filters={filters}
                   onFilterChange={handleFilterChange}
-                  projects={Array.from(new Set(tasks.map((task) => task.projet.nom)))}
-                  assignees={Array.from(new Set(tasks.map((task) => task.user.nom)))}
+                  projects={Array.from(new Set(tasks.map((task) => task.project)))}
+                  assignees={Array.from(new Set(tasks.map((task) => task.assignedTo)))}
                 />
               )}
             </div>
@@ -315,18 +343,18 @@ const TasksPage = () => {
                 <h3 className="mt-4 text-lg font-medium text-gray-900">No tasks found</h3>
                 <p className="mt-1 text-gray-500">
                   {searchTerm ||
-                  filters.statut !== "all" ||
+                  filters.status !== "all" ||
                   filters.project !== "all" ||
-                  filters.priorite !== "all" ||
+                  filters.priority !== "all" ||
                   filters.assignedTo !== "all" ||
                   filters.dueDate !== "all"
                     ? "Try adjusting your search or filter criteria"
                     : "Get started by creating your first task"}
                 </p>
                 {!searchTerm &&
-                  filters.statut === "all" &&
+                  filters.status === "all" &&
                   filters.project === "all" &&
-                  filters.priorite === "all" &&
+                  filters.priority === "all" &&
                   filters.assignedTo === "all" &&
                   filters.dueDate === "all" && (
                     <Link
@@ -343,62 +371,122 @@ const TasksPage = () => {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Task
                       </th>
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Project
                       </th>
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Status
                       </th>
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Priority
                       </th>
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Due Date
                       </th>
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        scope="col"
+                        className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Assigned To
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Actions
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredTasks.map((task) => (
-                      <tr key={task.id}>
-                        <td className="px-4 py-3 text-sm font-medium text-gray-900">{task.nom}</td>
-                        <td className="px-4 py-3 text-sm text-gray-500">{task.projet.nom}</td>
-                        <td className="px-4 py-3">
+                      <tr key={task.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="ml-4">
+                              <div className="text-xs font-medium text-gray-900">{task.title}</div>
+                              <div className="text-xs text-gray-500 truncate max-w-xs">{task.description}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{task.project}</div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
                           <span
-                            className={`px-2 inline-flex text-xs font-semibold leading-5 rounded-full ${getStatusColor(
-                              task.statut
+                            className={`px-1.5 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full ${getStatusColor(
+                              task.status,
                             )}`}
                           >
-                            {task.statut}
+                            {task.status === "in-progress"
+                              ? "In Progress"
+                              : task.status.charAt(0).toUpperCase() + task.status.slice(1).replace("-", " ")}
                           </span>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3 whitespace-nowrap">
                           <span
-                            className={`px-2 inline-flex text-xs font-semibold leading-5 rounded-full ${getPriorityColor(
-                              task.priorite
+                            className={`px-1.5 py-0.5 inline-flex text-xs leading-4 font-semibold rounded-full ${getPriorityColor(
+                              task.priority,
                             )}`}
                           >
-                            {task.priorite}
+                            {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {formatDate(task.dateFin)}
-                          {isOverdue(task.dateFin, task.statut) && (
-                            <span className="text-red-500 ml-2">(Overdue)</span>
-                          )}
+                        <td className="px-4 py-3 whitespace-nowrap text-sm">
+                          <div
+                            className={`flex items-center ${isOverdue(task.dueDate, task.status) ? "text-red-600" : "text-gray-500"}`}
+                          >
+                            <Calendar className="h-4 w-4 mr-1" />
+                            {formatDate(task.dueDate)}
+                            {isOverdue(task.dueDate, task.status) && (
+                              <span className="ml-1 text-xs bg-red-100 text-red-800 px-1.5 py-0.5 rounded">
+                                Overdue
+                              </span>
+                            )}
+                          </div>
                         </td>
-                        <td className="px-4 py-3 text-sm font-medium">
-                          <Link to={`/tasks/${task.id}/edit`} className="text-blue-600 hover:text-blue-800">
-                            <Edit className="h-5 w-5" />
-                          </Link>
-                          <button className="text-red-600 hover:text-red-800 ml-4">
-                            <Trash2 className="h-5 w-5" />
-                          </button>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-medium text-sm">
+                              {task.assignedToAvatar}
+                            </div>
+                            <div className="ml-3 text-sm text-gray-900">{task.assignedTo}</div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex justify-end space-x-2">
+                            <Link
+                              to={`/edit-task/${task.id}`}
+                              className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50"
+                            >
+                              <Edit className="h-4 w-4" />
+                              <span className="sr-only">Edit</span>
+                            </Link>
+                            <button
+                              onClick={() => handleDeleteClick(task)}
+                              className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span className="sr-only">Delete</span>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -407,14 +495,24 @@ const TasksPage = () => {
               </div>
             )}
           </div>
+
+          {showDeleteModal && (
+            <DeleteTaskModal
+              task={taskToDelete}
+              onCancel={() => {
+                setShowDeleteModal(false)
+                setTaskToDelete(null)
+              }}
+              onConfirm={confirmDelete}
+            />
+          )}
         </div>
       </main>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-<<<<<<< HEAD
 // Delete task confirmation modal component
 const DeleteTaskModal = ({ task, onCancel, onConfirm }) => {
   if (!task) return null
@@ -451,6 +549,3 @@ const DeleteTaskModal = ({ task, onCancel, onConfirm }) => {
 
 export default TasksPage
 
-=======
-export default TasksPage;
->>>>>>> 9254bab80c11dd4f676651952c91521dfb7e6bc7

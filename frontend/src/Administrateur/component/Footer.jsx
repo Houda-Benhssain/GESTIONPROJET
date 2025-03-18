@@ -10,7 +10,7 @@ const Footer = () => {
             <p className="text-sm text-gray-500">&copy; {currentYear} PlanIt. All rights reserved.</p>
           </div>
           <div className="flex items-center space-x-6">
-            <a href="/dashboard" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+            <a href="/" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
               Dashboard
             </a>
             <a href="/projects" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">

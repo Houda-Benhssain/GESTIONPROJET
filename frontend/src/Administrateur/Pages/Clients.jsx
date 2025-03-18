@@ -1,29 +1,11 @@
 import React from "react"
 import { useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import {
-  Users,
-  UserPlus,
-  Edit,
-  Trash2,
-  Eye,
-  Search,
-  X,
-  Phone,
-  Mail,
-  MapPin,
-  Building,
-  Calendar,
-  CreditCard,
-  Filter,
-  User,
-} from "lucide-react"
+import {Users,UserPlus,Edit,Trash2,Eye,Search,X,Phone,Mail,MapPin,Building,Calendar,CreditCard,Filter,User,} from "lucide-react"
 import Header from "../component/Header"
 import Footer from "../component/Footer"
 
 const ClientsPage = ({ clients, setClients }) => {
-  const location = useLocation()
-  const navigate = useNavigate()
   const [localClients, setLocalClients] = useState([
     {
       id: 1,
@@ -118,15 +100,7 @@ const ClientsPage = ({ clients, setClients }) => {
   }
 
   // Edit client
-  const handleEditClient = (e) => {
-    e.preventDefault()
-    const updatedClients = clientsList.map((client) =>
-      client.id === currentClient.id ? { ...client, ...formData } : client,
-    )
-    updateClients(updatedClients)
-    setIsEditModalOpen(false)
-    resetForm()
-  }
+ 
 
   // Delete client
   const handleDeleteClient = () => {
@@ -183,9 +157,6 @@ const ClientsPage = ({ clients, setClients }) => {
   const indexOfLastClient = currentPage * itemsPerPage
   const indexOfFirstClient = indexOfLastClient - itemsPerPage
   const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClient)
-  const totalPages = Math.ceil(filteredClients.length / itemsPerPage)
-
-  
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -244,33 +215,28 @@ const ClientsPage = ({ clients, setClients }) => {
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Client
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell"
-                    >
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                       Contact
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell"
-                    >
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell"
-                    >
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
                       Projects
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Your choice
+                      className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
                     </th>
                   </tr>
                 </thead>
@@ -296,9 +262,7 @@ const ClientsPage = ({ clients, setClients }) => {
                         <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
                           <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              client.status === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-                            }`}
-                          >
+                              client.status === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"  }`}>
                             {client.status === "active" ? "Active" : "Inactive"}
                           </span>
                         </td>
@@ -310,22 +274,19 @@ const ClientsPage = ({ clients, setClients }) => {
                             <button
                               onClick={() => openViewModal(client)}
                               className="text-blue-600 hover:text-blue-900"
-                              title="View details"
-                            >
+                              title="View details">
                               <Eye className="h-4 w-4" />
                             </button>
                             <Link
                               to={`/editClient/${client.id}`}
                               className="text-indigo-600 hover:text-indigo-900"
-                              title="Edit client"
-                            >
+                              title="Edit client">
                               <Edit className="h-4 w-4" />
                             </Link>
                             <button
                               onClick={() => openDeleteModal(client)}
                               className="text-red-600 hover:text-red-900"
-                              title="Delete client"
-                            >
+                              title="Delete client" >
                               <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
@@ -337,317 +298,14 @@ const ClientsPage = ({ clients, setClients }) => {
                       <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
                         No clients found
                       </td>
-                    </tr>
-                  )}
+                    </tr>)}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </main>
-
       <Footer />
-
-      {/* Add Client Modal */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div className="flex justify-between items-center p-6 border-b">
-              <h3 className="text-lg font-medium text-gray-900">Add New Client</h3>
-              <button
-                onClick={() => {
-                  setIsAddModalOpen(false)
-                  resetForm()
-                }}
-                className="text-gray-400 hover:text-gray-500">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <form onSubmit={handleAddClient}>
-              <div className="p-6 space-y-4">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                    Company Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="contact" className="block text-sm font-medium text-gray-700">
-                    Contact Person
-                  </label>
-                  <input
-                    type="text"
-                    id="contact"
-                    name="contact"
-                    required
-                    value={formData.contact}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                    Phone
-                  </label>
-                  <input
-                    type="text"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="industry" className="block text-sm font-medium text-gray-700">
-                    Industry
-                  </label>
-                  <input
-                    type="text"
-                    id="industry"
-                    name="industry"
-                    value={formData.industry}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-                    Status
-                  </label>
-                  <select
-                    id="status"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
-                    Notes
-                  </label>
-                  <textarea
-                    id="notes"
-                    name="notes"
-                    rows="3"
-                    value={formData.notes}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  ></textarea>
-                </div>
-              </div>
-              <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsAddModalOpen(false)
-                    resetForm()
-                  }}
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  Add Client
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Client Modal */}
-      {isEditModalOpen && currentClient && (
-        <div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-            <div className="flex justify-between items-center p-6 border-b">
-              <h3 className="text-lg font-medium text-gray-900">Edit Client</h3>
-              <button
-                onClick={() => {
-                  setIsEditModalOpen(false)
-                  resetForm()
-                }}
-                className="text-gray-400 hover:text-gray-500"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <form onSubmit={handleEditClient}>
-              <div className="p-6 space-y-4">
-                <div>
-                  <label htmlFor="edit-name" className="block text-sm font-medium text-gray-700">
-                    Company Name
-                  </label>
-                  <input
-                    type="text"
-                    id="edit-name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="edit-contact" className="block text-sm font-medium text-gray-700">
-                    Contact Person
-                  </label>
-                  <input
-                    type="text"
-                    id="edit-contact"
-                    name="contact"
-                    required
-                    value={formData.contact}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="edit-email" className="block text-sm font-medium text-gray-700">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="edit-email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="edit-phone" className="block text-sm font-medium text-gray-700">
-                    Phone
-                  </label>
-                  <input
-                    type="text"
-                    id="edit-phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="edit-address" className="block text-sm font-medium text-gray-700">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    id="edit-address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="edit-industry" className="block text-sm font-medium text-gray-700">
-                    Industry
-                  </label>
-                  <input
-                    type="text"
-                    id="edit-industry"
-                    name="industry"
-                    value={formData.industry}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="edit-status" className="block text-sm font-medium text-gray-700">
-                    Status
-                  </label>
-                  <select
-                    id="edit-status"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="edit-notes" className="block text-sm font-medium text-gray-700">
-                    Notes
-                  </label>
-                  <textarea
-                    id="edit-notes"
-                    name="notes"
-                    rows="3"
-                    value={formData.notes}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  ></textarea>
-                </div>
-              </div>
-              <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsEditModalOpen(false)
-                    resetForm()
-                  }}
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && currentClient && (
@@ -705,9 +363,7 @@ const ClientsPage = ({ clients, setClients }) => {
                 <div className="md:ml-auto mt-4 md:mt-0">
                   <span
                     className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${
-                      currentClient.status === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
+                      currentClient.status === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>
                     {currentClient.status === "active" ? "Active" : "Inactive"}
                   </span>
                 </div>
@@ -797,12 +453,10 @@ const ClientsPage = ({ clients, setClients }) => {
               )}
             </div>
             <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
-             
               <button
                 type="button"
                 onClick={() => setIsViewModalOpen(false)}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 Close
               </button>
             </div>

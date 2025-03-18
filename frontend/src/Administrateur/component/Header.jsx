@@ -1,6 +1,6 @@
 import React from "react"
 import { useState, useRef, useEffect } from "react"
-import {Bell,HelpCircle,Settings,Search,User,LogOut,Moon,Globe,CreditCard,Lock,ChevronDown,Check,FileText,MessageSquare,Video,BookOpen,LifeBuoy,} from "lucide-react"
+import { Bell, HelpCircle, Settings, Search, User, LogOut, Globe, ChevronDown, Check } from "lucide-react"
 import { Link } from "react-router-dom"
 import { fetchNotifications, markAsRead, markAllAsRead } from "./Notifications"
 
@@ -194,36 +194,50 @@ export default function Header() {
               </div>
 
               <Link
-              to="/projects"
-              className={`px-3 py-2 rounded flex items-center ${
-              activeTab === "projects"
-              ? "text-blue-600 border-b-2 border-blue-600"
-              : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-              }`}> Projects</Link>
-
-              <Link to="/" 
-              className={`px-3 py-2 rounded flex items-center ${
-              activeTab === "dashboards"
-                ? "text-blue-600 border-b-2 border-blue-600"
-               : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}> Dashboards
+                to="/projects"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "projects"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                }`}
+              >
+                {" "}
+                Projects
               </Link>
 
               <Link
-              to="/clients"
-              className={`px-3 py-2 rounded flex items-center ${
-              activeTab === "clients"
-              ? "text-blue-600 border-b-2 border-blue-600"
-              : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}>Clients
+                to="/"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "dashboards"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                }`}
+              >
+                {" "}
+                Dashboards
               </Link>
 
               <Link
-               to="/tasks"
-               className={`px-3 py-2 rounded flex items-center ${
-               activeTab === "tasks"
-               ? "text-blue-600 border-b-2 border-blue-600"
-               : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}>Tasks
+                to="/clients"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "clients"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                }`}
+              >
+                Clients
               </Link>
 
+              <Link
+                to="/tasks"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "tasks"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                }`}
+              >
+                Tasks
+              </Link>
             </nav>
           </div>
 
@@ -231,7 +245,8 @@ export default function Header() {
           <div className="flex items-center space-x-2">
             <Link
               to="/create"
-              className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700">
+              className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700"
+            >
               Create
             </Link>
 
@@ -317,7 +332,7 @@ export default function Header() {
               )}
             </div>
 
-            {/* Help Button with Dropdown */}
+            {/* Help Button with Documentation Popup */}
             <div className="relative" ref={helpMenuRef}>
               <button
                 onClick={toggleHelpMenu}
@@ -327,34 +342,24 @@ export default function Header() {
               </button>
 
               {isHelpMenuOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-50 border border-gray-200">
-                  <div className="py-1">
-                    <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">
-                      Help?
-                    </div>
-
-                    <Link
-                      to="/help/documentation"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                      <FileText className="h-4 w-4 mr-2" />
-                      Documentation
-                    </Link>
-                    <div className="border-t border-gray-200 mt-1"></div>
-
-                    <Link
-                      to="/help/support"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
-                      <LifeBuoy className="h-4 w-4 mr-2" />
-                      Contact support
-                    </Link>
-
-                    <Link
-                      to="/help/chat"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" >
-                      <MessageSquare className="h-4 w-4 mr-2" />
-                      Live chat
-                    </Link>
+                <div className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg z-50 border border-gray-200">
+                  <div className="py-3 px-4">
+                    <div className="text-lg font-medium mb-2">Documentation</div>
+                    <p className="text-sm text-gray-600 mb-3">
+                      PlanIt is a project management tool that helps teams organize tasks, track progress, and
+                      collaborate effectively. Use the navigation menu to access your projects, dashboards, and tasks.
+                      The create button allows you to add new items to your workspace.
+                    </p>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Projects section allows you to create and manage your projects. You can assign team members, set
+                      deadlines, and track progress. The dashboard provides an overview of all your projects and tasks.
+                      Use the clients section to manage client information and project assignments.
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Tasks can be created, assigned, and tracked through the tasks section. You can set priorities,
+                      deadlines, and track the status of each task. Use the notifications feature to stay updated on
+                      changes and assignments. For more detailed instructions, please contact support.
+                    </p>
                   </div>
                 </div>
               )}
@@ -364,7 +369,8 @@ export default function Header() {
             <div className="relative" ref={settingsMenuRef}>
               <button
                 onClick={toggleSettingsMenu}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none">
+                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none"
+              >
                 <Settings className="h-5 w-5" />
               </button>
 
@@ -374,15 +380,17 @@ export default function Header() {
                     <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">Settings</div>
 
                     <Link
-                      to="/settings/profile"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                      to="/profile"
+                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                    >
                       <User className="h-4 w-4 mr-2" />
                       Profile settings
                     </Link>
 
                     <Link
                       to="/settings/language"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                    >
                       <Globe className="h-4 w-4 mr-2" />
                       Language & region
                     </Link>
@@ -428,7 +436,8 @@ export default function Header() {
 
                     <Link
                       to="/login"
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
+                    >
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign out
                     </Link>
@@ -463,7 +472,7 @@ export default function Header() {
                 >
                   Assigned to me
                 </Link>
-               
+
                 <Link
                   to="/your-work/boards"
                   className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
@@ -478,7 +487,8 @@ export default function Header() {
                 activeTab === "projects"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`} >
+              }`}
+            >
               Projects
             </Link>
             <Link
@@ -487,7 +497,8 @@ export default function Header() {
                 activeTab === "dashboards"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}>
+              }`}
+            >
               Dashboards
             </Link>
             <Link
@@ -496,7 +507,8 @@ export default function Header() {
                 activeTab === "clients"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`} >
+              }`}
+            >
               Clients
             </Link>
             <Link
@@ -505,13 +517,15 @@ export default function Header() {
                 activeTab === "status"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}>
+              }`}
+            >
               Taches
             </Link>
 
             <Link
               to="/create"
-              className="w-full mt-2 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700">
+              className="w-full mt-2 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700"
+            >
               Create
             </Link>
             <div className="relative mt-3">
@@ -530,4 +544,3 @@ export default function Header() {
     </header>
   )
 }
-
