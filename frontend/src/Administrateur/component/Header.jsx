@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react"
 import { Bell, HelpCircle, Settings, Search, User, LogOut, Globe, ChevronDown, Check } from "lucide-react"
 import { Link } from "react-router-dom"
 import { fetchNotifications, markAsRead, markAllAsRead } from "./Notifications"
+import logo from "../../Image/square.png";
 
 export default function Header() {
   const [activeTab, setActiveTab] = useState("")
@@ -12,7 +13,6 @@ export default function Header() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
-  const [loading, setLoading] = useState(false)
 
   const profileMenuRef = useRef(null)
   const settingsMenuRef = useRef(null)
@@ -131,22 +131,7 @@ export default function Header() {
             {/* Logo */}
             <div className="flex items-center mr-4">
               <div className="text-gray-500 p-2 rounded hover:bg-gray-100">
-                <svg viewBox="0 0 24 24" width="24" height="24" className="text-blue-500">
-                  <path
-                    fill="currentColor"
-                    d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0-1.005-1.005z"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M5.01 11.513a5.206 5.206 0 0 0 5.214 5.214h2.119v2.057A5.216 5.216 0 0 0 17.575 24V12.518a1.005 1.005 0 0 0-1.005-1.005H5.01z"
-                    className="opacity-60"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M11.452 0A5.215 5.215 0 0 0 6.236 5.215v2.083H4.119A5.216 5.216 0 0 0-1.095 12.53h11.532a1.005 1.005 0 0 0 1.005-1.005V0h.01z"
-                    className="opacity-80"
-                  />
-                </svg>
+                  <img src={logo}/>
               </div>
               <span className="text-xl font-bold ml-1">PlanIt</span>
             </div>
@@ -180,14 +165,8 @@ export default function Header() {
                 </button>
                 <div className="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg z-50 border border-gray-200 hidden group-hover:block">
                   <div className="py-1">
-                    <Link
-                      to="/your-work/assigned"
-                      className="block px-4 py-2 text-sm text-blue-600 border-l-2 border-blue-600 bg-blue-50 hover:bg-blue-100"
-                    >
-                      Assigned to me
-                    </Link>
-                    <Link to="/your-work/boards" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Boards
+                    <Link to="Gant" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Gant
                     </Link>
                   </div>
                 </div>

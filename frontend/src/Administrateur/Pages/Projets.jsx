@@ -76,7 +76,6 @@ let projectsData = [...mockProjects]
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([])
   const [filteredProjects, setFilteredProjects] = useState([])
-  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState({
@@ -96,13 +95,9 @@ const ProjectsPage = () => {
   }, [searchTerm, filters, projects])
 
   const loadProjects = async () => {
-    setLoading(true)
-    // Simulate API delay
-    setTimeout(() => {
-      setProjects([...projectsData])
-      setFilteredProjects([...projectsData])
-      setLoading(false)
-    }, 800)
+    // Load projects immediately without delay
+    setProjects([...projectsData])
+    setFilteredProjects([...projectsData])
   }
 
   const filterProjects = () => {
@@ -161,15 +156,12 @@ const ProjectsPage = () => {
 
   const confirmDelete = async () => {
     if (projectToDelete) {
-      // Simulate API delay
-      setTimeout(() => {
-        // Remove from local data
-        projectsData = projectsData.filter((p) => p.id !== projectToDelete.id)
-        // Update state
-        setProjects(projectsData)
-        setShowDeleteModal(false)
-        setProjectToDelete(null)
-      }, 800)
+      // Remove from local data immediately
+      projectsData = projectsData.filter((p) => p.id !== projectToDelete.id)
+      // Update state
+      setProjects(projectsData)
+      setShowDeleteModal(false)
+      setProjectToDelete(null)
     }
   }
 
@@ -235,12 +227,7 @@ const ProjectsPage = () => {
               {showFilters && <ProjectFilter filters={filters} onFilterChange={handleFilterChange} />}
             </div>
 
-            {loading ? (
-              <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                <p className="mt-4 text-gray-500">Loading projects...</p>
-              </div>
-            ) : filteredProjects.length === 0 ? (
+            {filteredProjects.length === 0 ? (
               <div className="p-8 text-center">
                 <div className="bg-gray-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto">
                   <Filter className="h-8 w-8 text-gray-400" />
@@ -398,8 +385,8 @@ const DeleteConfirmModal = ({ project, onCancel, onConfirm }) => {
         </div>
         <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Delete Project</h3>
         <p className="text-sm text-gray-500 text-center mb-6">
-          Are you sure you want to delete <span className="font-semibold text-red-600">{project.name}</span>? This action cannot be
-          undone.
+          Are you sure you want to delete <span className="font-semibold text-red-600">{project.name}</span>? This
+          action cannot be undone.
         </p>
         <div className="flex justify-end space-x-3">
           <button
