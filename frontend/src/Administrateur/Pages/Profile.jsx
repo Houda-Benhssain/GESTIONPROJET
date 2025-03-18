@@ -1,22 +1,34 @@
-import React from "react"
-import { useState, useEffect } from "react"
-import { User, Mail, Briefcase, Save, Camera, ArrowLeft } from "lucide-react"
+import React, { useState, useEffect } from "react"
+import { User, Mail, Briefcase, ArrowLeft } from "lucide-react"
 import { Link } from "react-router-dom"
 import Header from "../component/Header"
 import Footer from "../component/Footer"
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "Project Manager",
+    name: "",
+    email: "",
+    role: "",
     avatar: null,
   })
 
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({ ...profile })
 
-  useEffect(() => {}, [])
+  // Charger les données depuis localStorage lorsque le composant est monté
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"))
+    const storedRole = localStorage.getItem("role")
+    if (storedUser) {
+      setProfile({
+        name: storedUser.nom,
+        email: storedUser.email,
+        role: storedRole || "User", // Si le rôle n'est pas défini, mettre "User"
+        avatar: storedUser.avatar || null,
+      })
+    }
+  }, [])
+
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData({
@@ -27,28 +39,9 @@ const ProfilePage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    setSaving(true)
-
-    // Simulate API call to save profile
-    setTimeout(() => {
-      setProfile({ ...formData })
-      setSaving(false)
-      setIsEditing(false)
-    }, 1000)
-  }
-
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setFormData({
-          ...formData,
-          avatar: reader.result,
-        })
-      }
-      reader.readAsDataURL(file)
-    }
+    setIsEditing(false)
+    setProfile({ ...formData })
+    localStorage.setItem("user", JSON.stringify(formData)) // Sauvegarder les nouvelles informations dans localStorage
   }
 
   const roleOptions = [
@@ -112,7 +105,6 @@ const ProfilePage = () => {
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
 
@@ -139,7 +131,6 @@ const ProfilePage = () => {
                               <User className="h-12 w-12 text-gray-400" />
                             )}
                           </div>
-                          
                         </div>
                       </div>
                     )}
@@ -216,7 +207,8 @@ const ProfilePage = () => {
                               <option key={role} value={role}>
                                 {role}
                               </option>
-                            ))}</select>
+                            ))}
+                          </select>
                         ) : (
                           <div className="block w-full pl-10 border border-gray-200 bg-gray-50 rounded-md py-2 px-3 sm:text-sm text-gray-800">
                             {profile.role}
@@ -226,15 +218,6 @@ const ProfilePage = () => {
                     </div>   
                   </div>
                 </form>
-              </div>
-
-              {/* Additional sections could go here */}
-              <div className="bg-white rounded-lg shadow p-6 mt-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">Account Security</h2>
-                <p className="text-gray-500 mb-4">Manage your password and account security settings.</p>
-                <button className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                  Change Password
-                </button>
               </div>
             </div>
           </div>
@@ -246,4 +229,3 @@ const ProfilePage = () => {
 }
 
 export default ProfilePage
-

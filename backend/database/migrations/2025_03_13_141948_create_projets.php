@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('projets', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->string('description');
+            $table->text('description');
             $table->date('dateDebut');
             $table->date('dateFin');
             $table->enum('statut', ['en attente', 'en cours', 'termine', 'annule'])->default('en attente');

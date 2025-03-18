@@ -122,7 +122,23 @@ export default function Header() {
   useEffect(() => {
     loadNotifications()
   }, [])
-
+  const [profile, setProfile] = useState({
+      name: "",
+      email: "",
+      role: "",
+      avatar: null,
+    })
+ useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"))
+    if (storedUser) {
+      setProfile({
+        name: storedUser.nom,
+        email: storedUser.email,
+        
+        avatar: storedUser.avatar || null,
+      })
+    }
+  }, [])
   return (
     <header className="bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-screen-2xl mx-auto px-4">
@@ -391,8 +407,8 @@ export default function Header() {
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 border border-gray-200">
                   <div className="py-1">
                     <div className="px-4 py-3 border-b border-gray-200">
-                      <p className="text-sm font-medium text-gray-900">Howard Smith</p>
-                      <p className="text-xs text-gray-500 mt-1">howard.smith@example.com</p>
+                      <p className="text-sm font-medium text-gray-900">{profile.name}</p>
+                      <p className="text-xs text-gray-500 mt-1">{profile.email}</p>
                     </div>
 
                     <Link
