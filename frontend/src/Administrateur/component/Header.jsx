@@ -1,7 +1,6 @@
 import React from "react"
 import { useState, useRef, useEffect } from "react"
-import {Bell,HelpCircle,Settings,Search,User,LogOut,Moon,Globe,CreditCard,Lock,ChevronDown,Check,FileText,MessageSquare,Video,BookOpen,LifeBuoy,
-} from "lucide-react"
+import {Bell,HelpCircle,Settings,Search,User,LogOut,Moon,Globe,CreditCard,Lock,ChevronDown,Check,FileText,MessageSquare,Video,BookOpen,LifeBuoy,} from "lucide-react"
 import { Link } from "react-router-dom"
 import { fetchNotifications, markAsRead, markAllAsRead } from "./Notifications"
 
@@ -204,13 +203,12 @@ export default function Header() {
                   activeTab === "projects"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:bg-gray-100"
-                }`}
-              >
+                }`}>
                 Projects
               </Link>
 
               <Link
-                to="/dashboards"
+                to="/"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "dashboards"
                     ? "text-blue-600 border-b-2 border-blue-600"
@@ -219,12 +217,12 @@ export default function Header() {
                 Dashboards
               </Link>
               <Link
-                to="/clients"
+                to="/client"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "clients"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:bg-gray-100"
-                }`}              >
+                }`}>
                 Clients
               </Link>
               <Link
@@ -233,7 +231,7 @@ export default function Header() {
                   activeTab === "status"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:bg-gray-100"
-                }`}              >
+                }`}>
                 Tasks
               </Link>
             </nav>
@@ -243,8 +241,7 @@ export default function Header() {
           <div className="flex items-center space-x-2">
             <Link
               to="/create"
-              className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700"
-            >
+              className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700">
               Create
             </Link>
 
@@ -509,7 +506,7 @@ export default function Header() {
               Dashboards
             </Link>
             <Link
-              to="/clients"
+              to="/client"
               className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
                 activeTab === "clients"
                   ? "bg-blue-50 text-blue-700"
