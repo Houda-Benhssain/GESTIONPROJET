@@ -200,7 +200,8 @@ const ProjectsPage = () => {
             </div>
             <Link
               to="/addProjet"
-              className="mt-4 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 flex items-center">
+              className="mt-4 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 flex items-center"
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Project
             </Link>
@@ -381,6 +382,40 @@ const ProjectsPage = () => {
         </div>
       </main>
       <Footer />
+    </div>
+  )
+}
+
+// Delete confirmation modal component
+const DeleteConfirmModal = ({ project, onCancel, onConfirm }) => {
+  if (!project) return null
+
+  return (
+    <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
+          <Trash2 className="h-6 w-6 text-red-600" />
+        </div>
+        <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Delete Project</h3>
+        <p className="text-sm text-gray-500 text-center mb-6">
+          Are you sure you want to delete <span className="font-semibold text-red-600">{project.name}</span>? This action cannot be
+          undone.
+        </p>
+        <div className="flex justify-end space-x-3">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

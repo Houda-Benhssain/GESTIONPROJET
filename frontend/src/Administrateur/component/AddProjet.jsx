@@ -1,12 +1,11 @@
 import React from "react";
-import { useState, useEffect } from "react"
-import { useParams, useNavigate, Link } from "react-router-dom"
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { ArrowLeft, Save, X } from "lucide-react"
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "../component/Header"
+import Footer from "../component/Footer"
 
-const EditProject = () => {
-  const { id } = useParams()
+const AddProject = () => {
   const navigate = useNavigate()
   const [saving, setSaving] = useState(false)
   const [project, setProject] = useState({
@@ -21,93 +20,6 @@ const EditProject = () => {
     priority: "medium",
   })
   const [errors, setErrors] = useState({})
-
-  useEffect(() => {
-    // Fetch project data based on ID
-    fetchProject()
-  }, [id])
-
-  const fetchProject = async () => {
-    setLoading(true)
-
-    // In a real app, this would be an API call
-    // For now, we'll use the mock data from the original component
-    setTimeout(() => {
-      const mockProjects = [
-        {
-          id: "1",
-          name: "Website Redesign",
-          description: "Complete overhaul of the company website with modern design and improved UX",
-          client: "Acme Inc",
-          status: "in-progress",
-          startDate: "2023-01-15",
-          endDate: "2023-04-30",
-          teamSize: 5,
-          budget: "25000",
-          priority: "high",
-        },
-        {
-          id: "2",
-          name: "Mobile App Development",
-          description: "Develop a native mobile app for iOS and Android platforms",
-          client: "Globex Corporation",
-          status: "not-started",
-          startDate: "2023-05-01",
-          endDate: "2023-09-30",
-          teamSize: 8,
-          budget: "75000",
-          priority: "medium",
-        },
-        {
-          id: "3",
-          name: "E-commerce Platform",
-          description: "Build an online store with payment processing and inventory management",
-          client: "Stark Industries",
-          status: "completed",
-          startDate: "2022-10-01",
-          endDate: "2023-02-28",
-          teamSize: 6,
-          budget: "50000",
-          priority: "high",
-        },
-        {
-          id: "4",
-          name: "CRM Implementation",
-          description: "Implement and customize a CRM solution for sales team",
-          client: "Wayne Enterprises",
-          status: "on-hold",
-          startDate: "2023-02-15",
-          endDate: "2023-06-30",
-          teamSize: 4,
-          budget: "35000",
-          priority: "medium",
-        },
-        {
-          id: "5",
-          name: "Data Migration",
-          description: "Migrate legacy data to new cloud-based platform",
-          client: "Umbrella Corporation",
-          status: "in-progress",
-          startDate: "2023-03-01",
-          endDate: "2023-05-15",
-          teamSize: 3,
-          budget: "20000",
-          priority: "urgent",
-        },
-      ]
-
-      const foundProject = mockProjects.find((p) => p.id === id)
-
-      if (foundProject) {
-        setProject(foundProject)
-      } else {
-        // Handle project not found
-        setErrors({ general: "Project not found" })
-      }
-
-      setLoading(false)
-    }, 800)
-  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -148,24 +60,31 @@ const EditProject = () => {
     e.preventDefault()
 
     if (!validateForm()) {
+      // Scroll to the first error
+      const firstError = document.querySelector(".text-red-600")
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" })
+      }
       return
     }
 
     setSaving(true)
 
-    // In a real app, this would be an API call to update the project
+    // In a real app, this would be an API call to create the project
+    // For now, we'll simulate an API delay
     setTimeout(() => {
+      // Generate a new ID for the project
+      const newProject = {
+        ...project,
+        id: Date.now().toString(),
+      }
+
+      // In a real app, you would add this to your database
+      // For now, we'll just navigate back to the projects list
       setSaving(false)
-      // Navigate back to projects list
       navigate("/projects")
     }, 1000)
   }
-  const handleCancel = () => {
-    navigate("/projects")
-  }
-
-
-  
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -173,20 +92,11 @@ const EditProject = () => {
       <main className="flex-grow">
         <div className="max-w-screen-lg mx-auto px-4 py-6">
           <div className="flex items-center mb-6">
-           <button onClick={handleCancel} className="mr-3 text-gray-500 hover:text-gray-700">
-            <ArrowLeft className="h-5 w-5" />
-           </button>
-            <div>
-                <h1 className="text-2xl font-bold text-gray-800">Edit Client</h1>
-                <p className="text-sm text-gray-500 mt-1">Update client information</p>
-              </div>
+            <Link to="/" className="text-gray-500 hover:text-gray-700 mr-4">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+            <h1 className="text-2xl font-bold text-gray-900">Add New Project</h1>
           </div>
-
-          {errors.general && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-600">{errors.general}</p>
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -350,12 +260,12 @@ const EditProject = () => {
                 {saving ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Saving...
+                    Creating...
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4 mr-2" />
-                    Save Changes
+                    Create Project
                   </>
                 )}
               </button>
@@ -368,5 +278,5 @@ const EditProject = () => {
   )
 }
 
-export default EditProject
+export default AddProject
 

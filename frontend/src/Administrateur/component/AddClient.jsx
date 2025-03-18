@@ -86,7 +86,7 @@ const AddClientPage = ({ addClient }) => {
           {/* Page header */}
           <div className="mb-6">
             <button
-              onClick={() => navigate("/client")}
+              onClick={() => navigate("/clients")}
               className="flex items-center text-blue-600 hover:text-blue-800 mb-4">
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Clients

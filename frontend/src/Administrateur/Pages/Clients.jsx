@@ -1,14 +1,29 @@
 import React from "react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import {Users,UserPlus,Edit,Trash2,Eye,Search,ChevronLeft,ChevronRight,X,Check,Phone,Mail,MapPin,Building,Calendar,CreditCard,Filter,User,} from "lucide-react"
+import {
+  Users,
+  UserPlus,
+  Edit,
+  Trash2,
+  Eye,
+  Search,
+  X,
+  Phone,
+  Mail,
+  MapPin,
+  Building,
+  Calendar,
+  CreditCard,
+  Filter,
+  User,
+} from "lucide-react"
 import Header from "../component/Header"
 import Footer from "../component/Footer"
 
 const ClientsPage = ({ clients, setClients }) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const [notification, setNotification] = useState(location.state?.message || null)
   const [localClients, setLocalClients] = useState([
     {
       id: 1,
@@ -58,7 +73,16 @@ const ClientsPage = ({ clients, setClients }) => {
   const updateClients = setClients || setLocalClients
 
   // State for client form
-  const [formData, setFormData] = useState({ name: "", contact: "", email: "", phone: "", address: "", status: "active", industry: "",notes: "",})
+  const [formData, setFormData] = useState({
+    name: "",
+    contact: "",
+    email: "",
+    phone: "",
+    address: "",
+    status: "active",
+    industry: "",
+    notes: "",
+  })
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -141,8 +165,7 @@ const ClientsPage = ({ clients, setClients }) => {
 
   // Reset form data
   const resetForm = () => {
-    setFormData({name: "",contact: "",email: "",phone: "",address: "",status: "active",industry: "",notes: "",
-    })
+    setFormData({ name: "", contact: "", email: "", phone: "", address: "", status: "active", industry: "", notes: "" })
     setCurrentClient(null)
   }
 
@@ -162,8 +185,7 @@ const ClientsPage = ({ clients, setClients }) => {
   const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClient)
   const totalPages = Math.ceil(filteredClients.length / itemsPerPage)
 
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -178,8 +200,9 @@ const ClientsPage = ({ clients, setClients }) => {
             </div>
             <Link
               to="/add"
-              className="mt-4 md:mt-0 flex items-center bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 transition-colors">
-              <UserPlus className="h-4 w-4 mr-2" />Add New Client
+              className="mt-4 md:mt-0 flex items-center bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 transition-colors" >
+              <UserPlus className="h-4 w-4 mr-2" />
+              Add New Client
             </Link>
           </div>
 
@@ -221,28 +244,33 @@ const ClientsPage = ({ clients, setClients }) => {
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" >
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
                       Client
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell" >
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell"
+                    >
                       Contact
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell"
+                    >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell"
+                    >
                       Projects
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                     Your choice
+                      className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Your choice
                     </th>
                   </tr>
                 </thead>
@@ -269,7 +297,8 @@ const ClientsPage = ({ clients, setClients }) => {
                           <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               client.status === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-                            }`}>
+                            }`}
+                          >
                             {client.status === "active" ? "Active" : "Inactive"}
                           </span>
                         </td>
@@ -281,19 +310,22 @@ const ClientsPage = ({ clients, setClients }) => {
                             <button
                               onClick={() => openViewModal(client)}
                               className="text-blue-600 hover:text-blue-900"
-                              title="View details">
+                              title="View details"
+                            >
                               <Eye className="h-4 w-4" />
                             </button>
-                            <button
-                              onClick={() => openEditModal(client)}
+                            <Link
+                              to={`/editClient/${client.id}`}
                               className="text-indigo-600 hover:text-indigo-900"
-                              title="Edit client">
+                              title="Edit client"
+                            >
                               <Edit className="h-4 w-4" />
-                            </button>
+                            </Link>
                             <button
                               onClick={() => openDeleteModal(client)}
                               className="text-red-600 hover:text-red-900"
-                              title="Delete client">
+                              title="Delete client"
+                            >
                               <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
@@ -310,8 +342,6 @@ const ClientsPage = ({ clients, setClients }) => {
                 </tbody>
               </table>
             </div>
-
-            {/* Pagination */}
           </div>
         </div>
       </main>
@@ -629,7 +659,7 @@ const ClientsPage = ({ clients, setClients }) => {
               </div>
               <h3 className="text-lg font-medium text-center text-gray-900 mb-2">Delete Client</h3>
               <p className="text-sm text-center text-gray-500 mb-6">
-                Are you sure you want to delete <span className="font-medium">{currentClient.name}</span>? This action
+                Are you sure you want to delete <span className="font-medium text-red-600">{currentClient.name}</span>? This action
                 cannot be undone.
               </p>
               <div className="flex justify-center space-x-3">
@@ -767,14 +797,7 @@ const ClientsPage = ({ clients, setClients }) => {
               )}
             </div>
             <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3 rounded-b-lg">
-              <button
-                type="button"
-                onClick={() => openEditModal(currentClient)}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center"
-              >
-                <Edit className="h-4 w-4 mr-2" />
-                Edit Client
-              </button>
+             
               <button
                 type="button"
                 onClick={() => setIsViewModalOpen(false)}

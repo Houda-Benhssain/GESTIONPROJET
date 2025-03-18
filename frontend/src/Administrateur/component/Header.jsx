@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import { fetchNotifications, markAsRead, markAllAsRead } from "./Notifications"
 
 export default function Header() {
-  const [activeTab, setActiveTab] = useState("projects")
+  const [activeTab, setActiveTab] = useState("")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false)
@@ -127,7 +127,6 @@ export default function Header() {
     <header className="bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-screen-2xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Left side - Logo and navigation */}
           <div className="flex items-center">
             {/* Logo */}
             <div className="flex items-center mr-4">
@@ -187,9 +186,6 @@ export default function Header() {
                     >
                       Assigned to me
                     </Link>
-                    <Link to="/your-work/recent" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Recent
-                    </Link>
                     <Link to="/your-work/boards" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                       Boards
                     </Link>
@@ -198,42 +194,36 @@ export default function Header() {
               </div>
 
               <Link
-                to="/projects"
-                className={`px-3 py-2 rounded flex items-center ${
-                  activeTab === "projects"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}>
-                Projects
+              to="/projects"
+              className={`px-3 py-2 rounded flex items-center ${
+              activeTab === "projects"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+              }`}> Projects</Link>
+
+              <Link to="/" 
+              className={`px-3 py-2 rounded flex items-center ${
+              activeTab === "dashboards"
+                ? "text-blue-600 border-b-2 border-blue-600"
+               : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}> Dashboards
               </Link>
 
               <Link
-                to="/"
-                className={`px-3 py-2 rounded flex items-center ${
-                  activeTab === "dashboards"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}              >
-                Dashboards
+              to="/clients"
+              className={`px-3 py-2 rounded flex items-center ${
+              activeTab === "clients"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}>Clients
               </Link>
+
               <Link
-                to="/client"
-                className={`px-3 py-2 rounded flex items-center ${
-                  activeTab === "clients"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}>
-                Clients
+               to="/tasks"
+               className={`px-3 py-2 rounded flex items-center ${
+               activeTab === "tasks"
+               ? "text-blue-600 border-b-2 border-blue-600"
+               : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}>Tasks
               </Link>
-              <Link
-                to="/tasks"
-                className={`px-3 py-2 rounded flex items-center ${
-                  activeTab === "status"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}>
-                Tasks
-              </Link>
+
             </nav>
           </div>
 
@@ -473,12 +463,7 @@ export default function Header() {
                 >
                   Assigned to me
                 </Link>
-                <Link
-                  to="/your-work/recent"
-                  className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                >
-                  Recent
-                </Link>
+               
                 <Link
                   to="/your-work/boards"
                   className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
@@ -506,7 +491,7 @@ export default function Header() {
               Dashboards
             </Link>
             <Link
-              to="/client"
+              to="/clients"
               className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
                 activeTab === "clients"
                   ? "bg-blue-50 text-blue-700"
