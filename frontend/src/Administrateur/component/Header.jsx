@@ -13,7 +13,6 @@ export default function Header() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
-  const [loading, setLoading] = useState(true)
 
   const profileMenuRef = useRef(null)
   const settingsMenuRef = useRef(null)
@@ -165,7 +164,17 @@ export default function Header() {
                 </svg>
               </button>
             </div>
-
+<Link
+                to="/adminhome"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "dashboards"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                }`}
+              >
+                {" "}
+                Tableaux de bord
+              </Link>
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-1">
               <div className="relative group">
@@ -198,20 +207,10 @@ export default function Header() {
                 }`}
               >
                 {" "}
-                Projects
+                Projets
               </Link>
 
-              <Link
-                to="/"
-                className={`px-3 py-2 rounded flex items-center ${
-                  activeTab === "dashboards"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                }`}
-              >
-                {" "}
-                Dashboards
-              </Link>
+              
 
               <Link
                 to="/clients"
@@ -232,7 +231,7 @@ export default function Header() {
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
                 }`}
               >
-                Tasks
+                Tâches
               </Link>
             </nav>
           </div>
@@ -243,7 +242,7 @@ export default function Header() {
               to="/create"
               className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700"
             >
-              Create
+              Créer
             </Link>
 
             <div className="relative hidden md:block w-64">
@@ -277,18 +276,18 @@ export default function Header() {
                     <div className="px-4 py-2 flex justify-between items-center border-b border-gray-200">
                       <h3 className="text-sm font-medium text-gray-900">Notifications</h3>
                       <button onClick={handleMarkAllAsRead} className="text-xs text-blue-600 hover:text-blue-800">
-                        Mark all as read
+                      Marquer tout comme lu
                       </button>
                     </div>
 
                     {loading ? (
                       <div className="px-4 py-6 text-center text-gray-500">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-500 mx-auto mb-2"></div>
-                        <p>Loading notifications...</p>
+                        <p>Chargement des notifications...</p>
                       </div>
                     ) : notifications.length === 0 ? (
                       <div className="px-4 py-6 text-center text-gray-500">
-                        <p>No notifications</p>
+                        <p>Aucune notification</p>
                       </div>
                     ) : (
                       notifications.map((notification) => (
@@ -320,7 +319,7 @@ export default function Header() {
 
                     <div className="px-4 py-2 text-center border-t border-gray-200">
                       <Link to="/notifications" className="text-sm text-blue-600 hover:text-blue-800">
-                        View all notifications
+                      Voir toutes les notifications
                       </Link>
                     </div>
                   </div>
@@ -342,19 +341,13 @@ export default function Header() {
                   <div className="py-3 px-4">
                     <div className="text-lg font-medium mb-2">Documentation</div>
                     <p className="text-sm text-gray-600 mb-3">
-                      PlanIt is a project management tool that helps teams organize tasks, track progress, and
-                      collaborate effectively. Use the navigation menu to access your projects, dashboards, and tasks.
-                      The create button allows you to add new items to your workspace.
+                    PlanIt est un outil de gestion de projet qui aide les équipes à organiser les tâches, suivre les progrès et collaborer efficacement. Utilisez le menu de navigation pour accéder à vos projets, tableaux de bord et tâches. Le bouton de création vous permet d'ajouter de nouveaux éléments à votre espace de travail.
                     </p>
                     <p className="text-sm text-gray-600 mb-3">
-                      Projects section allows you to create and manage your projects. You can assign team members, set
-                      deadlines, and track progress. The dashboard provides an overview of all your projects and tasks.
-                      Use the clients section to manage client information and project assignments.
+                    La section Projets vous permet de créer et de gérer vos projets. Vous pouvez attribuer des membres d'équipe, définir des échéances et suivre les progrès. Le tableau de bord offre une vue d'ensemble de tous vos projets et tâches. Utilisez la section Clients pour gérer les informations des clients et les affectations de projets.
                     </p>
                     <p className="text-sm text-gray-600">
-                      Tasks can be created, assigned, and tracked through the tasks section. You can set priorities,
-                      deadlines, and track the status of each task. Use the notifications feature to stay updated on
-                      changes and assignments. For more detailed instructions, please contact support.
+                    Les tâches peuvent être créées, attribuées et suivies via la section Tâches. Vous pouvez définir des priorités, des dates d'échéance et suivre l'état de chaque tâche. Utilisez la fonction de notifications pour rester informé des changements et des affectations. Pour des instructions plus détaillées, veuillez contacter le support.
                     </p>
                   </div>
                 </div>
@@ -373,14 +366,14 @@ export default function Header() {
               {isSettingsMenuOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 border border-gray-200">
                   <div className="py-1">
-                    <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">Settings</div>
+                    <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">Paramètres</div>
 
                     <Link
                       to="/profile"
                       className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                     >
                       <User className="h-4 w-4 mr-2" />
-                      Profile settings
+                      Paramètres du profil
                     </Link>
 
                     <Link
@@ -431,7 +424,7 @@ export default function Header() {
                     <div className="border-t border-gray-200 mt-1"></div>
 
                     <Link
-                      to="/login"
+                      to="/"
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
                     >
                       <LogOut className="h-4 w-4 mr-2" />
