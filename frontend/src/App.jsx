@@ -23,10 +23,10 @@ function App() {
        <Route path="/add" element={<AddClientPage/>} />
        <Route path="/editClient/:id" element={<EditClient/>}/>
        <Route path="/projects" element={<ProjectsPage/>} />
-       <Route  path="/edit/:id" element={<EditProject/>}/>
+       <Route path="/edit/:id" element={<EditProject />} />
        <Route path="/addProjet" element={<AddProject/>}/>
        <Route path="/tasks" element={<TasksPage/>} />
-       <Route path="/addTache" element= {<AddTaches/>} />
+       <Route path="/create-task" element= {<AddTaches/>} />
        <Route path="/edit-task/:id" element= {<EditTaches/>} />
        <Route path="/Profile" element= {<ProfilePage/>} />
        

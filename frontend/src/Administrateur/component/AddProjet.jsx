@@ -1,90 +1,119 @@
-import React from "react";
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { ArrowLeft, Save, X } from "lucide-react"
-import Header from "../component/Header"
-import Footer from "../component/Footer"
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, Save, X } from "lucide-react";
+import Header from "../component/Header";
+import Footer from "../component/Footer";
 
 const AddProject = () => {
-  const navigate = useNavigate()
-  const [saving, setSaving] = useState(false)
+  const navigate = useNavigate();
+  const [saving, setSaving] = useState(false);
   const [project, setProject] = useState({
-    name: "",
-    description: "",
-    client: "",
-    status: "not-started",
-    startDate: "",
-    endDate: "",
-    teamSize: 1,
-    budget: "",
-    priority: "medium",
-  })
-  const [errors, setErrors] = useState({})
+    nom: "",          // Nom du projet
+    description: "",  // Description
+    client_id: "",    // ID du client
+    statut: "en attente",  // Statut du projet
+    dateDebut: "",    // Date de début
+    dateFin: "",      // Date de fin
+  });
+  const [clients, setClients] = useState([]); // Liste des clients
+  const [errors, setErrors] = useState({});
+
+  // Récupérer la liste des clients
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/clients");
+        const data = await response.json();
+        setClients(data); // Stocker les clients dans le state
+      } catch (error) {
+        console.error("Error fetching clients:", error);
+      }
+    };
+
+    fetchClients();
+  }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setProject((prev) => ({
       ...prev,
       [name]: value,
-    }))
+    }));
 
     // Clear error for this field if it exists
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
         [name]: undefined,
-      }))
+      }));
     }
-  }
+  };
 
   const validateForm = () => {
-    const newErrors = {}
+    const newErrors = {};
 
-    if (!project.name.trim()) newErrors.name = "Project name is required"
-    if (!project.description.trim()) newErrors.description = "Description is required"
-    if (!project.client.trim()) newErrors.client = "Client name is required"
-    if (!project.startDate) newErrors.startDate = "Start date is required"
-    if (!project.endDate) newErrors.endDate = "End date is required"
-    if (project.startDate && project.endDate && new Date(project.startDate) > new Date(project.endDate)) {
-      newErrors.endDate = "End date must be after start date"
+    if (!project.nom.trim()) newErrors.nom = "Nom du projet requis";
+    if (!project.description.trim()) newErrors.description = "Description requise";
+    if (!project.client_id.trim()) newErrors.client_id = "Nom du client requis";
+    if (!project.dateDebut) newErrors.startDate = "Date de début requise";
+    if (!project.dateFin) newErrors.endDate = "Date de fin requise";
+    if (project.dateDebut && project.dateFin && new Date(project.dateDebut) > new Date(project.dateFin)) {
+      newErrors.endDate = "La date de fin doit être après la date de début";
     }
-    if (!project.budget) newErrors.budget = "Budget is required"
-    if (isNaN(Number(project.budget))) newErrors.budget = "Budget must be a number"
-    if (!project.teamSize || project.teamSize < 1) newErrors.teamSize = "Team size must be at least 1"
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!validateForm()) {
-      // Scroll to the first error
-      const firstError = document.querySelector(".text-red-600")
+      const firstError = document.querySelector(".text-red-600");
       if (firstError) {
-        firstError.scrollIntoView({ behavior: "smooth", block: "center" })
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
       }
-      return
+      return;
     }
 
-    setSaving(true)
+    setSaving(true);
 
-    // In a real app, this would be an API call to create the project
-    // For now, we'll simulate an API delay
-    setTimeout(() => {
-      // Generate a new ID for the project
-      const newProject = {
-        ...project,
-        id: Date.now().toString(),
+    // Création des données du projet à envoyer à l'API
+    const projectData = {
+      nom: project.nom,           // Correspond à 'nom' dans la base de données
+      description: project.description,
+      dateDebut: project.dateDebut, // Correspond à 'dateDebut' dans la base de données
+      dateFin: project.dateFin,     // Correspond à 'dateFin' dans la base de données
+      statut: project.statut,       // Utilise le statut tel qu'il est dans le modèle
+      client_id: project.client_id,    // ID du client
+    };
+
+    try {
+      // Appel à l'API pour créer un projet
+      const response = await fetch("http://127.0.0.1:8000/projets", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(projectData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Si l'API retourne un succès, navigue vers la page des projets
+        setSaving(false);
+        navigate("/projects");
+      } else {
+        // Gestion des erreurs côté serveur
+        setSaving(false);
+        setErrors(result.errors || {});
       }
-
-      // In a real app, you would add this to your database
-      // For now, we'll just navigate back to the projects list
-      setSaving(false)
-      navigate("/projects")
-    }, 1000)
-  }
+    } catch (error) {
+      setSaving(false);
+      console.error("Error creating project:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -95,24 +124,24 @@ const AddProject = () => {
             <Link to="/" className="text-gray-500 hover:text-gray-700 mr-4">
               <ArrowLeft className="h-5 w-5" />
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Add New Project</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Ajouter un nouveau projet</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Project Name*
+                <label htmlFor="nom" className="block text-sm font-medium text-gray-700 mb-1">
+                  Nom du projet*
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={project.name}
+                  id="nom"
+                  name="nom"
+                  value={project.nom}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border ${errors.name ? "border-red-300" : "border-gray-300"} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                  className={`w-full px-3 py-2 border ${errors.nom ? "border-red-300" : "border-gray-300"} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                 />
-                {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+                {errors.nom && <p className="mt-1 text-sm text-red-600">{errors.nom}</p>}
               </div>
 
               <div className="md:col-span-2">
@@ -131,48 +160,53 @@ const AddProject = () => {
               </div>
 
               <div>
-                <label htmlFor="client" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="client_id" className="block text-sm font-medium text-gray-700 mb-1">
                   Client*
                 </label>
-                <input
-                  type="text"
-                  id="client"
-                  name="client"
-                  value={project.client}
+                <select
+                  id="client_id"
+                  name="client_id"
+                  value={project.client_id}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 border ${errors.client ? "border-red-300" : "border-gray-300"} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
-                />
-                {errors.client && <p className="mt-1 text-sm text-red-600">{errors.client}</p>}
+                  className={`w-full px-3 py-2 border ${errors.client_id ? "border-red-300" : "border-gray-300"} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                >
+                  <option value="">Sélectionner un client</option>
+                  {clients.map((client) => (
+                    <option key={client.id} value={client.id}>
+                      {client.utilisateur.nom}
+                    </option>
+                  ))}
+                </select>
+                {errors.client_id && <p className="mt-1 text-sm text-red-600">{errors.client_id}</p>}
               </div>
 
               <div>
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                  Status
+                <label htmlFor="statut" className="block text-sm font-medium text-gray-700 mb-1">
+                  Statut
                 </label>
                 <select
-                  id="status"
-                  name="status"
-                  value={project.status}
+                  id="statut"
+                  name="statut"
+                  value={project.statut}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="not-started">Not Started</option>
-                  <option value="in-progress">In Progress</option>
-                  <option value="on-hold">On Hold</option>
-                  <option value="completed">Completed</option>
-                  <option value="cancelled">Cancelled</option>
+                  <option value="en attente">En attente</option>
+                  <option value="en cours">En cours</option>
+                  <option value="termine">Terminé</option>
+                  <option value="annule">Annulé</option>
                 </select>
               </div>
 
               <div>
-                <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
-                  Start Date*
+                <label htmlFor="dateDebut" className="block text-sm font-medium text-gray-700 mb-1">
+                  Date de début*
                 </label>
                 <input
                   type="date"
-                  id="startDate"
-                  name="startDate"
-                  value={project.startDate}
+                  id="dateDebut"
+                  name="dateDebut"
+                  value={project.dateDebut}
                   onChange={handleChange}
                   className={`w-full px-3 py-2 border ${errors.startDate ? "border-red-300" : "border-gray-300"} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                 />
@@ -180,94 +214,39 @@ const AddProject = () => {
               </div>
 
               <div>
-                <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
-                  End Date*
+                <label htmlFor="dateFin" className="block text-sm font-medium text-gray-700 mb-1">
+                  Date de fin*
                 </label>
                 <input
                   type="date"
-                  id="endDate"
-                  name="endDate"
-                  value={project.endDate}
+                  id="dateFin"
+                  name="dateFin"
+                  value={project.dateFin}
                   onChange={handleChange}
                   className={`w-full px-3 py-2 border ${errors.endDate ? "border-red-300" : "border-gray-300"} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                 />
                 {errors.endDate && <p className="mt-1 text-sm text-red-600">{errors.endDate}</p>}
               </div>
-
-              <div>
-                <label htmlFor="teamSize" className="block text-sm font-medium text-gray-700 mb-1">
-                  Team Size
-                </label>
-                <input
-                  type="number"
-                  id="teamSize"
-                  name="teamSize"
-                  min="1"
-                  value={project.teamSize}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border ${errors.teamSize ? "border-red-300" : "border-gray-300"} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
-                />
-                {errors.teamSize && <p className="mt-1 text-sm text-red-600">{errors.teamSize}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
-                  Budget ($)*
-                </label>
-                <input
-                  type="text"
-                  id="budget"
-                  name="budget"
-                  value={project.budget}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border ${errors.budget ? "border-red-300" : "border-gray-300"} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
-                />
-                {errors.budget && <p className="mt-1 text-sm text-red-600">{errors.budget}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
-                  Priority
-                </label>
-                <select
-                  id="priority"
-                  name="priority"
-                  value={project.priority}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                  <option value="urgent">Urgent</option>
-                </select>
-              </div>
             </div>
 
-            <div className="mt-8 flex justify-end space-x-3">
-              <Link
-                to="/projects"
-                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center"
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                type="button"
+                className="text-gray-500 hover:text-gray-700 flex items-center space-x-2"
+                onClick={() => navigate("/projects")}
               >
-                <X className="h-4 w-4 mr-2" />
-                Cancel
-              </Link>
+                <X className="h-5 w-5" />
+                <span>Annuler</span>
+              </button>
               <button
                 type="submit"
+                className={`bg-blue-500 text-white px-6 py-2 rounded-md flex items-center space-x-2 ${saving ? "opacity-50 cursor-not-allowed" : ""}`}
                 disabled={saving}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4 mr-2" />
-                    Create Project
-                  </>
-                )}
+                {saving ? <span>Enregistrement...</span> : <>
+                  <Save className="h-5 w-5" />
+                  <span>Enregistrer</span>
+                </>}
               </button>
             </div>
           </form>
@@ -275,8 +254,8 @@ const AddProject = () => {
       </main>
       <Footer />
     </div>
-  )
-}
+  );
+};
+export default AddProject;
 
-export default AddProject
 

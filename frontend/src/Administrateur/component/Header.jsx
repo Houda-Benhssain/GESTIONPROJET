@@ -13,6 +13,7 @@ export default function Header() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const profileMenuRef = useRef(null)
   const settingsMenuRef = useRef(null)

@@ -29,7 +29,7 @@ class ProjetController extends Controller
             'description' => 'nullable|string',
             'dateDebut' => 'required|date',
             'dateFin' => 'nullable|date',
-            'statut' => 'required|in:a faire,en cours,fini',
+            'statut' => 'required|in:en attente,en cours,termine,annule',
             'client_id' => 'required|exists:clients,id'
         ]);
 
@@ -50,7 +50,7 @@ class ProjetController extends Controller
             'description' => 'sometimes|string',
             'dateDebut' => 'sometimes|date',
             'dateFin' => 'sometimes|date',
-            'statut' => 'sometimes|in:a faire,en cours,fini',
+            'statut' => 'sometimes|in:en attente,en cours,termine,annule',
             'client_id' => 'sometimes|exists:clients,id'
         ]);
 

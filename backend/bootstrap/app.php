@@ -20,6 +20,27 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            'projets/*',
+            'http://example.com/foo/bar',
+            'http://example.com/foo/*',
+        ]);
+        $middleware->validateCsrfTokens(except: [
+            'projets/',
+            'http://example.com/foo/bar',
+            'http://example.com/foo/*',
+        ]);
+        $middleware->validateCsrfTokens(except: [
+            'taches/',
+            'http://example.com/foo/bar',
+            'http://example.com/foo/*',
+        ]);
+        $middleware->validateCsrfTokens(except: [
+            'taches/*',
+            'http://example.com/foo/bar',
+            'http://example.com/foo/*',
+        ]);
+
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
