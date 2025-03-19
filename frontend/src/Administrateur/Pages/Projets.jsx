@@ -1,77 +1,9 @@
-import React from "react"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Search, Plus, Filter, Edit, Trash2, ChevronDown, Calendar, Users } from "lucide-react"
 import ProjectFilter from "../component/FilterProjet"
 import Header from "../component/Header"
 import Footer from "../component/Footer"
-
-// Mock data for projects
-const mockProjects = [
-  {
-    id: "1",
-    name: "Website Redesign",
-    description: "Complete overhaul of the company website with modern design and improved UX",
-    client: "Acme Inc",
-    status: "in-progress",
-    startDate: "2023-01-15",
-    endDate: "2023-04-30",
-    teamSize: 5,
-    budget: "25000",
-    priority: "high",
-  },
-  {
-    id: "2",
-    name: "Mobile App Development",
-    description: "Develop a native mobile app for iOS and Android platforms",
-    client: "Globex Corporation",
-    status: "not-started",
-    startDate: "2023-05-01",
-    endDate: "2023-09-30",
-    teamSize: 8,
-    budget: "75000",
-    priority: "medium",
-  },
-  {
-    id: "3",
-    name: "E-commerce Platform",
-    description: "Build an online store with payment processing and inventory management",
-    client: "Stark Industries",
-    status: "completed",
-    startDate: "2022-10-01",
-    endDate: "2023-02-28",
-    teamSize: 6,
-    budget: "50000",
-    priority: "high",
-  },
-  {
-    id: "4",
-    name: "CRM Implementation",
-    description: "Implement and customize a CRM solution for sales team",
-    client: "Wayne Enterprises",
-    status: "on-hold",
-    startDate: "2023-02-15",
-    endDate: "2023-06-30",
-    teamSize: 4,
-    budget: "35000",
-    priority: "medium",
-  },
-  {
-    id: "5",
-    name: "Data Migration",
-    description: "Migrate legacy data to new cloud-based platform",
-    client: "Umbrella Corporation",
-    status: "in-progress",
-    startDate: "2023-03-01",
-    endDate: "2023-05-15",
-    teamSize: 3,
-    budget: "20000",
-    priority: "urgent",
-  },
-]
-
-// Create a copy of the mock data to work with
-let projectsData = [...mockProjects]
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([])
@@ -85,53 +17,68 @@ const ProjectsPage = () => {
   })
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [projectToDelete, setProjectToDelete] = useState(null)
+  const [clients, setClients] = useState([]) // Nouveau state pour les clients
 
+  // Effect pour charger les projets et clients
   useEffect(() => {
     loadProjects()
+    loadClients()
   }, [])
 
+  // Effect pour filtrer les projets selon les critères
   useEffect(() => {
     filterProjects()
   }, [searchTerm, filters, projects])
 
   const loadProjects = async () => {
-    // Load projects immediately without delay
-    setProjects([...projectsData])
-    setFilteredProjects([...projectsData])
+    try {
+      const response = await fetch("http://127.0.0.1:8000/projets")
+      const data = await response.json()
+      setProjects(data) // Définir les projets récupérés
+      setFilteredProjects(data) // Initialiser les projets filtrés
+    } catch (error) {
+      console.error("Error fetching projects:", error)
+    }
+  }
+
+  const loadClients = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/clients") // Adapter l'URL si nécessaire
+      const data = await response.json()
+      setClients(data) // Définir les clients récupérés
+    } catch (error) {
+      console.error("Error fetching clients:", error)
+    }
   }
 
   const filterProjects = () => {
     let result = [...projects]
 
-    // Apply search filter
     if (searchTerm) {
       result = result.filter(
         (project) =>
-          project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          project.description.toLowerCase().includes(searchTerm.toLowerCase()),
+          project.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          project.description.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
-    // Apply status filter
     if (filters.status !== "all") {
-      result = result.filter((project) => project.status === filters.status)
+      result = result.filter((project) => project.statut === filters.status)
     }
 
-    // Apply client filter
     if (filters.client !== "all") {
-      result = result.filter((project) => project.client === filters.client)
+      result = result.filter((project) => project.client_id === filters.client) // Utilisation de client_id
     }
 
-    // Apply date range filter
     if (filters.dateRange !== "all") {
       const now = new Date()
       const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30))
       const ninetyDaysAgo = new Date(now.setDate(now.getDate() - 90))
 
       if (filters.dateRange === "30days") {
-        result = result.filter((project) => new Date(project.startDate) >= thirtyDaysAgo)
+        result = result.filter((project) => new Date(project.dateDebut) >= thirtyDaysAgo)
       } else if (filters.dateRange === "90days") {
-        result = result.filter((project) => new Date(project.startDate) >= ninetyDaysAgo)
+        result = result.filter((project) => new Date(project.dateDebut) >= ninetyDaysAgo)
       }
     }
 
@@ -156,24 +103,27 @@ const ProjectsPage = () => {
 
   const confirmDelete = async () => {
     if (projectToDelete) {
-      // Remove from local data immediately
-      projectsData = projectsData.filter((p) => p.id !== projectToDelete.id)
-      // Update state
-      setProjects(projectsData)
-      setShowDeleteModal(false)
-      setProjectToDelete(null)
+      const response = await fetch(`http://127.0.0.1:8000/projets/${projectToDelete.id}`, {
+        method: "DELETE",
+      })
+      if (response.ok) {
+        setProjects(projects.filter((p) => p.id !== projectToDelete.id))
+        setFilteredProjects(filteredProjects.filter((p) => p.id !== projectToDelete.id))
+        setShowDeleteModal(false)
+        setProjectToDelete(null)
+      }
     }
   }
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "completed":
+      case "termine":
         return "bg-green-100 text-green-800"
-      case "in-progress":
+      case "en cours":
         return "bg-blue-100 text-blue-800"
-      case "on-hold":
+      case "en attente":
         return "bg-yellow-100 text-yellow-800"
-      case "cancelled":
+      case "annule":
         return "bg-red-100 text-red-800"
       default:
         return "bg-gray-100 text-gray-800"
@@ -187,15 +137,15 @@ const ProjectsPage = () => {
         <div className="max-w-screen-2xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Projects</h1>
-              <p className="text-gray-500 mt-1">Manage and track all your projects</p>
+              <h1 className="text-2xl font-bold text-gray-900">Projets</h1>
+              <p className="text-gray-500 mt-1">Gérer et suivre tous vos projets</p>
             </div>
             <Link
               to="/addProjet"
               className="mt-4 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 flex items-center"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Project
+              Ajouter projet
             </Link>
           </div>
 
@@ -224,7 +174,7 @@ const ProjectsPage = () => {
                 </button>
               </div>
 
-              {showFilters && <ProjectFilter filters={filters} onFilterChange={handleFilterChange} />}
+              {showFilters && <ProjectFilter filters={filters} onFilterChange={handleFilterChange} clients={clients} />}
             </div>
 
             {filteredProjects.length === 0 ? (
@@ -232,7 +182,7 @@ const ProjectsPage = () => {
                 <div className="bg-gray-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto">
                   <Filter className="h-8 w-8 text-gray-400" />
                 </div>
-                <h3 className="mt-4 text-lg font-medium text-gray-900">No projects found</h3>
+                <h3 className="mt-4 text-lg font-medium text-gray-900">Aucun projet trouvé</h3>
                 <p className="mt-1 text-gray-500">
                   {searchTerm || filters.status !== "all" || filters.client !== "all" || filters.dateRange !== "all"
                     ? "Try adjusting your search or filter criteria"
@@ -244,7 +194,7 @@ const ProjectsPage = () => {
                     className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Project
+                    Ajouter projet
                   </Link>
                 )}
               </div>
@@ -257,7 +207,7 @@ const ProjectsPage = () => {
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Project
+                        Projet
                       </th>
                       <th
                         scope="col"
@@ -269,143 +219,96 @@ const ProjectsPage = () => {
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Status
+                        Statut
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Timeline
+                        Date
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Team
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Actions
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredProjects.map((project) => (
-                      <tr key={project.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center text-blue-600 font-bold">
-                              {project.name.substring(0, 2).toUpperCase()}
+                    {filteredProjects.map((project) => {
+                      const client = clients.find((client) => client.id === project.client_id) // Trouver le client par ID
+                      return (
+                        <tr key={project.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center text-blue-600 font-bold">
+                                {project.nom.substring(0, 2).toUpperCase()}
+                              </div>
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-900">{project.nom}</div>
+                                <div className="text-sm text-gray-500 truncate max-w-xs">{project.description}</div>
+                              </div>
                             </div>
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">{project.name}</div>
-                              <div className="text-sm text-gray-500 truncate max-w-xs">{project.description}</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{project.client}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span
-                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-                              project.status,
-                            )}`}
-                          >
-                            {project.status.charAt(0).toUpperCase() + project.status.slice(1).replace("-", " ")}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-1 text-gray-400" />
-                            {new Date(project.startDate).toLocaleDateString()} -{" "}
-                            {new Date(project.endDate).toLocaleDateString()}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <div className="flex items-center">
-                            <Users className="h-4 w-4 mr-1 text-gray-400" />
-                            {project.teamSize} members
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <div className="flex justify-end space-x-2">
-                            <Link
-                              to={`/edit/${project.id}`}
-                              className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50"
-                            >
-                              <Edit className="h-4 w-4" />
-                              <span className="sr-only">Edit</span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{client ? client.utilisateur.nom : "Client non trouvé"}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`px-2 py-1 text-xs font-semibold inline-block rounded-full ${getStatusColor(project.statut)}`}>
+                              {project.statut}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{new Date(project.dateDebut).toLocaleDateString()}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <Link to={`/editProjet/${project.id}`} className="text-blue-600 hover:text-blue-800">
+                              <Edit className="h-5 w-5" />
                             </Link>
                             <button
                               onClick={() => handleDeleteClick(project)}
-                              className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50"
+                              className="ml-4 text-red-600 hover:text-red-800"
                             >
-                              <Trash2 className="h-4 w-4" />
-                              <span className="sr-only">Delete</span>
+                              <Trash2 className="h-5 w-5" />
                             </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
             )}
           </div>
-
-          {showDeleteModal && (
-            <DeleteConfirmModal
-              project={projectToDelete}
-              onCancel={() => {
-                setShowDeleteModal(false)
-                setProjectToDelete(null)
-              }}
-              onConfirm={confirmDelete}
-            />
-          )}
         </div>
       </main>
       <Footer />
-    </div>
-  )
-}
 
-// Delete confirmation modal component
-const DeleteConfirmModal = ({ project, onCancel, onConfirm }) => {
-  if (!project) return null
-
-  return (
-    <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
-          <Trash2 className="h-6 w-6 text-red-600" />
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-10">
+          <div className="bg-white p-6 rounded-md shadow-lg">
+            <h3 className="text-lg font-semibold">Confirm Deletion</h3>
+            <p className="mt-2">Are you sure you want to delete this project?</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-md"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Delete Project</h3>
-        <p className="text-sm text-gray-500 text-center mb-6">
-          Are you sure you want to delete <span className="font-semibold text-red-600">{project.name}</span>? This
-          action cannot be undone.
-        </p>
-        <div className="flex justify-end space-x-3">
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
 
 export default ProjectsPage
-
