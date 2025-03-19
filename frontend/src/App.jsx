@@ -12,6 +12,8 @@ import AddProject from "./Administrateur/component/AddProjet";
 import AddTaches from "./Administrateur/component/AddTaches";
 import EditTaches from "./Administrateur/component/EditTache";
 import ProfilePage from "./Administrateur/Pages/Profile";
+// chef de projet
+import HomeChefProjet from "./ChefProjet/Pages/HomeChefProjet";
 
 function App() {
   return (
@@ -23,12 +25,16 @@ function App() {
        <Route path="/add" element={<AddClientPage/>} />
        <Route path="/editClient/:id" element={<EditClient/>}/>
        <Route path="/projects" element={<ProjectsPage/>} />
-       <Route  path="/edit/:id" element={<EditProject/>}/>
+       <Route path="/edit/:id" element={<EditProject/>}/>
        <Route path="/addProjet" element={<AddProject/>}/>
        <Route path="/tasks" element={<TasksPage/>} />
        <Route path="/addTache" element= {<AddTaches/>} />
        <Route path="/edit-task/:id" element= {<EditTaches/>} />
        <Route path="/Profile" element= {<ProfilePage/>} />
+          {/* route chef de projet  */}
+       <Route path="/HomeChefProjet" element= {<HomeChefProjet/>} />
+
+       
        
     </Routes>
     </>

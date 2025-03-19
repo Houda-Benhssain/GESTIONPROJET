@@ -2,10 +2,9 @@ import React from "react"
 import { useState, useRef, useEffect } from "react"
 import { Bell, HelpCircle, Settings, Search, User, LogOut, Globe, ChevronDown, Check } from "lucide-react"
 import { Link } from "react-router-dom"
-import { fetchNotifications, markAsRead, markAllAsRead } from "./Notifications"
 import logo from "../../Image/square.png";
 
-export default function Header() {
+export default function HeaderChefProjet() {
   const [activeTab, setActiveTab] = useState("")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)

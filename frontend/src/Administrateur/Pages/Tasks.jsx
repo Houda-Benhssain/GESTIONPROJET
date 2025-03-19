@@ -120,7 +120,6 @@ let tasksData = [...mockTasks]
 const TasksPage = () => {
   const [tasks, setTasks] = useState([])
   const [filteredTasks, setFilteredTasks] = useState([])
-  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState({
@@ -142,13 +141,9 @@ const TasksPage = () => {
   }, [searchTerm, filters, tasks])
 
   const loadTasks = async () => {
-    setLoading(true)
-    // Simulate API delay
-    setTimeout(() => {
-      setTasks([...tasksData])
-      setFilteredTasks([...tasksData])
-      setLoading(false)
-    }, 800)
+    // Load tasks immediately without delay
+    setTasks([...tasksData])
+    setFilteredTasks([...tasksData])
   }
 
   const filterTasks = () => {
@@ -225,15 +220,12 @@ const TasksPage = () => {
 
   const confirmDelete = async () => {
     if (taskToDelete) {
-      // Simulate API delay
-      setTimeout(() => {
-        // Remove from local data
-        tasksData = tasksData.filter((t) => t.id !== taskToDelete.id)
-        // Update state
-        setTasks(tasksData)
-        setShowDeleteModal(false)
-        setTaskToDelete(null)
-      }, 800)
+      // Remove from local data immediately
+      tasksData = tasksData.filter((t) => t.id !== taskToDelete.id)
+      // Update state
+      setTasks(tasksData)
+      setShowDeleteModal(false)
+      setTaskToDelete(null)
     }
   }
 
@@ -330,12 +322,7 @@ const TasksPage = () => {
               )}
             </div>
 
-            {loading ? (
-              <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                <p className="mt-4 text-gray-500">Loading tasks...</p>
-              </div>
-            ) : filteredTasks.length === 0 ? (
+            {filteredTasks.length === 0 ? (
               <div className="p-8 text-center">
                 <div className="bg-gray-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto">
                   <Filter className="h-8 w-8 text-gray-400" />
@@ -525,8 +512,8 @@ const DeleteTaskModal = ({ task, onCancel, onConfirm }) => {
         </div>
         <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Delete Task</h3>
         <p className="text-sm text-gray-500 text-center mb-6">
-          Are you sure you want to delete <span className="font-semibold text-red-600">{task.title}</span>? This action cannot be
-          undone.
+          Are you sure you want to delete <span className="font-semibold text-red-600">{task.title}</span>? This action
+          cannot be undone.
         </p>
         <div className="flex justify-end space-x-3">
           <button
