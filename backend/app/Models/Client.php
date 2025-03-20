@@ -12,6 +12,7 @@ class Client extends Model
     protected $fillable = [
         'telephone', 'adresse', 'user_id'
     ];
+    
 
     // Relation avec l'utilisateur (Utilisateur)
     public function utilisateur()

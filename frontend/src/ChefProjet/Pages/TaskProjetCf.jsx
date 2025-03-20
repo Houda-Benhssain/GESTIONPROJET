@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Search, Plus, Filter, Edit, Trash2, ChevronDown, Calendar } from "lucide-react";
-import Header from "../component/Header";
-import Footer from "../component/Footer";
-import TaskFilter from "../component/TaskFilter";
+import React from "react"
+import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
+import { Search, Plus, Filter, Edit, Trash2, ChevronDown } from "lucide-react"
+import HeaderChefProjet from "../component/HeaderChefProjet"
+import FooterChefProjet from "../component/FooterChefProjet"
+import TaskFilter from "../component/TasksFilterCf"
 
-const TasksPage = () => {
-
-  const [tasks, setTasks] = useState([]);
-  const [filteredTasks, setFilteredTasks] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
+const TachesProjetCf = () => {
+  const [tasks, setTasks] = useState([])
+  const [filteredTasks, setFilteredTasks] = useState([])
+  const [searchTerm, setSearchTerm] = useState("")
+  const [showFilters, setShowFilters] = useState(false)
+  const [taskToDelete, setTaskToDelete] = useState(null)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const [filters, setFilters] = useState({
     statut: "all",
@@ -18,84 +20,115 @@ const TasksPage = () => {
     priorite: "all",
     assignedTo: "all",
     dueDate: "all",
-  });
+  })
+
+  // Sample data for demonstration
+  const tasksData = [
+    {
+      id: 1,
+      nom: "Créer maquette UI",
+      statut: "completed",
+      priorite: "haute",
+      dateFin: "2025-04-15",
+      projet: { nom: "Refonte Site Web" },
+      user: { nom: "Sophie Martin" },
+    },
+    {
+      id: 2,
+      nom: "Développer API REST",
+      statut: "in-progress",
+      priorite: "critique",
+      dateFin: "2025-03-30",
+      projet: { nom: "Application Mobile" },
+      user: { nom: "Thomas Dubois" },
+    },
+    {
+      id: 3,
+      nom: "Tester fonctionnalités",
+      statut: "not-started",
+      priorite: "moyenne",
+      dateFin: "2025-04-20",
+      projet: { nom: "Refonte Site Web" },
+      user: { nom: "Julie Leroy" },
+    },
+    {
+      id: 4,
+      nom: "Déployer en production",
+      statut: "blocked",
+      priorite: "critique",
+      dateFin: "2025-03-25",
+      projet: { nom: "Application Mobile" },
+      user: { nom: "Thomas Dubois" },
+    },
+    {
+      id: 5,
+      nom: "Rédiger documentation",
+      statut: "in-progress",
+      priorite: "basse",
+      dateFin: "2025-04-10",
+      projet: { nom: "Système CRM" },
+      user: { nom: "Sophie Martin" },
+    },
+  ]
 
   useEffect(() => {
-    loadTasks();
-  }, []);
+    loadTasks()
+  }, [])
 
   useEffect(() => {
-    filterTasks();
-  }, [searchTerm, filters, tasks]);
+    filterTasks()
+  }, [searchTerm, filters, tasks])
 
   const loadTasks = async () => {
-
     // Load tasks immediately without delay
     setTasks([...tasksData])
     setFilteredTasks([...tasksData])
   }
 
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch("http://127.0.0.1:8000/taches");
-  //     const data = await response.json();
-  //     setTasks(data);
-  //     setFilteredTasks(data);
-  //   } catch (error) {
-  //     console.error("Erreur lors du chargement des tâches:", error);
-  //   }
-  //   setLoading(false);
-  // };
-
-
   const filterTasks = () => {
-    let result = [...tasks];
-  
-   
+    let result = [...tasks]
+
     if (searchTerm) {
       result = result.filter(
         (task) =>
           task.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          task.projet.nom.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+          task.projet.nom.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
     }
-  
+
     if (filters.statut !== "all") {
-      result = result.filter((task) => task.statut === filters.statut);
+      result = result.filter((task) => task.statut === filters.statut)
     }
-  
+
     if (filters.project !== "all") {
-      result = result.filter((task) => task.projet.nom === filters.project);
+      result = result.filter((task) => task.projet.nom === filters.project)
     }
 
     if (filters.priorite !== "all") {
-      result = result.filter((task) => task.priorite === filters.priorite);
+      result = result.filter((task) => task.priorite === filters.priorite)
     }
-  
-    
+
     if (filters.assignedTo !== "all") {
-      result = result.filter((task) => task.user.nom === filters.assignedTo);
+      result = result.filter((task) => task.user.nom === filters.assignedTo)
     }
-  
+
     if (filters.dueDate !== "all") {
-      result = result.filter((task) => task.dateFin === filters.dueDate);
+      result = result.filter((task) => task.dateFin === filters.dueDate)
     }
-  
-    setFilteredTasks(result);
-  };
-  
+
+    setFilteredTasks(result)
+  }
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+    setSearchTerm(e.target.value)
+  }
 
   const handleFilterChange = (name, value) => {
     setFilters({
       ...filters,
       [name]: value,
-    });
-  };
-
+    })
+  }
 
   const handleDeleteClick = (task) => {
     setTaskToDelete(task)
@@ -105,9 +138,9 @@ const TasksPage = () => {
   const confirmDelete = async () => {
     if (taskToDelete) {
       // Remove from local data immediately
-      tasksData = tasksData.filter((t) => t.id !== taskToDelete.id)
+      const updatedTasks = tasks.filter((t) => t.id !== taskToDelete.id)
       // Update state
-      setTasks(tasksData)
+      setTasks(updatedTasks)
       setShowDeleteModal(false)
       setTaskToDelete(null)
     }
@@ -124,50 +157,50 @@ const TasksPage = () => {
       case "not-started":
         return "bg-gray-100 text-gray-800"
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-800"
     }
-  };
+  }
 
   const getPriorityColor = (priorite) => {
     switch (priorite) {
       case "critique":
-        return "bg-red-100 text-red-800";
+        return "bg-red-100 text-red-800"
       case "haute":
-        return "bg-orange-100 text-orange-800";
+        return "bg-orange-100 text-orange-800"
       case "moyenne":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-100 text-yellow-800"
       case "basse":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 text-green-800"
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-800"
     }
-  };
+  }
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
+    const date = new Date(dateString)
+    return date.toLocaleDateString()
+  }
 
   const isOverdue = (dateFin, statut) => {
-    return new Date(dateFin) < new Date() && statut !== "terminé";
-  };
+    return new Date(dateFin) < new Date() && statut !== "completed"
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <HeaderChefProjet />
       <main className="flex-grow">
         <div className="max-w-screen-2xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Tasks</h1>
-              <p className="text-gray-500 mt-1">Manage and track all your tasks</p>
+              <h1 className="text-2xl font-bold text-gray-900">Tâches Projet</h1>
+              <p className="text-gray-500 mt-1">Gérer et suivre toutes les tâches du projet</p>
             </div>
             <Link
               to="/create-task"
               className="mt-4 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 flex items-center"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Task
+              Ajouter Tâche
             </Link>
           </div>
 
@@ -181,7 +214,7 @@ const TasksPage = () => {
                   <input
                     type="text"
                     className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    placeholder="Search tasks..."
+                    placeholder="Rechercher des tâches..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                   />
@@ -191,7 +224,7 @@ const TasksPage = () => {
                   className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                 >
                   <Filter className="h-4 w-4 mr-2" />
-                  Filters
+                  Filtres
                   <ChevronDown className="h-4 w-4 ml-2" />
                 </button>
               </div>
@@ -211,7 +244,7 @@ const TasksPage = () => {
                 <div className="bg-gray-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto">
                   <Filter className="h-8 w-8 text-gray-400" />
                 </div>
-                <h3 className="mt-4 text-lg font-medium text-gray-900">No tasks found</h3>
+                <h3 className="mt-4 text-lg font-medium text-gray-900">Aucune tâche trouvée</h3>
                 <p className="mt-1 text-gray-500">
                   {searchTerm ||
                   filters.statut !== "all" ||
@@ -219,9 +252,23 @@ const TasksPage = () => {
                   filters.priorite !== "all" ||
                   filters.assignedTo !== "all" ||
                   filters.dueDate !== "all"
-                    ? "Try adjusting your search or filter criteria"
-                    : "Get started by creating your first task"}
+                    ? "Essayez d'ajuster vos critères de recherche ou de filtrage"
+                    : "Commencez par créer votre première tâche"}
                 </p>
+                {!searchTerm &&
+                  filters.statut === "all" &&
+                  filters.project === "all" &&
+                  filters.priorite === "all" &&
+                  filters.assignedTo === "all" &&
+                  filters.dueDate === "all" && (
+                    <Link
+                      to="/create-task"
+                      className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Ajouter Tâche
+                    </Link>
+                  )}
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -229,19 +276,19 @@ const TasksPage = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Task
+                        Tâche
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Project
+                        Projet
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        Statut
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Priority
+                        Priorité
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Due Date
+                        Date d'échéance
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
@@ -256,7 +303,7 @@ const TasksPage = () => {
                         <td className="px-4 py-3">
                           <span
                             className={`px-2 inline-flex text-xs font-semibold leading-5 rounded-full ${getStatusColor(
-                              task.statut
+                              task.statut,
                             )}`}
                           >
                             {task.statut}
@@ -265,7 +312,7 @@ const TasksPage = () => {
                         <td className="px-4 py-3">
                           <span
                             className={`px-2 inline-flex text-xs font-semibold leading-5 rounded-full ${getPriorityColor(
-                              task.priorite
+                              task.priorite,
                             )}`}
                           >
                             {task.priorite}
@@ -274,16 +321,18 @@ const TasksPage = () => {
                         <td className="px-4 py-3 text-sm text-gray-500">
                           {formatDate(task.dateFin)}
                           {isOverdue(task.dateFin, task.statut) && (
-                            <span className="text-red-500 ml-2">(Overdue)</span>
+                            <span className="text-red-500 ml-2">(En retard)</span>
                           )}
                         </td>
                         <td className="px-4 py-3 text-sm font-medium">
-                          <Link to={`/tasks/${task.id}/edit`} className="text-blue-600 hover:text-blue-800">
-                            <Edit className="h-5 w-5" />
-                          </Link>
-                          <button className="text-red-600 hover:text-red-800 ml-4">
-                            <Trash2 className="h-5 w-5" />
-                          </button>
+                          <div className="flex items-center space-x-3">
+                            <Link to={`/tasks/edit/${task.id}`} className="text-blue-600 hover:text-blue-800">
+                              <Edit className="h-5 w-5" />
+                            </Link>
+                            <button className="text-red-600 hover:text-red-800" onClick={() => handleDeleteClick(task)}>
+                              <Trash2 className="h-5 w-5" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -294,10 +343,15 @@ const TasksPage = () => {
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+      <FooterChefProjet />
 
+      {/* Delete task confirmation modal */}
+      {showDeleteModal && (
+        <DeleteTaskModal task={taskToDelete} onCancel={() => setShowDeleteModal(false)} onConfirm={confirmDelete} />
+      )}
+    </div>
   )
+}
 
 // Delete task confirmation modal component
 const DeleteTaskModal = ({ task, onCancel, onConfirm }) => {
@@ -309,28 +363,29 @@ const DeleteTaskModal = ({ task, onCancel, onConfirm }) => {
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
           <Trash2 className="h-6 w-6 text-red-600" />
         </div>
-        <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Delete Task</h3>
+        <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Supprimer la tâche</h3>
         <p className="text-sm text-gray-500 text-center mb-6">
-          Are you sure you want to delete <span className="font-semibold text-red-600">{task.title}</span>? This action
-          cannot be undone.
+          Êtes-vous sûr de vouloir supprimer <span className="font-semibold text-red-600">{task.nom}</span>? Cette
+          action ne peut pas être annulée.
         </p>
         <div className="flex justify-end space-x-3">
           <button
             onClick={onCancel}
             className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
           >
-            Cancel
+            Annuler
           </button>
           <button
             onClick={onConfirm}
             className="px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700"
           >
-            Delete
+            Supprimer
           </button>
         </div>
       </div>
     </div>
   )
 }
-}
-export default TasksPage
+
+export default TachesProjetCf
+

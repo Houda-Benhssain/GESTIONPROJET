@@ -69,5 +69,11 @@ class ProjetController extends Controller
         $projet->delete();
         return response()->json(['message' => 'Projet supprimé']);
     }
+
+    public function getClients()
+{
+    $clients = Client::with('projets')->get();
+    return response()->json($clients);
+}
 }
 

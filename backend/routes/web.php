@@ -18,6 +18,7 @@ Route::get('/projets/{id}', [ProjetController::class, 'show']);
 Route::post('/projets', [ProjetController::class, 'store']);
 Route::put('/projets/{id}', [ProjetController::class, 'update']);
 Route::delete('/projets/{id}', [ProjetController::class, 'destroy']);
+Route::get('/clients/{clientId}/projets', [ProjetController::class, 'getProjetsByClient']);
 
 
 Route::get('/clients/{id}', [ClientController::class, 'show'])->name('clients.show');

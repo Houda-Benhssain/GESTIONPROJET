@@ -2,8 +2,9 @@ import React from "react"
 import { useState, useRef, useEffect } from "react"
 import { Bell, HelpCircle, Settings, Search, User, LogOut, Globe, ChevronDown, Check } from "lucide-react"
 import { Link } from "react-router-dom"
-import { fetchNotifications, markAsRead, markAllAsRead } from "./Notifications"
+import { fetchNotifications,  markAllAsRead } from "./Notifications"
 import logo from "../../Image/square.png";
+
 
 export default function Header() {
   const [activeTab, setActiveTab] = useState("")
@@ -13,7 +14,7 @@ export default function Header() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
-
+  const [loading, setLoading] = useState(false)
   const profileMenuRef = useRef(null)
   const settingsMenuRef = useRef(null)
   const notificationsRef = useRef(null)
@@ -71,18 +72,6 @@ export default function Header() {
     }
   }
 
-  const handleMarkAsRead = async (id, e) => {
-    e.stopPropagation()
-    try {
-      await markAsRead(id)
-      setNotifications(
-        notifications.map((notification) => (notification.id === id ? { ...notification, read: true } : notification)),
-      )
-    } catch (error) {
-      console.error("Failed to mark notification as read:", error)
-    }
-  }
-
   const handleMarkAllAsRead = async (e) => {
     e.stopPropagation()
     try {
@@ -131,7 +120,7 @@ export default function Header() {
             {/* Logo */}
             <div className="flex items-center mr-4">
               <div className="text-gray-500 p-2 rounded hover:bg-gray-100">
-                  <img src={logo}/>
+                <img  src={logo}/>
               </div>
               <span className="text-xl font-bold ml-1">PlanIt</span>
             </div>
@@ -158,14 +147,21 @@ export default function Header() {
                       ? "text-blue-600 border-b-2 border-blue-600"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
-                  onClick={() => handleTabClick("your-work")}>
+                  onClick={() => handleTabClick("your-work")}
+                >
                   Your work
                   <ChevronDown className="ml-1 h-4 w-4" />
                 </button>
                 <div className="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg z-50 border border-gray-200 hidden group-hover:block">
                   <div className="py-1">
-                    <Link to="Gant" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Gant
+                    <Link
+                      to="/your-work/assigned"
+                      className="block px-4 py-2 text-sm text-blue-600 border-l-2 border-blue-600 bg-blue-50 hover:bg-blue-100"
+                    >
+                      Assigned to me
+                    </Link>
+                    <Link to="/your-work/boards" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Boards
                     </Link>
                   </div>
                 </div>
@@ -222,7 +218,7 @@ export default function Header() {
           {/* Right side - Actions */}
           <div className="flex items-center space-x-2">
             <Link
-              to="/create"
+              to="/createUser"
               className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700"
             >
               Create
@@ -311,38 +307,14 @@ export default function Header() {
             </div>
 
             {/* Help Button with Documentation Popup */}
-            <div className="relative" ref={helpMenuRef}>
-              <button
-                onClick={toggleHelpMenu}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none"
-              >
-                <HelpCircle className="h-5 w-5" />
-              </button>
-
-              {isHelpMenuOpen && (
-                <div className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg z-50 border border-gray-200">
-                  <div className="py-3 px-4">
-                    <div className="text-lg font-medium mb-2">Documentation</div>
-                    <p className="text-sm text-gray-600 mb-3">
-                      PlanIt is a project management tool that helps teams organize tasks, track progress, and
-                      collaborate effectively. Use the navigation menu to access your projects, dashboards, and tasks.
-                      The create button allows you to add new items to your workspace.
-                    </p>
-                    <p className="text-sm text-gray-600 mb-3">
-                      Projects section allows you to create and manage your projects. You can assign team members, set
-                      deadlines, and track progress. The dashboard provides an overview of all your projects and tasks.
-                      Use the clients section to manage client information and project assignments.
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Tasks can be created, assigned, and tracked through the tasks section. You can set priorities,
-                      deadlines, and track the status of each task. Use the notifications feature to stay updated on
-                      changes and assignments. For more detailed instructions, please contact support.
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-
+             <div className="relative" ref={helpMenuRef}>
+                  <Link to="/documentationAdmin">
+                    <button onClick={toggleHelpMenu} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none" >
+                            <HelpCircle className="h-5 w-5" />
+                    </button>
+                  </Link>
+              </div>
+         
             {/* Settings Button with Dropdown */}
             <div className="relative" ref={settingsMenuRef}>
               <button
@@ -358,7 +330,7 @@ export default function Header() {
                     <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">Settings</div>
 
                     <Link
-                      to="/profile"
+                      to="/settings/profile"
                       className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                     >
                       <User className="h-4 w-4 mr-2" />
@@ -396,16 +368,14 @@ export default function Header() {
 
                     <Link
                       to="/profile"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
+                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                       <User className="h-4 w-4 mr-2" />
                       Your profile
                     </Link>
 
                     <Link
                       to="/settings"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
+                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                       <Settings className="h-4 w-4 mr-2" />
                       Settings
                     </Link>
@@ -414,8 +384,7 @@ export default function Header() {
 
                     <Link
                       to="/login"
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
-                    >
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign out
                     </Link>
@@ -445,17 +414,9 @@ export default function Header() {
               </button>
               <div className="pl-4 space-y-1 border-l-2 border-gray-200 ml-3">
                 <Link
-                  to="/your-work/assigned"
-                  className="block px-3 py-2 rounded-md text-sm font-medium text-blue-700 bg-blue-50 border-l-2 border-blue-600"
-                >
-                  Assigned to me
-                </Link>
-
-                <Link
                   to="/your-work/boards"
-                  className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                >
-                  Boards
+                  className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+                  Gant
                 </Link>
               </div>
             </div>
@@ -470,7 +431,7 @@ export default function Header() {
               Projects
             </Link>
             <Link
-              to="/dashboards"
+              to="/"
               className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
                 activeTab === "dashboards"
                   ? "bg-blue-50 text-blue-700"
@@ -497,13 +458,12 @@ export default function Header() {
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
               }`}
             >
-              Taches
+              Tasks
             </Link>
 
             <Link
-              to="/create"
-              className="w-full mt-2 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700"
-            >
+              to="/createUser"
+              className="w-full mt-2 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700" >
               Create
             </Link>
             <div className="relative mt-3">

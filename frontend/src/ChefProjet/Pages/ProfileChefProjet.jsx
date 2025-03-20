@@ -2,10 +2,10 @@ import React from "react"
 import { useState, useEffect } from "react"
 import { User, Mail, Briefcase, ArrowLeft, ChevronLeft, ChevronRight, Calendar, MapPin } from "lucide-react"
 import { Link } from "react-router-dom"
-import Header from "../component/Header"
-import Footer from "../component/Footer"
+import HeaderChefProjet from "../component/HeaderChefProjet"
+import FooterChefProjet from "../component/FooterChefProjet"
 
-const ProfilePage = () => {
+const ProfilePageCf = () => {
   // Profile state
   const [profile, setProfile] = useState({
     name: "Chef de Projet",
@@ -163,11 +163,11 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <HeaderChefProjet />
       <main className="flex-grow bg-gray-50">
         <div className="max-w-screen-xl mx-auto px-4 py-8">
           <div className="flex items-center mb-6">
-            <Link to="/" className="text-gray-500 hover:text-gray-700 mr-4">
+            <Link to="/dashboard" className="text-gray-500 hover:text-gray-700 mr-4">
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
@@ -220,8 +220,9 @@ const ProfilePage = () => {
                 </div>
                 <div className="mt-6 flex justify-center">
                   <Link
-                    to="/editProfileAdmin"
-                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    to="/editProfile/chefProjet"
+                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+>
                     Edit Profile
                   </Link>
                 </div>
@@ -285,10 +286,10 @@ const ProfilePage = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      <FooterChefProjet />
     </div>
   )
 }
 
-export default ProfilePage
+export default ProfilePageCf
 

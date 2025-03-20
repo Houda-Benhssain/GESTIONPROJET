@@ -2,26 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Users, UserPlus, Edit, Trash2, Eye, Search, Filter } from "lucide-react";
-import Header from "../component/Header";
-import Footer from "../component/Footer";
+import HeaderChefProjet from "../component/HeaderChefProjet";
+import FooterChefProjet from "../component/FooterChefProjet";
 
-const ClientsPage = () => {
+const ClientProjet = () => {
   const [clients, setClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Fetch clients and their projects from API
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/clients")
-      .then((response) => {
-        setClients(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the clients:", error);
-      });
-  }, []);
 
   // Filter clients based on search term and status
   const filteredClients = clients.filter((client) => {
@@ -40,7 +30,7 @@ const ClientsPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
+      <HeaderChefProjet />
       <main className="flex-grow p-4 md:p-6">
         <div className="max-w-screen-2xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
@@ -49,7 +39,7 @@ const ClientsPage = () => {
               <p className="text-sm text-gray-500 mt-1">Manage your client relationships</p>
             </div>
             <Link
-              to="/add"
+              to="/add_clients"
               className="mt-4 md:mt-0 flex items-center bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 transition-colors">
               <UserPlus className="h-4 w-4 mr-2" />
               Add New Client
@@ -184,10 +174,10 @@ const ClientsPage = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      <FooterChefProjet />
     </div>
   );
 };
 
-export default ClientsPage;
+export default ClientProjet;
 

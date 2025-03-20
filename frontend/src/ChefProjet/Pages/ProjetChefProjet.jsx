@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { Search, Plus, Filter, Edit, Trash2, ChevronDown, Calendar, Users } from "lucide-react"
-import ProjectFilter from "../component/FilterProjet"
-import Header from "../component/Header"
-import Footer from "../component/Footer"
+import { Search, Plus, Filter, Edit, Trash2, ChevronDown } from "lucide-react"
+import HeaderChefProjet from "../component/HeaderChefProjet"
+import FooterChefProjet from "../component/FooterChefProjet"
 
-const ProjectsPage = () => {
+const ProjectChefProjet = () => {
   const [projects, setProjects] = useState([])
   const [filteredProjects, setFilteredProjects] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
@@ -17,25 +17,58 @@ const ProjectsPage = () => {
   })
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [projectToDelete, setProjectToDelete] = useState(null)
-  const [clients, setClients] = useState([]) // Nouveau state pour les clients
+  const [clients, setClients] = useState([])
 
-  // Effect pour charger les projets et clients
+  // Effect to load projects and clients
   useEffect(() => {
     loadProjects()
     loadClients()
   }, [])
 
-  // Effect pour filtrer les projets selon les critères
+  // Effect to filter projects based on criteria
   useEffect(() => {
     filterProjects()
   }, [searchTerm, filters, projects])
 
   const loadProjects = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/projets")
-      const data = await response.json()
-      setProjects(data) // Définir les projets récupérés
-      setFilteredProjects(data) // Initialiser les projets filtrés
+      // This would be replaced with your actual API call
+      const data = [
+        {
+          id: 1,
+          nom: "E-commerce Platform",
+          description: "A comprehensive e-commerce solution with payment integration",
+          client_id: 1,
+          statut: "en cours",
+          dateDebut: "2023-11-15",
+        },
+        {
+          id: 2,
+          nom: "Mobile Banking App",
+          description: "Secure mobile banking application with biometric authentication",
+          client_id: 2,
+          statut: "en attente",
+          dateDebut: "2024-01-30",
+        },
+        {
+          id: 3,
+          nom: "Healthcare Dashboard",
+          description: "Interactive dashboard for healthcare professionals",
+          client_id: 3,
+          statut: "termine",
+          dateDebut: "2023-10-05",
+        },
+        {
+          id: 4,
+          nom: "Inventory Management System",
+          description: "Real-time inventory tracking and management system",
+          client_id: 1,
+          statut: "en cours",
+          dateDebut: "2023-11-20",
+        },
+      ]
+      setProjects(data)
+      setFilteredProjects(data)
     } catch (error) {
       console.error("Error fetching projects:", error)
     }
@@ -43,9 +76,13 @@ const ProjectsPage = () => {
 
   const loadClients = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/clients") // Adapter l'URL si nécessaire
-      const data = await response.json()
-      setClients(data) // Définir les clients récupérés
+      // This would be replaced with your actual API call
+      const data = [
+        { id: 1, utilisateur: { nom: "Acme Corporation" } },
+        { id: 2, utilisateur: { nom: "TechStart Inc." } },
+        { id: 3, utilisateur: { nom: "Healthcare Solutions" } },
+      ]
+      setClients(data)
     } catch (error) {
       console.error("Error fetching clients:", error)
     }
@@ -58,7 +95,7 @@ const ProjectsPage = () => {
       result = result.filter(
         (project) =>
           project.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          project.description.toLowerCase().includes(searchTerm.toLowerCase())
+          project.description.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     }
 
@@ -67,13 +104,16 @@ const ProjectsPage = () => {
     }
 
     if (filters.client !== "all") {
-      result = result.filter((project) => project.client_id === filters.client) // Utilisation de client_id
+      result = result.filter((project) => project.client_id === filters.client)
     }
 
     if (filters.dateRange !== "all") {
       const now = new Date()
-      const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30))
-      const ninetyDaysAgo = new Date(now.setDate(now.getDate() - 90))
+      const thirtyDaysAgo = new Date(now)
+      thirtyDaysAgo.setDate(now.getDate() - 30)
+
+      const ninetyDaysAgo = new Date(now)
+      ninetyDaysAgo.setDate(now.getDate() - 90)
 
       if (filters.dateRange === "30days") {
         result = result.filter((project) => new Date(project.dateDebut) >= thirtyDaysAgo)
@@ -103,14 +143,15 @@ const ProjectsPage = () => {
 
   const confirmDelete = async () => {
     if (projectToDelete) {
-      const response = await fetch(`http://127.0.0.1:8000/projets/${projectToDelete.id}`, {
-        method: "DELETE",
-      })
-      if (response.ok) {
+      // This would be replaced with your actual API call
+      try {
+        // Simulate successful deletion
         setProjects(projects.filter((p) => p.id !== projectToDelete.id))
         setFilteredProjects(filteredProjects.filter((p) => p.id !== projectToDelete.id))
         setShowDeleteModal(false)
         setProjectToDelete(null)
+      } catch (error) {
+        console.error("Error deleting project:", error)
       }
     }
   }
@@ -130,9 +171,60 @@ const ProjectsPage = () => {
     }
   }
 
+  // ProjectFilter component
+  const ProjectFilter = ({ filters, onFilterChange, clients }) => {
+    return (
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <select
+            className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+            value={filters.status}
+            onChange={(e) => onFilterChange("status", e.target.value)}
+          >
+            <option value="all">All Statuses</option>
+            <option value="en cours">En cours</option>
+            <option value="termine">Terminé</option>
+            <option value="en attente">En attente</option>
+            <option value="annule">Annulé</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+          <select
+            className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+            value={filters.client}
+            onChange={(e) => onFilterChange("client", e.target.value)}
+          >
+            <option value="all">All Clients</option>
+            {clients.map((client) => (
+              <option key={client.id} value={client.id}>
+                {client.utilisateur.nom}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+          <select
+            className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+            value={filters.dateRange}
+            onChange={(e) => onFilterChange("dateRange", e.target.value)}
+          >
+            <option value="all">All Time</option>
+            <option value="30days">Last 30 Days</option>
+            <option value="90days">Last 90 Days</option>
+          </select>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <HeaderChefProjet />
       <main className="flex-grow">
         <div className="max-w-screen-2xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
@@ -141,7 +233,7 @@ const ProjectsPage = () => {
               <p className="text-gray-500 mt-1">Gérer et suivre tous vos projets</p>
             </div>
             <Link
-              to="/addProjet"
+              to="/add_project"
               className="mt-4 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 flex items-center"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -188,7 +280,15 @@ const ProjectsPage = () => {
                     ? "Try adjusting your search or filter criteria"
                     : "Get started by creating your first project"}
                 </p>
-           
+                {!searchTerm && filters.status === "all" && filters.client === "all" && filters.dateRange === "all" && (
+                  <Link
+                    href="/add-project"
+                    className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Ajouter projet
+                  </Link>
+                )}
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -229,7 +329,7 @@ const ProjectsPage = () => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredProjects.map((project) => {
-                      const client = clients.find((client) => client.id === project.client_id) // Trouver le client par ID
+                      const client = clients.find((client) => client.id === project.client_id)
                       return (
                         <tr key={project.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -244,23 +344,32 @@ const ProjectsPage = () => {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{client ? client.utilisateur.nom : "Client non trouvé"}</div>
+                            <div className="text-sm text-gray-900">
+                              {client ? client.utilisateur.nom : "Client non trouvé"}
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`px-2 py-1 text-xs font-semibold inline-block rounded-full ${getStatusColor(project.statut)}`}>
+                            <span
+                              className={`px-2 py-1 text-xs font-semibold inline-block rounded-full ${getStatusColor(project.statut)}`}
+                            >
                               {project.statut}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{new Date(project.dateDebut).toLocaleDateString()}</div>
+                            <div className="text-sm text-gray-900">
+                              {new Date(project.dateDebut).toLocaleDateString()}
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <Link to={`/editProjet/${project.id}`} className="text-blue-600 hover:text-blue-800">
+                            <Link
+                              to={`/edit-project/${project.id}`}
+                              className="text-blue-600 hover:text-blue-800 inline-block"
+                            >
                               <Edit className="h-5 w-5" />
                             </Link>
                             <button
                               onClick={() => handleDeleteClick(project)}
-                              className="ml-4 text-red-600 hover:text-red-800"
+                              className="ml-4 text-red-600 hover:text-red-800 inline-block"
                             >
                               <Trash2 className="h-5 w-5" />
                             </button>
@@ -275,24 +384,25 @@ const ProjectsPage = () => {
           </div>
         </div>
       </main>
-      <Footer />
-
+      <FooterChefProjet />
       {showDeleteModal && (
         <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-10">
           <div className="bg-white p-6 rounded-md shadow-lg">
-            <h3 className="text-lg font-semibold">Confirm Deletion</h3>
-            <p className="mt-2">Are you sure you want to delete this project?</p>
+             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
+                      <Trash2 className="h-6 w-6 text-red-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Supprimer le projet</h3>
+            <p className="text-sm text-gray-500 text-center mb-6">
+            Êtes-vous sûr de vouloir supprimer <span className="font-semibold text-red-600"></span>? Cette
+            action ne peut pas être annulée.
+            </p>
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md mr-2"
-              >
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md mr-2" >
                 Cancel
               </button>
-              <button
-                onClick={confirmDelete}
-                className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-md"
-              >
+              <button onClick={confirmDelete} className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-md">
                 Delete
               </button>
             </div>
@@ -303,4 +413,5 @@ const ProjectsPage = () => {
   )
 }
 
-export default ProjectsPage
+export default ProjectChefProjet
+

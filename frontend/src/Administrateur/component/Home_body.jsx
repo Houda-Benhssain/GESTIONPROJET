@@ -3,6 +3,7 @@ import { useState } from "react"
 import Header from "./Header"
 import Footer from "./Footer"
 import imagePlanIt from "../../Image/imagePlanIt.jpg";
+import DocumentationAdmin from "../Pages/DocumentationAdmin";
 
 
 import { CheckCircle, FileEdit, FileText, Calendar, Maximize2, X, RefreshCw, Link2 } from "lucide-react"
@@ -131,7 +132,7 @@ const HomeBody = () => {
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Welcome to PlanIt</h3>
                 <p className="text-gray-700 mb-3">
                   New to PlanIt? Check out the{" "}
-                  <a href="#" className="text-blue-600 hover:underline">
+                  <a href="/documentationAdmin" className="text-blue-600 hover:underline">
                     Documentation
                   </a>
                   .
