@@ -159,15 +159,15 @@ const TasksPage = () => {
         <div className="max-w-screen-2xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Tasks</h1>
-              <p className="text-gray-500 mt-1">Manage and track all your tasks</p>
+              <h1 className="text-2xl font-bold text-gray-900">Tâches</h1>
+              <p className="text-gray-500 mt-1">Gérez et suivez toutes vos tâches</p>
             </div>
             <Link
               to="/create-task"
               className="mt-4 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 flex items-center"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Task
+              Ajouter une tâche
             </Link>
           </div>
 
@@ -206,12 +206,21 @@ const TasksPage = () => {
               )}
             </div>
 
+<<<<<<< HEAD
             {filteredTasks.length === 0 ? (
+=======
+            {loading ? (
+              <div className="p-8 text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                <p className="mt-4 text-gray-500">Chargement des tâches...</p>
+              </div>
+            ) : filteredTasks.length === 0 ? (
+>>>>>>> 9256176b525a732e9c1c1e3d6b1ad55def78b5ec
               <div className="p-8 text-center">
                 <div className="bg-gray-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto">
                   <Filter className="h-8 w-8 text-gray-400" />
                 </div>
-                <h3 className="mt-4 text-lg font-medium text-gray-900">No tasks found</h3>
+                <h3 className="mt-4 text-lg font-medium text-gray-900">Aucune tâche trouvée</h3>
                 <p className="mt-1 text-gray-500">
                   {searchTerm ||
                   filters.statut !== "all" ||
@@ -229,19 +238,22 @@ const TasksPage = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Task
+                      Tâche
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Project
+                        Projet
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        Statut
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Priority
+                      Priorité
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Due Date
+                      Date d'échéance
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Attribuer à
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
@@ -276,6 +288,11 @@ const TasksPage = () => {
                           {isOverdue(task.dateFin, task.statut) && (
                             <span className="text-red-500 ml-2">(Overdue)</span>
                           )}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                         
+                            <span className="px-4 py-3 text-sm text-gray-500">{task.user.nom}</span>
+                          
                         </td>
                         <td className="px-4 py-3 text-sm font-medium">
                           <Link to={`/tasks/${task.id}/edit`} className="text-blue-600 hover:text-blue-800">

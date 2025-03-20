@@ -19,6 +19,10 @@ Route::post('/projets', [ProjetController::class, 'store']);
 Route::put('/projets/{id}', [ProjetController::class, 'update']);
 Route::delete('/projets/{id}', [ProjetController::class, 'destroy']);
 Route::get('/clients/{clientId}/projets', [ProjetController::class, 'getProjetsByClient']);
+Route::get('/csrf-token', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+});
+
 
 
 Route::get('/clients/{id}', [ClientController::class, 'show'])->name('clients.show');

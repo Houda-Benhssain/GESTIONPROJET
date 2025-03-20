@@ -46,13 +46,13 @@ const ClientsPage = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Clients</h1>
-              <p className="text-sm text-gray-500 mt-1">Manage your client relationships</p>
+              <p className="text-sm text-gray-500 mt-1">Gérez vos relations avec les clients</p>
             </div>
             <Link
               to="/add"
               className="mt-4 md:mt-0 flex items-center bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 transition-colors">
               <UserPlus className="h-4 w-4 mr-2" />
-              Add New Client
+              Ajouter un nouveau client
             </Link>
           </div>
 
@@ -73,7 +73,7 @@ const ClientsPage = () => {
 
               <div className="flex items-center">
                 <Filter className="h-4 w-4 text-gray-500 mr-2" />
-                <span className="text-sm text-gray-500 mr-2">Status:</span>
+                <span className="text-sm text-gray-500 mr-2">Statut:</span>
                 <select
                   className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                   value={statusFilter}
@@ -105,12 +105,12 @@ const ClientsPage = () => {
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                      Status
+                      Statut
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                      Projects
+                      Projet
                     </th>
                     <th
                       scope="col"
@@ -174,7 +174,7 @@ const ClientsPage = () => {
                   ) : (
                     <tr>
                       <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
-                        No clients found
+                      Aucun client trouvé
                       </td>
                     </tr>
                   )}

@@ -44,10 +44,14 @@ function App() {
        <Route path="/add" element={<AddClientPage/>} />
        <Route path="/editClient/:id" element={<EditClient/>}/>
        <Route path="/projects" element={<ProjectsPage/>} />
+<<<<<<< HEAD
        <Route path="/edit/:id" element={<EditProject/>}/>
+=======
+       <Route path="/edit/:id" element={<EditProject />} />
+>>>>>>> 9256176b525a732e9c1c1e3d6b1ad55def78b5ec
        <Route path="/addProjet" element={<AddProject/>}/>
        <Route path="/tasks" element={<TasksPage/>} />
-       <Route path="/addTache" element= {<AddTaches/>} />
+       <Route path="/create-task" element= {<AddTaches/>} />
        <Route path="/edit-task/:id" element= {<EditTaches/>} />
        <Route path="/Profile" element= {<ProfilePage/>} /> 
        <Route path="/editProfileAdmin" element= {<EditProfileAdmin/>} /> 

@@ -67,7 +67,7 @@ const ProjectsPage = () => {
     }
 
     if (filters.client !== "all") {
-      result = result.filter((project) => project.client_id === filters.client) // Utilisation de client_id
+      result = result.filter((project) => String(project.client_id) === String(filters.client))
     }
 
     if (filters.dateRange !== "all") {
@@ -99,21 +99,32 @@ const ProjectsPage = () => {
   const handleDeleteClick = (project) => {
     setProjectToDelete(project)
     setShowDeleteModal(true)
-  }
+}
 
-  const confirmDelete = async () => {
+const confirmDelete = async () => {
     if (projectToDelete) {
-      const response = await fetch(`http://127.0.0.1:8000/projets/${projectToDelete.id}`, {
-        method: "DELETE",
-      })
-      if (response.ok) {
-        setProjects(projects.filter((p) => p.id !== projectToDelete.id))
-        setFilteredProjects(filteredProjects.filter((p) => p.id !== projectToDelete.id))
-        setShowDeleteModal(false)
-        setProjectToDelete(null)
-      }
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/projets/${projectToDelete.id}`, {
+                method: "DELETE",
+            })
+            if (response.ok) {
+                // Mettre à jour les états après la suppression du projet
+                setProjects(projects.filter((p) => p.id !== projectToDelete.id))
+                setFilteredProjects(filteredProjects.filter((p) => p.id !== projectToDelete.id))
+                setShowDeleteModal(false)
+                setProjectToDelete(null)
+            } else {
+                // Gérer l'échec de la suppression
+                console.error("Error deleting project")
+            }
+        } catch (error) {
+            console.error("Error deleting project:", error)
+        }
     }
-  }
+}
+
+
+  
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -255,9 +266,8 @@ const ProjectsPage = () => {
                             <div className="text-sm text-gray-900">{new Date(project.dateDebut).toLocaleDateString()}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <Link to={`/editProjet/${project.id}`} className="text-blue-600 hover:text-blue-800">
-                              <Edit className="h-5 w-5" />
-                            </Link>
+                          <Link to={`/edit/${project.id}`} className="text-blue-600 hover:text-blue-800">
+                              <Edit className="h-5 w-5" /></Link>
                             <button
                               onClick={() => handleDeleteClick(project)}
                               className="ml-4 text-red-600 hover:text-red-800"
