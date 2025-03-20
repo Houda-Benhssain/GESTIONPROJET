@@ -1,12 +1,10 @@
 import React from "react"
 import { useState, useRef, useEffect } from "react"
-import { Bell, HelpCircle, Settings, Search, User, LogOut, Globe, ChevronDown, Check } from "lucide-react"
+import { Bell, HelpCircle, Settings, Search, User, LogOut, Globe, Check, Users,MessageSquare } from "lucide-react"
 import { Link } from "react-router-dom"
-import { fetchNotifications,  markAllAsRead } from "./Notifications"
 import logo from "../../Image/square.png";
 
-
-export default function Header() {
+export default function HeaderChefProjet() {
   const [activeTab, setActiveTab] = useState("")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
@@ -19,10 +17,6 @@ export default function Header() {
   const settingsMenuRef = useRef(null)
   const notificationsRef = useRef(null)
   const helpMenuRef = useRef(null)
-
-  const handleTabClick = (tab) => {
-    setActiveTab(tab)
-  }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -63,8 +57,24 @@ export default function Header() {
   const loadNotifications = async () => {
     setLoading(true)
     try {
-      const data = await fetchNotifications()
-      setNotifications(data)
+      // Mock data for notifications since fetchNotifications is not available
+      const mockNotifications = [
+        {
+          id: 1,
+          title: "New Task Assigned",
+          message: "You have been assigned a new task",
+          time: "10 minutes ago",
+          read: false,
+        },
+        {
+          id: 2,
+          title: "Project Update",
+          message: "Dashboard project has been updated",
+          time: "1 hour ago",
+          read: true,
+        },
+      ]
+      setNotifications(mockNotifications)
     } catch (error) {
       console.error("Failed to fetch notifications:", error)
     } finally {
@@ -72,10 +82,22 @@ export default function Header() {
     }
   }
 
+  const handleMarkAsRead = async (id, e) => {
+    e.stopPropagation()
+    try {
+      // Mock markAsRead functionality
+      setNotifications(
+        notifications.map((notification) => (notification.id === id ? { ...notification, read: true } : notification)),
+      )
+    } catch (error) {
+      console.error("Failed to mark notification as read:", error)
+    }
+  }
+
   const handleMarkAllAsRead = async (e) => {
     e.stopPropagation()
     try {
-      await markAllAsRead()
+      // Mock markAllAsRead functionality
       setNotifications(notifications.map((notification) => ({ ...notification, read: true })))
     } catch (error) {
       console.error("Failed to mark all notifications as read:", error)
@@ -120,7 +142,9 @@ export default function Header() {
             {/* Logo */}
             <div className="flex items-center mr-4">
               <div className="text-gray-500 p-2 rounded hover:bg-gray-100">
-                <img  src={logo}/>
+                <Link to="/dashbord">
+                <img src={logo} />
+                </Link>
               </div>
               <span className="text-xl font-bold ml-1">PlanIt</span>
             </div>
@@ -137,93 +161,70 @@ export default function Header() {
                 </svg>
               </button>
             </div>
-<Link
-                to="/adminhome"
-                className={`px-3 py-2 rounded flex items-center ${
-                  activeTab === "dashboards"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                }`}
-              >
-                {" "}
-                Tableaux de bord
-              </Link>
+
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-1">
-              <div className="relative group">
-                <button
-                  className={`px-3 py-2 rounded flex items-center ${
-                    activeTab === "your-work"
-                      ? "text-blue-600 border-b-2 border-blue-600"
-                      : "text-gray-600 hover:bg-gray-100"
-                  }`}
-                  onClick={() => handleTabClick("your-work")}
-                >
-                  Your work
-                  <ChevronDown className="ml-1 h-4 w-4" />
-                </button>
-                <div className="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg z-50 border border-gray-200 hidden group-hover:block">
-                  <div className="py-1">
-                    <Link
-                      to="/your-work/assigned"
-                      className="block px-4 py-2 text-sm text-blue-600 border-l-2 border-blue-600 bg-blue-50 hover:bg-blue-100"
-                    >
-                      Assigned to me
-                    </Link>
-                    <Link to="/your-work/boards" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Boards
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              <Link
+                to="/dashboard"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "dashboard"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`} >
+                Dashboard
+              </Link>
 
               <Link
-                to="/projects"
+                to="/projects/ChefProjet"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "projects"
                     ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                }`}
-              >
-                {" "}
-                Projets
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}>
+                Projects
               </Link>
 
-              
-
               <Link
-                to="/clients"
+                to="/clients/ChefProjet"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "clients"
                     ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                }`}
-              >
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}>
                 Clients
               </Link>
 
               <Link
-                to="/tasks"
+                to="/tasks/ChefProjet"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "tasks"
                     ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}  >
+                Taches
+              </Link>
+
+              <Link
+                to="/team/ChefProjet"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "team"
+                    ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                }`}
-              >
-                Tâches
+                }`}  >
+                <Users className="h-4 w-4 mr-1" />
+                Membres d'équipe
+              </Link>
+              <Link
+                to="/chat/ChefProjet"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "messages"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                }`} >
+                <MessageSquare className="h-4 w-4 mr-1" />
+                Messages
               </Link>
             </nav>
           </div>
 
           {/* Right side - Actions */}
           <div className="flex items-center space-x-2">
-            <Link
-              to="/createUser"
-              className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700"
-            >
-              Créer
-            </Link>
-
             <div className="relative hidden md:block w-64">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-gray-400" />
@@ -231,22 +232,19 @@ export default function Header() {
               <input
                 type="text"
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Search"
-              />
+                placeholder="Search"/>
             </div>
 
             {/* Notifications Button with Dropdown */}
             <div className="relative" ref={notificationsRef}>
               <button
                 onClick={toggleNotifications}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full relative"
-              >
+                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full relative" >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
                   <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">
                     {unreadCount}
-                  </span>
-                )}
+                  </span>)}
               </button>
 
               {isNotificationsOpen && (
@@ -255,18 +253,18 @@ export default function Header() {
                     <div className="px-4 py-2 flex justify-between items-center border-b border-gray-200">
                       <h3 className="text-sm font-medium text-gray-900">Notifications</h3>
                       <button onClick={handleMarkAllAsRead} className="text-xs text-blue-600 hover:text-blue-800">
-                      Marquer tout comme lu
+                        Mark all as read
                       </button>
                     </div>
 
                     {loading ? (
                       <div className="px-4 py-6 text-center text-gray-500">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-500 mx-auto mb-2"></div>
-                        <p>Chargement des notifications...</p>
+                        <p>Loading notifications...</p>
                       </div>
                     ) : notifications.length === 0 ? (
                       <div className="px-4 py-6 text-center text-gray-500">
-                        <p>Aucune notification</p>
+                        <p>No notifications</p>
                       </div>
                     ) : (
                       notifications.map((notification) => (
@@ -286,8 +284,7 @@ export default function Header() {
                               <button
                                 onClick={(e) => handleMarkAsRead(notification.id, e)}
                                 className="text-blue-500 hover:text-blue-700"
-                                title="Mark as read"
-                              >
+                                title="Mark as read" >
                                 <Check className="h-4 w-4" />
                               </button>
                             )}
@@ -298,7 +295,7 @@ export default function Header() {
 
                     <div className="px-4 py-2 text-center border-t border-gray-200">
                       <Link to="/notifications" className="text-sm text-blue-600 hover:text-blue-800">
-                      Voir toutes les notifications
+                        View all notifications
                       </Link>
                     </div>
                   </div>
@@ -308,57 +305,38 @@ export default function Header() {
 
             {/* Help Button with Documentation Popup */}
             <div className="relative" ref={helpMenuRef}>
-              <button
+             <Link to="/documentation">
+             <button
                 onClick={toggleHelpMenu}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none"
-              >
+                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none" >
                 <HelpCircle className="h-5 w-5" />
               </button>
 
-              {isHelpMenuOpen && (
-                <div className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg z-50 border border-gray-200">
-                  <div className="py-3 px-4">
-                    <div className="text-lg font-medium mb-2">Documentation</div>
-                    <p className="text-sm text-gray-600 mb-3">
-                    PlanIt est un outil de gestion de projet qui aide les équipes à organiser les tâches, suivre les progrès et collaborer efficacement. Utilisez le menu de navigation pour accéder à vos projets, tableaux de bord et tâches. Le bouton de création vous permet d'ajouter de nouveaux éléments à votre espace de travail.
-                    </p>
-                    <p className="text-sm text-gray-600 mb-3">
-                    La section Projets vous permet de créer et de gérer vos projets. Vous pouvez attribuer des membres d'équipe, définir des échéances et suivre les progrès. Le tableau de bord offre une vue d'ensemble de tous vos projets et tâches. Utilisez la section Clients pour gérer les informations des clients et les affectations de projets.
-                    </p>
-                    <p className="text-sm text-gray-600">
-                    Les tâches peuvent être créées, attribuées et suivies via la section Tâches. Vous pouvez définir des priorités, des dates d'échéance et suivre l'état de chaque tâche. Utilisez la fonction de notifications pour rester informé des changements et des affectations. Pour des instructions plus détaillées, veuillez contacter le support.
-                    </p>
-                  </div>
-                </div>
-              )}
+             </Link>
             </div>
 
             {/* Settings Button with Dropdown */}
             <div className="relative" ref={settingsMenuRef}>
               <button
                 onClick={toggleSettingsMenu}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none"
-              >
+                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none">
                 <Settings className="h-5 w-5" />
               </button>
 
               {isSettingsMenuOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 border border-gray-200">
                   <div className="py-1">
-                    <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">Paramètres</div>
+                    <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">Settings</div>
 
                     <Link
-                      to="/settings/profile"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
+                      to="/profile/ChefProjet"
+                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                       <User className="h-4 w-4 mr-2" />
-                      Paramètres du profil
+                      Profile settings
                     </Link>
-
                     <Link
                       to="/settings/language"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
+                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" >
                       <Globe className="h-4 w-4 mr-2" />
                       Language & region
                     </Link>
@@ -371,21 +349,20 @@ export default function Header() {
             <div className="relative" ref={profileMenuRef}>
               <button
                 onClick={toggleProfileMenu}
-                className="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center focus:outline-none"
-              >
-                <span className="font-medium text-sm">H</span>
+                className="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center focus:outline-none">
+                <span className="font-medium text-sm">C</span>
               </button>
 
               {isProfileMenuOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 border border-gray-200">
                   <div className="py-1">
                     <div className="px-4 py-3 border-b border-gray-200">
-                      <p className="text-sm font-medium text-gray-900">Howard Smith</p>
-                      <p className="text-xs text-gray-500 mt-1">howard.smith@example.com</p>
+                      <p className="text-sm font-medium text-gray-900">Chef de Projet</p>
+                      <p className="text-xs text-gray-500 mt-1">chef.projet@example.com</p>
                     </div>
 
                     <Link
-                      to="/profile"
+                      to="/profile/chefProjet"
                       className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                       <User className="h-4 w-4 mr-2" />
                       Your profile
@@ -401,9 +378,8 @@ export default function Header() {
                     <div className="border-t border-gray-200 mt-1"></div>
 
                     <Link
-                      to="/"
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
-                    >
+                      to="/login"
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign out
                     </Link>
@@ -419,72 +395,66 @@ export default function Header() {
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <div className="space-y-1">
-              <button
-                className={`flex items-center justify-between px-3 py-2 rounded-md text-base font-medium w-full text-left ${
-                  activeTab === "your-work"
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                }`}
-                onClick={() => handleTabClick("your-work")}
-              >
-                Your work
-                <ChevronDown className="h-4 w-4" />
-              </button>
-              <div className="pl-4 space-y-1 border-l-2 border-gray-200 ml-3">
-                <Link
-                  to="/your-work/boards"
-                  className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                  Gant
-                </Link>
-              </div>
-            </div>
             <Link
-              to="/projects"
+              to="/dashboard"
+              className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
+                activeTab === "dashboard"
+                  ? "bg-blue-50 text-blue-700"
+                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              }`} >
+              Dashboard
+            </Link>
+
+            <Link
+              to="/projects/ChefProjet"
               className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
                 activeTab === "projects"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}
-            >
+              }`} >
               Projects
             </Link>
+
             <Link
-              to="/"
-              className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
-                activeTab === "dashboards"
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}
-            >
-              Dashboards
-            </Link>
-            <Link
-              to="/clients"
+              to="/clients/ChefProjet"
               className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
                 activeTab === "clients"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}
-            >
+              }`}  >
               Clients
-            </Link>
-            <Link
-              to="/tasks"
-              className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
-                activeTab === "status"
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}
-            >
-              Tasks
             </Link>
 
             <Link
-              to="/createUser"
-              className="w-full mt-2 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700" >
-              Create
+              to="/tasks/ChefProjet"
+              className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
+                activeTab === "tasks"
+                  ? "bg-blue-50 text-blue-700"
+                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              }`} >
+              Taches
             </Link>
+
+            <Link
+              to="/team/ChefProjet"
+              className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
+                activeTab === "team" ? "bg-blue-50 text-blue-700" : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              }`}>
+              Membres d'équipe
+            </Link>
+          
+              <Link
+                to="/chat/ChefProjet"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "messages"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                }`}
+              >
+                <MessageSquare className="h-4 w-4 mr-1" />
+                Messages
+              </Link>
+
             <div className="relative mt-3">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-gray-400" />
@@ -492,8 +462,7 @@ export default function Header() {
               <input
                 type="text"
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Search"
-              />
+                placeholder="Search"/>
             </div>
           </div>
         </div>
@@ -501,3 +470,4 @@ export default function Header() {
     </header>
   )
 }
+

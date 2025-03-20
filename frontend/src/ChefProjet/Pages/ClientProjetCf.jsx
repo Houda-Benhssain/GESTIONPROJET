@@ -2,24 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Users, UserPlus, Edit, Trash2, Eye, Search, Filter } from "lucide-react";
-import Header from "../component/Header";
-import Footer from "../component/Footer";
+import HeaderChefProjet from "../component/HeaderChefProjet";
+import FooterChefProjet from "../component/FooterChefProjet";
 
-const ClientsPage = () => {
+const ClientProjet = () => {
   const [clients, setClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/clients")
-      .then((response) => {
-        setClients(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the clients:", error);
-      });
-  }, []);
+
 
   // Filter clients based on search term and status
   const filteredClients = clients.filter((client) => {
@@ -38,19 +30,19 @@ const ClientsPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
+      <HeaderChefProjet />
       <main className="flex-grow p-4 md:p-6">
         <div className="max-w-screen-2xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Clients</h1>
-              <p className="text-sm text-gray-500 mt-1">Gérez vos relations avec les clients</p>
+              <p className="text-sm text-gray-500 mt-1">Manage your client relationships</p>
             </div>
             <Link
-              to="/add"
+              to="/add_clients"
               className="mt-4 md:mt-0 flex items-center bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 transition-colors">
               <UserPlus className="h-4 w-4 mr-2" />
-              Ajouter un nouveau client
+              Add New Client
             </Link>
           </div>
 
@@ -69,7 +61,18 @@ const ClientsPage = () => {
                   onChange={(e) => setSearchTerm(e.target.value)} />
               </div>
 
-  
+              <div className="flex items-center">
+                <Filter className="h-4 w-4 text-gray-500 mr-2" />
+                <span className="text-sm text-gray-500 mr-2">Status:</span>
+                <select
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}>
+                  <option value="all">All</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -89,11 +92,15 @@ const ClientsPage = () => {
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                       Contact
                     </th>
-                    
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                      Projet
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                      Projects
                     </th>
                     <th
                       scope="col"
@@ -121,20 +128,26 @@ const ClientsPage = () => {
                           <div className="text-sm text-gray-900">{client.telephone}</div>
                           <div className="text-sm text-gray-500">{client.utilisateur.email}</div>
                         </td>
+                        <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+                          <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${client.status === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>
+                            {client.status === "active" ? "Active" : "Inactive"}
+                          </span>
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
-  {client.projets && client.projets.length > 0 ? (
-    client.projets.map((projet) => (
-      <div key={projet.id} className="text-blue-600">{projet.nom}</div>
-    ))
-  ) : (
-    <span className="text-gray-500">Aucun projet</span>
-  )}
-</td>
+                       {client.projets && client.projets.length > 0 ? (
+                        client.projets.map((projet) => (
+                         <div key={projet.id} className="text-blue-600">{projet.nom}</div>
+                        ))
+                       ) : (
+                         <span className="text-gray-500">No projects</span>
+                       )}
+                       </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-2">
-                            <Link to  ="/detailsclient"className="text-blue-600 hover:text-blue-900" title="View details">
+                            <button className="text-blue-600 hover:text-blue-900" title="View details">
                               <Eye className="h-4 w-4" />
-                            </Link>
+                            </button>
                             <Link
                               to={`/editClient/${client.id}`}
                               className="text-indigo-600 hover:text-indigo-900"
@@ -151,7 +164,7 @@ const ClientsPage = () => {
                   ) : (
                     <tr>
                       <td colSpan="5" className="px-6 py-4 text-center text-sm text-gray-500">
-                      Aucun client trouvé
+                        No clients found
                       </td>
                     </tr>
                   )}
@@ -161,10 +174,10 @@ const ClientsPage = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      <FooterChefProjet />
     </div>
   );
 };
 
-export default ClientsPage;
+export default ClientProjet;
 
