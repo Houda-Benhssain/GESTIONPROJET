@@ -19,6 +19,10 @@ class Client extends Model
     {
         return $this->belongsTo(Utilisateur::class, 'user_id'); // Assurez-vous que `user_id` existe dans la table `clients`
     }
+    public function projet()
+{
+    return $this->belongsTo(Projet::class); // Assure-toi que le nom de la relation est correct
+}
 
     public function projets()
 {

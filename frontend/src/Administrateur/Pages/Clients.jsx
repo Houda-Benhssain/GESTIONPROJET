@@ -71,18 +71,7 @@ const ClientsPage = () => {
                   onChange={(e) => setSearchTerm(e.target.value)} />
               </div>
 
-              <div className="flex items-center">
-                <Filter className="h-4 w-4 text-gray-500 mr-2" />
-                <span className="text-sm text-gray-500 mr-2">Statut:</span>
-                <select
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}>
-                  <option value="all">All</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
+  
             </div>
           </div>
 
@@ -102,11 +91,7 @@ const ClientsPage = () => {
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                       Contact
                     </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                      Statut
-                    </th>
+                    
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
@@ -138,26 +123,20 @@ const ClientsPage = () => {
                           <div className="text-sm text-gray-900">{client.telephone}</div>
                           <div className="text-sm text-gray-500">{client.utilisateur.email}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
-                          <span
-                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${client.status === "active" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>
-                            {client.status === "active" ? "Active" : "Inactive"}
-                          </span>
-                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
   {client.projets && client.projets.length > 0 ? (
     client.projets.map((projet) => (
       <div key={projet.id} className="text-blue-600">{projet.nom}</div>
     ))
   ) : (
-    <span className="text-gray-500">No projects</span>
+    <span className="text-gray-500">Aucun projet</span>
   )}
 </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-2">
-                            <button className="text-blue-600 hover:text-blue-900" title="View details">
+                            <Link to  ="/detailsclient"className="text-blue-600 hover:text-blue-900" title="View details">
                               <Eye className="h-4 w-4" />
-                            </button>
+                            </Link>
                             <Link
                               to={`/editClient/${client.id}`}
                               className="text-indigo-600 hover:text-indigo-900"

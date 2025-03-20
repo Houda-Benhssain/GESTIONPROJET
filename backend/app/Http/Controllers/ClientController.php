@@ -27,12 +27,14 @@ class ClientController extends Controller
     }
     public function index()
     {
-        $clients = Client::with('utilisateur')->get();
+        $clients = Client::with('utilisateur','projets')->get();
+        // $clients = Client::with('projets')->get();
         return response()->json($clients);
     }
     public function update(Request $request, $id)
     {
         $client = Client::with('utilisateur')->find($id);
+        $client = Client::with('projets')->find($id);
     
         if (!$client) {
             return response()->json(['message' => 'Client non trouvé'], 404);
@@ -48,6 +50,33 @@ class ClientController extends Controller
     
         return response()->json(['message' => 'Client et utilisateur mis à jour avec succès']);
     }
+    public function store(Request $request)
+{
+    // Validation des données entrantes
+    $request->validate([
+        'user_id' => 'required|exists:utilisateurs,id',
+        'telephone' => 'nullable|string|max:20',
+        'adresse' => 'nullable|string|max:255',
+    ]);
+
+    // Vérifier si l'utilisateur a bien le rôle "client"
+    $utilisateur = \App\Models\Utilisateur::find($request->user_id);
+
+    if (!$utilisateur || $utilisateur->role !== 'client') {
+        return response()->json(['message' => 'Seuls les utilisateurs avec le rôle "client" peuvent être ajoutés en tant que client.'], 403);
+    }
+
+    // Création du client
+    $client = Client::create([
+        
+        'telephone' => $request->telephone,
+        'adresse' => $request->adresse,
+        'user_id' => $request->user_id,
+    ]);
+
+    return response()->json(['message' => 'Client ajouté avec succès', 'client' => $client], 201);
+}
+
 }
 
 

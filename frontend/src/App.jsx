@@ -27,7 +27,8 @@ function App() {
        <Route path="/addProjet" element={<AddProject/>}/>
        <Route path="/tasks" element={<TasksPage/>} />
        <Route path="/create-task" element= {<AddTaches/>} />
-       <Route path="/edit-task/:id" element= {<EditTaches/>} />
+       <Route path="/tasks/:id/edit" element={<EditTaches />} />
+
        <Route path="/Profile" element= {<ProfilePage/>} />
        
     </Routes>

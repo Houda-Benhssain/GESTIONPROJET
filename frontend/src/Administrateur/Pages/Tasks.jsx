@@ -19,6 +19,9 @@ const TasksPage = () => {
     dueDate: "all",
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+
   useEffect(() => {
     loadTasks();
   }, []);
@@ -42,8 +45,7 @@ const TasksPage = () => {
 
   const filterTasks = () => {
     let result = [...tasks];
-  
-   
+
     if (searchTerm) {
       result = result.filter(
         (task) =>
@@ -51,11 +53,11 @@ const TasksPage = () => {
           task.projet.nom.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-  
+
     if (filters.statut !== "all") {
       result = result.filter((task) => task.statut === filters.statut);
     }
-  
+
     if (filters.project !== "all") {
       result = result.filter((task) => task.projet.nom === filters.project);
     }
@@ -63,19 +65,17 @@ const TasksPage = () => {
     if (filters.priorite !== "all") {
       result = result.filter((task) => task.priorite === filters.priorite);
     }
-  
-    
+
     if (filters.assignedTo !== "all") {
       result = result.filter((task) => task.user.nom === filters.assignedTo);
     }
-  
+
     if (filters.dueDate !== "all") {
       result = result.filter((task) => task.dateFin === filters.dueDate);
     }
-  
+
     setFilteredTasks(result);
   };
-  
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -88,13 +88,39 @@ const TasksPage = () => {
     });
   };
 
+  const handleDelete = async () => {
+    if (!taskToDelete) return;
+
+    try {
+      await fetch(`http://127.0.0.1:8000/taches/${taskToDelete.id}`, {
+        method: "DELETE",
+      });
+      // Supprimer la tâche de la liste sans recharger la page
+      setTasks(tasks.filter((task) => task.id !== taskToDelete.id));
+      setFilteredTasks(filteredTasks.filter((task) => task.id !== taskToDelete.id));
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la tâche:", error);
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setTaskToDelete(null);
+  };
+
+  const openDeleteModal = (task) => {
+    setTaskToDelete(task);
+    setIsModalOpen(true);
+  };
+
   const getStatusColor = (statut) => {
     switch (statut) {
       case "en attente":
         return "bg-gray-100 text-gray-800";
       case "en cours":
         return "bg-blue-100 text-blue-800";
-      case "terminé":
+      case "terminee":
         return "bg-green-100 text-green-800";
       case "annulee":
         return "bg-red-100 text-red-800";
@@ -156,7 +182,7 @@ const TasksPage = () => {
                   <input
                     type="text"
                     className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    placeholder="Search tasks..."
+                    placeholder="Rechercher des tâches..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                   />
@@ -199,23 +225,15 @@ const TasksPage = () => {
                   filters.priorite !== "all" ||
                   filters.assignedTo !== "all" ||
                   filters.dueDate !== "all"
-                    ? "Try adjusting your search or filter criteria"
-                    : "Get started by creating your first task"}
+                    ? "Essayez d'ajuster vos critères de recherche."
+                    : "Il semble que vous n'ayez encore aucune tâche."}
                 </p>
-                {!searchTerm &&
-                  filters.statut === "all" &&
-                  filters.project === "all" &&
-                  filters.priorite === "all" &&
-                  filters.assignedTo === "all" &&
-                  filters.dueDate === "all" && (
-                    <Link
-                      to="/create-task"
-                      className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Task
-                    </Link>
-                  )}
+                <Link
+                  to="/create-task"
+                  className="mt-6 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700"
+                >
+                  Ajouter une tâche
+                </Link>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -223,7 +241,7 @@ const TasksPage = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Tâche
+                        Tâche
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Projet
@@ -232,13 +250,13 @@ const TasksPage = () => {
                         Statut
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Priorité
+                        Priorité
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date d'échéance
+                        Date d'échéance
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Attribuer à
+                        Attribuer à
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
@@ -271,22 +289,23 @@ const TasksPage = () => {
                         <td className="px-4 py-3 text-sm text-gray-500">
                           {formatDate(task.dateFin)}
                           {isOverdue(task.dateFin, task.statut) && (
-                            <span className="text-red-500 ml-2">(Overdue)</span>
+                            <span className="text-red-500 ml-2">(En retard)</span>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                         
-                            <span className="px-4 py-3 text-sm text-gray-500">{task.user.nom}</span>
-                          
-                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">{task.user.nom}</td>
                         <td className="px-4 py-3 text-sm font-medium">
-                          <Link to={`/tasks/${task.id}/edit`} className="text-blue-600 hover:text-blue-800">
-                            <Edit className="h-5 w-5" />
-                          </Link>
-                          <button className="text-red-600 hover:text-red-800 ml-4">
-                            <Trash2 className="h-5 w-5" />
-                          </button>
-                        </td>
+  <div className="flex justify-start gap-4 items-center">
+    <Link to={`/tasks/${task.id}/edit`} className="text-blue-600 hover:text-blue-800">
+      <Edit className="h-5 w-5" />
+    </Link>
+    <button
+      onClick={() => openDeleteModal(task)}
+      className="text-red-600 hover:text-red-800"
+    >
+      <Trash2 className="h-5 w-5" />
+    </button>
+  </div>
+</td>
                       </tr>
                     ))}
                   </tbody>
@@ -297,6 +316,30 @@ const TasksPage = () => {
         </div>
       </main>
       <Footer />
+
+      {/* Modal de confirmation */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold text-gray-900">Êtes-vous sûr ?</h3>
+            <p className="text-sm text-gray-500 mt-2">Voulez-vous vraiment supprimer cette tâche ? Cette action est irréversible.</p>
+            <div className="mt-4 flex justify-end gap-4">
+              <button
+                onClick={handleModalClose}
+                className="text-gray-600 hover:text-gray-800"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleDelete}
+                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
