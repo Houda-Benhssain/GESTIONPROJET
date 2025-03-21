@@ -54,16 +54,15 @@ function App() {
        <Route path="/Profile" element= {<ProfilePage/>} />
        
        <Route path="/edit-task/:id" element= {<EditTaches/>} />
-       <Route path="/Profile" element= {<ProfilePage/>} /> 
        <Route path="/editProfileAdmin" element= {<EditProfileAdmin/>} /> 
 
        <Route path="/documentationAdmin" element= {<DocumentationAdmin/>} /> 
-       <Route path="/createUser" element= {<UserPage/>} /> 
+       <Route path="/users" element= {<UserPage/>} /> 
 
 
 
           {/* route chef de projet  */}
-      <Route path="/dashboard" element= {<HomeChefProjet/>} />
+      <Route path="/managerdashboard" element= {<HomeChefProjet/>} />
       <Route path="/profile/chefProjet" element= {<ProfilePageCf/>} />
       <Route path="/projects/ChefProjet" element= {<ProjectChefProjet/>} />
       <Route path="/add_project" element= {<Add_Project_ChefProjet/>} />

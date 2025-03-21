@@ -33,8 +33,8 @@ class ClientController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $client = Client::with('utilisateur')->find($id);
-        $client = Client::with('projets')->find($id);
+        $client = Client::with(['utilisateur', 'projets'])->find($id);
+
     
         if (!$client) {
             return response()->json(['message' => 'Client non trouvé'], 404);
@@ -76,6 +76,21 @@ class ClientController extends Controller
 
     return response()->json(['message' => 'Client ajouté avec succès', 'client' => $client], 201);
 }
+
+public function destroy($id)
+{
+    $client = Client::find($id);
+
+    if (!$client) {
+        return response()->json(['message' => 'Client non trouvé'], 404);
+    }
+
+    // Supprimer le client
+    $client->delete();
+
+    return response()->json(['message' => 'Client supprimé avec succès']);
+}
+
 
 }
 

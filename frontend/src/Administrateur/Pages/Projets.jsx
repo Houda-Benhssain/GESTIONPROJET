@@ -294,8 +294,8 @@ const confirmDelete = async () => {
       {showDeleteModal && (
         <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-10">
           <div className="bg-white p-6 rounded-md shadow-lg">
-            <h3 className="text-lg font-semibold">Confirm Deletion</h3>
-            <p className="mt-2">Are you sure you want to delete this project?</p>
+            <h3 className="text-lg font-semibold">Confirmer la suppression</h3>
+            <p className="mt-2">Êtes-vous sûr de vouloir supprimer ce projet ??</p>
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setShowDeleteModal(false)}

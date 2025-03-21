@@ -30,8 +30,8 @@ export default function Login() {
         // Redirection selon le rôle
         if (response.data.role === "administrateur") {
           navigate("/adminhome");
-        } else if (response.data.role === "membre equipe") {
-          navigate("/memberdashboard");
+        } else if (response.data.role === "chef de projet") {
+          navigate("/managerdashboard");
         }
       } else {
         setError(response.data.error || "Identifiants incorrects");

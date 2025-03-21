@@ -212,6 +212,16 @@ export default function Header() {
               >
                 Tâches
               </Link>
+              <Link
+                to="/users"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "users"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                }`}
+              >
+                Utilisateurs
+              </Link>
             </nav>
           </div>
 
@@ -307,32 +317,14 @@ export default function Header() {
             </div>
 
             {/* Help Button with Documentation Popup */}
-            <div className="relative" ref={helpMenuRef}>
-              <button
-                onClick={toggleHelpMenu}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none"
-              >
-                <HelpCircle className="h-5 w-5" />
-              </button>
-
-              {isHelpMenuOpen && (
-                <div className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg z-50 border border-gray-200">
-                  <div className="py-3 px-4">
-                    <div className="text-lg font-medium mb-2">Documentation</div>
-                    <p className="text-sm text-gray-600 mb-3">
-                    PlanIt est un outil de gestion de projet qui aide les équipes à organiser les tâches, suivre les progrès et collaborer efficacement. Utilisez le menu de navigation pour accéder à vos projets, tableaux de bord et tâches. Le bouton de création vous permet d'ajouter de nouveaux éléments à votre espace de travail.
-                    </p>
-                    <p className="text-sm text-gray-600 mb-3">
-                    La section Projets vous permet de créer et de gérer vos projets. Vous pouvez attribuer des membres d'équipe, définir des échéances et suivre les progrès. Le tableau de bord offre une vue d'ensemble de tous vos projets et tâches. Utilisez la section Clients pour gérer les informations des clients et les affectations de projets.
-                    </p>
-                    <p className="text-sm text-gray-600">
-                    Les tâches peuvent être créées, attribuées et suivies via la section Tâches. Vous pouvez définir des priorités, des dates d'échéance et suivre l'état de chaque tâche. Utilisez la fonction de notifications pour rester informé des changements et des affectations. Pour des instructions plus détaillées, veuillez contacter le support.
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-
+             <div className="relative" ref={helpMenuRef}>
+                  <Link to="/documentationAdmin">
+                    <button onClick={toggleHelpMenu} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none" >
+                            <HelpCircle className="h-5 w-5" />
+                    </button>
+                  </Link>
+              </div>
+         
             {/* Settings Button with Dropdown */}
             <div className="relative" ref={settingsMenuRef}>
               <button
@@ -402,10 +394,9 @@ export default function Header() {
 
                     <Link
                       to="/"
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
-                    >
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
                       <LogOut className="h-4 w-4 mr-2" />
-                      Sign out
+                      Se déconnecter
                     </Link>
                   </div>
                 </div>
@@ -480,11 +471,7 @@ export default function Header() {
               Tasks
             </Link>
 
-            <Link
-              to="/createUser"
-              className="w-full mt-2 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700" >
-              Create
-            </Link>
+            
             <div className="relative mt-3">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-gray-400" />
@@ -492,7 +479,7 @@ export default function Header() {
               <input
                 type="text"
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Search"
+                placeholder="recherche"
               />
             </div>
           </div>

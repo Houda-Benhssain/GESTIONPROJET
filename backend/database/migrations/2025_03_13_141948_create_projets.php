@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('dateFin');
             $table->enum('statut', ['en attente', 'en cours', 'termine', 'annule'])->default('en attente');
             $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('utilisateurs')->onDelete('cascade');
             $table->timestamps();
         });
     }

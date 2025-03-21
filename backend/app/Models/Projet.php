@@ -20,6 +20,7 @@ class Projet extends Model
         'dateFin',
         'statut',
         'client_id',
+        'user_id',  // Ajout du user_id
     ];
 
     // Constantes pour les statuts
@@ -32,6 +33,12 @@ class Projet extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    // Relation avec l'utilisateur
+    public function user()
+    {
+        return $this->belongsTo(Utilisateur::class);  // Relation avec l'utilisateur
     }
 
     // Relation avec les tâches
@@ -60,10 +67,10 @@ class Projet extends Model
     // Mutateur pour enregistrer le statut
     public function setStatusAttribute($value)
     {
-        if (!in_array($value, [self::STATUT_A_FAIRE, self::STATUT_EN_COURS, self::STATUT_FINI])) {
+        if (!in_array($value, [self::STATUT_ENATTENTE, self::STATUT_EN_COURS, self::STATUT_FINI, self::STATUT_ANNULE])) {
             throw new \InvalidArgumentException("Statut invalide");
         }
-        $this->attributes['status'] = $value;
+        $this->attributes['statut'] = $value;  // Correction de l'attribut `status` à `statut`
     }
 }
 
