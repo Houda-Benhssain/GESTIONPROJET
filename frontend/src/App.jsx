@@ -45,17 +45,34 @@ function App() {
   return (
     <>
     <Routes>
+<<<<<<< HEAD
       {/* Route Administrateur */}
        <Route path="/login" element={<Login />} />
        <Route path="/" element={<Home />} />   
+=======
+
+       <Route path="/" element={<Login />} />
+       <Route path="/adminhome" element={<Home />} />   
+>>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
        <Route path="/clients" element={<ClientsPage />} />
        <Route path="/add" element={<AddClientPage/>} />
        <Route path="/editClient/:id" element={<EditClient/>}/>
        <Route path="/projects" element={<ProjectsPage/>} />
        <Route path="/edit/:id" element={<EditProject/>}/>
+<<<<<<< HEAD
        <Route path="/addProjet" element={<AddProject/>}/>
        <Route path="/tasks" element={<TasksPage/>} />
        <Route path="/addTache" element= {<AddTaches/>} />
+=======
+       <Route path="/edit/:id" element={<EditProject />} />
+       <Route path="/addProjet" element={<AddProject/>}/>
+       <Route path="/tasks" element={<TasksPage/>} />
+       <Route path="/create-task" element= {<AddTaches/>} />
+       <Route path="/tasks/:id/edit" element={<EditTaches />} />
+
+       <Route path="/Profile" element= {<ProfilePage/>} />
+       
+>>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
        <Route path="/edit-task/:id" element= {<EditTaches/>} />
        <Route path="/Profile" element= {<ProfilePage/>} /> 
        <Route path="/documentationAdmin" element= {<DocumentationAdmin/>} /> 

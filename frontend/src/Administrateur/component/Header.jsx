@@ -257,6 +257,7 @@ export default function Header() {
                   </div>
 
             {/* Help Button with Documentation Popup */}
+<<<<<<< HEAD
              <div className="relative" ref={helpMenuRef}>
                   <Link to="/documentationAdmin">
                     <button onClick={toggleHelpMenu} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none" >
@@ -265,6 +266,34 @@ export default function Header() {
                   </Link>
               </div>
          
+=======
+            <div className="relative" ref={helpMenuRef}>
+              <button
+                onClick={toggleHelpMenu}
+                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none"
+              >
+                <HelpCircle className="h-5 w-5" />
+              </button>
+
+              {isHelpMenuOpen && (
+                <div className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg z-50 border border-gray-200">
+                  <div className="py-3 px-4">
+                    <div className="text-lg font-medium mb-2">Documentation</div>
+                    <p className="text-sm text-gray-600 mb-3">
+                    PlanIt est un outil de gestion de projet qui aide les équipes à organiser les tâches, suivre les progrès et collaborer efficacement. Utilisez le menu de navigation pour accéder à vos projets, tableaux de bord et tâches. Le bouton de création vous permet d'ajouter de nouveaux éléments à votre espace de travail.
+                    </p>
+                    <p className="text-sm text-gray-600 mb-3">
+                    La section Projets vous permet de créer et de gérer vos projets. Vous pouvez attribuer des membres d'équipe, définir des échéances et suivre les progrès. Le tableau de bord offre une vue d'ensemble de tous vos projets et tâches. Utilisez la section Clients pour gérer les informations des clients et les affectations de projets.
+                    </p>
+                    <p className="text-sm text-gray-600">
+                    Les tâches peuvent être créées, attribuées et suivies via la section Tâches. Vous pouvez définir des priorités, des dates d'échéance et suivre l'état de chaque tâche. Utilisez la fonction de notifications pour rester informé des changements et des affectations. Pour des instructions plus détaillées, veuillez contacter le support.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+>>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
             {/* Settings Button with Dropdown */}
             <div className="relative" ref={settingsMenuRef}>
               <button
@@ -332,8 +361,14 @@ export default function Header() {
                     <div className="border-t border-gray-200 mt-1"></div>
 
                     <Link
+<<<<<<< HEAD
                       to="/login"
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
+=======
+                      to="/"
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
+                    >
+>>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign out
                     </Link>

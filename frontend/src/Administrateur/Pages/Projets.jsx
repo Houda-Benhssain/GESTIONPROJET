@@ -266,15 +266,19 @@ const confirmDelete = async () => {
                             <div className="text-sm text-gray-900">{new Date(project.dateDebut).toLocaleDateString()}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <Link to={`/edit/${project.id}`} className="text-blue-600 hover:text-blue-800">
-                              <Edit className="h-5 w-5" /></Link>
-                            <button
-                              onClick={() => handleDeleteClick(project)}
-                              className="ml-4 text-red-600 hover:text-red-800"
-                            >
-                              <Trash2 className="h-5 w-5" />
-                            </button>
-                          </td>
+  <div className="flex justify-start gap-4 items-center">
+    <Link to={`/edit/${project.id}`} className="text-blue-600 hover:text-blue-800">
+      <Edit className="h-5 w-5" />
+    </Link>
+    <button
+      onClick={() => handleDeleteClick(project)}
+      className="text-red-600 hover:text-red-800"
+    >
+      <Trash2 className="h-5 w-5" />
+    </button>
+  </div>
+</td>
+
                         </tr>
                       )
                     })}

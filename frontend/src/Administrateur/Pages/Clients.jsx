@@ -39,6 +39,7 @@ const DeleteClientModal = ({ client, onCancel, onConfirm }) => {
 }
 
 const ClientsPage = () => {
+<<<<<<< HEAD
   const [clients, setClients] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
@@ -46,6 +47,13 @@ const ClientsPage = () => {
   const itemsPerPage = 10
   const [clientToDelete, setClientToDelete] = useState(null)
 
+=======
+  const [clients, setClients] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+>>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
   useEffect(() => {
     const mockClients = [
       {
@@ -169,9 +177,16 @@ const ClientsPage = () => {
                   placeholder="Search clients..."
                   className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                   value={searchTerm}
+<<<<<<< HEAD
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
+=======
+                  onChange={(e) => setSearchTerm(e.target.value)} />
+              </div>
+
+  
+>>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
             </div>
           </div>
 
@@ -187,10 +202,17 @@ const ClientsPage = () => {
                     >
                       Contact
                     </th>
+<<<<<<< HEAD
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell"
                     >
+=======
+                    
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+>>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
                       Projet
                     </th>
                     <th
@@ -209,6 +231,7 @@ const ClientsPage = () => {
                           <div className="text-sm text-gray-900">{client.telephone}</div>
                           <div className="text-sm text-gray-500">{client.utilisateur.email}</div>
                         </td>
+<<<<<<< HEAD
 
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
                           {client.projets && client.projets.length > 0 ? (
@@ -223,6 +246,22 @@ const ClientsPage = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-2">
+=======
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
+  {client.projets && client.projets.length > 0 ? (
+    client.projets.map((projet) => (
+      <div key={projet.id} className="text-blue-600">{projet.nom}</div>
+    ))
+  ) : (
+    <span className="text-gray-500">Aucun projet</span>
+  )}
+</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex justify-end space-x-2">
+                            <Link to  ="/detailsclient"className="text-blue-600 hover:text-blue-900" title="View details">
+                              <Eye className="h-4 w-4" />
+                            </Link>
+>>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
                             <Link
                               to={`/DetailClientCF/${client.id}`}
                               className="text-blue-600 hover:text-blue-900"

@@ -120,13 +120,17 @@ const AddProject = () => {
       <Header />
       <main className="flex-grow">
         <div className="max-w-screen-lg mx-auto px-4 py-6">
-          <div className="flex items-center mb-6">
-            <Link to="/" className="text-gray-500 hover:text-gray-700 mr-4">
-              <ArrowLeft className="h-5 w-5" />
+          <div className="flex items-center mb-6 space-x-4">
+            <Link to="/projects" className="inline-flex items-center text-blue-600 hover:text-blue-800">
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Retour aux projets
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Ajouter un nouveau projet</h1>
+            <div className="flex-grow">
+              <h1 className="text-2xl font-bold text-gray-900">Ajouter un nouveau projet</h1>
+              <p className="text-gray-500">Créez un nouveau projet et assignez-le à un client</p>
+            </div>
           </div>
-
+  
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
@@ -143,7 +147,7 @@ const AddProject = () => {
                 />
                 {errors.nom && <p className="mt-1 text-sm text-red-600">{errors.nom}</p>}
               </div>
-
+  
               <div className="md:col-span-2">
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
                   Description*
@@ -158,7 +162,7 @@ const AddProject = () => {
                 ></textarea>
                 {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
               </div>
-
+  
               <div>
                 <label htmlFor="client_id" className="block text-sm font-medium text-gray-700 mb-1">
                   Client*
@@ -179,7 +183,7 @@ const AddProject = () => {
                 </select>
                 {errors.client_id && <p className="mt-1 text-sm text-red-600">{errors.client_id}</p>}
               </div>
-
+  
               <div>
                 <label htmlFor="statut" className="block text-sm font-medium text-gray-700 mb-1">
                   Statut
@@ -197,7 +201,7 @@ const AddProject = () => {
                   <option value="annule">Annulé</option>
                 </select>
               </div>
-
+  
               <div>
                 <label htmlFor="dateDebut" className="block text-sm font-medium text-gray-700 mb-1">
                   Date de début*
@@ -212,7 +216,7 @@ const AddProject = () => {
                 />
                 {errors.startDate && <p className="mt-1 text-sm text-red-600">{errors.startDate}</p>}
               </div>
-
+  
               <div>
                 <label htmlFor="dateFin" className="block text-sm font-medium text-gray-700 mb-1">
                   Date de fin*
@@ -228,7 +232,7 @@ const AddProject = () => {
                 {errors.endDate && <p className="mt-1 text-sm text-red-600">{errors.endDate}</p>}
               </div>
             </div>
-
+  
             <div className="mt-6 flex justify-end space-x-3">
               <button
                 type="button"
@@ -243,10 +247,7 @@ const AddProject = () => {
                 className={`bg-blue-500 text-white px-6 py-2 rounded-md flex items-center space-x-2 ${saving ? "opacity-50 cursor-not-allowed" : ""}`}
                 disabled={saving}
               >
-                {saving ? <span>Enregistrement...</span> : <>
-                  <Save className="h-5 w-5" />
-                  <span>Enregistrer</span>
-                </>}
+                {saving ? <span>Enregistrement...</span> : <><Save className="h-5 w-5" /><span>Enregistrer</span></>}
               </button>
             </div>
           </form>
@@ -255,6 +256,7 @@ const AddProject = () => {
       <Footer />
     </div>
   );
+  
 };
 export default AddProject;
 

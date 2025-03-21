@@ -35,29 +35,31 @@ class TacheController extends Controller
      * Créer une nouvelle tâche.
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'nom' => 'required|string|max:255',
-        'statut' => ['required', Rule::in(StatutTache::valeurs())],
-        'dateDebut' => 'required|date',
-        'dateFin' => 'required|date|after_or_equal:dateDebut',
-        'priorite' => ['required', Rule::in(PrioriteTache::valeurs())],
-        'project_id' => 'required|exists:projets,id',
-        'user_id' => 'required|exists:utilisateurs,id',
-    ]);
+    {
+        // Validation des données
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'statut' => ['required', Rule::in(Tache::STATUTS)],
+            'dateDebut' => 'required|date',
+            'dateFin' => 'required|date|after_or_equal:dateDebut',
+            'priorite' => ['required', Rule::in(Tache::PRIORITES)],
+            'project_id' => 'required|exists:projets,id',
+            'user_id' => 'required|exists:utilisateurs,id',
+        ]);
 
-    $tache = Tache::create([
-        'nom' => $request->nom,
-        'statut' => $request->statut,
-        'dateDebut' => $request->dateDebut,
-        'dateFin' => $request->dateFin,
-        'priorite' => $request->priorite,
-        'project_id' => $request->project_id,
-        'user_id' => $request->user_id,
-    ]);
+        // Création de la tâche
+        $tache = Tache::create([
+            'nom' => $request->nom,
+            'statut' => $request->statut,
+            'dateDebut' => $request->dateDebut,
+            'dateFin' => $request->dateFin,
+            'priorite' => $request->priorite,
+            'project_id' => $request->project_id,
+            'user_id' => $request->user_id,
+        ]);
 
-    return response()->json($tache, 201);
-}
+        return response()->json($tache, 201); // Retourner la tâche créée avec un code 201
+    }
 
     /**
      * Mettre à jour une tâche existante.
@@ -69,18 +71,20 @@ class TacheController extends Controller
             return response()->json(['error' => 'Tâche non trouvée'], 404);
         }
 
+        // Validation des données pour la mise à jour
         $validatedData = $request->validate([
             'nom' => 'sometimes|string|max:255',
-            'statut' => ['sometimes', Rule::in(['en attente', 'en cours', 'terminee', 'annulee'])],
+            'statut' => ['sometimes', Rule::in(Tache::STATUTS)],
             'dateDebut' => 'sometimes|date',
             'dateFin' => 'sometimes|date|after_or_equal:dateDebut',
-            'priorite' => ['sometimes', Rule::in(['basse', 'moyenne', 'haute', 'critique'])],
+            'priorite' => ['sometimes', Rule::in(Tache::PRIORITES)],
             'project_id' => 'sometimes|exists:projets,id',
             'user_id' => 'sometimes|exists:utilisateurs,id',
         ]);
 
+        // Mise à jour de la tâche avec les données validées
         $tache->update($validatedData);
-        return response()->json($tache);
+        return response()->json($tache); // Retourner la tâche mise à jour
     }
 
     /**
@@ -93,9 +97,9 @@ class TacheController extends Controller
             return response()->json(['error' => 'Tâche non trouvée'], 404);
         }
 
+        // Suppression de la tâche
         $tache->delete();
-        return response()->json(['message' => 'Tâche supprimée avec succès']);
+        return response()->json(['message' => 'Tâche supprimée avec succès']); // Message de succès
     }
 }
-
 
