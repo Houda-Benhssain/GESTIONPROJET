@@ -2,8 +2,8 @@ import React from "react"
 import { useState, useEffect } from "react"
 import { User, Mail, Briefcase, ArrowLeft, MapPin, Save } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
-import Header from "./Header"
-import Footer from "./Footer"
+import Header from "../component/Header"
+import Footer from "../component/Footer"
 
 const EditProfileAdmin = () => {
   const navigate = useNavigate()
@@ -87,11 +87,11 @@ const EditProfileAdmin = () => {
             <Link to="/profile" className="text-gray-500 hover:text-gray-700 mr-4">
               <ArrowLeft className="h-5 w-5" />
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Profile Settings</h1>
           </div>
 
           <div className="bg-white rounded-lg shadow overflow-hidden max-w-2xl mx-auto">
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 flex flex-col items-center">
+            <div className="bg-gradient-to-r from-white-500 to-white-600 p-6 flex flex-col items-center">
               <div className="relative group">
                 <div className="h-24 w-24 rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-white">
                   {previewAvatar || profile.avatar ? (
@@ -106,8 +106,7 @@ const EditProfileAdmin = () => {
                 </div>
                 <label
                   htmlFor="avatar-upload"
-                  className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity"
-                >
+                  className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity" >
                   <span className="text-white text-sm">Change</span>
                 </label>
                 <input

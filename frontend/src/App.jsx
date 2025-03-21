@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes,Route } from "react-router-dom";
+
 import ClientsPage from "./Administrateur/Pages/Clients";
 import AddClientPage from "./Administrateur/component/AddClient";
 import ProjectsPage from "./Administrateur/Pages/Projets";
@@ -10,9 +11,11 @@ import AddProject from "./Administrateur/component/AddProjet";
 import AddTaches from "./Administrateur/component/AddTaches";
 import EditTaches from "./Administrateur/component/EditTache";
 import ProfilePage from "./Administrateur/Pages/Profile";
-import EditProfileAdmin from "./Administrateur/component/EditProfileAdmin";
 import Home from "./Administrateur/Pages/Home";
 import DocumentationAdmin from "./Administrateur/Pages/DocumentationAdmin";
+import DetailClient from "./Administrateur/component/DetailClient";
+import SettingProfile from "./Administrateur/Pages/SettingProfile";
+import DetailClientCF from "./ChefProjet/component/DtailClientCF";
 
 // chef de projet
 import HomeChefProjet from "./ChefProjet/Pages/BodyChefProjet";
@@ -31,43 +34,45 @@ import MembreEquipe from "./ChefProjet/Pages/MembreEquipe";
 import Documentation from "./ChefProjet/component/Documentation";
 import EditProfileCf from "./ChefProjet/component/EditProfileCf";
 import UserPage from "./Administrateur/Pages/UsersPage";
+import EditClientCF from "./ChefProjet/component/EditClientCF";
+// Membre Equipe
+import HomeEquipe from "./MembreEquipe/Pages/BodyEquipe";
+import DocumentationEquipe from "./MembreEquipe/Pages/DocumentationEquipe";
+import ProjetEquipe from "./MembreEquipe/Pages/ProjetEquipe";
 
 
 function App() {
   return (
     <>
     <Routes>
-
+      {/* Route Administrateur */}
        <Route path="/login" element={<Login />} />
        <Route path="/" element={<Home />} />   
        <Route path="/clients" element={<ClientsPage />} />
        <Route path="/add" element={<AddClientPage/>} />
        <Route path="/editClient/:id" element={<EditClient/>}/>
        <Route path="/projects" element={<ProjectsPage/>} />
-<<<<<<< HEAD
        <Route path="/edit/:id" element={<EditProject/>}/>
-=======
-       <Route path="/edit/:id" element={<EditProject />} />
->>>>>>> 9256176b525a732e9c1c1e3d6b1ad55def78b5ec
        <Route path="/addProjet" element={<AddProject/>}/>
        <Route path="/tasks" element={<TasksPage/>} />
-       <Route path="/create-task" element= {<AddTaches/>} />
+       <Route path="/addTache" element= {<AddTaches/>} />
        <Route path="/edit-task/:id" element= {<EditTaches/>} />
        <Route path="/Profile" element= {<ProfilePage/>} /> 
-       <Route path="/editProfileAdmin" element= {<EditProfileAdmin/>} /> 
-
        <Route path="/documentationAdmin" element= {<DocumentationAdmin/>} /> 
        <Route path="/createUser" element= {<UserPage/>} /> 
-
-
-
-          {/* route chef de projet  */}
+       <Route path="/DetailClient/:id" element= {<DetailClient/>} /> 
+       <Route path="/settings/profile" element= {<SettingProfile/>} /> 
+       
+          {/* Route chef de projet  */}
       <Route path="/dashboard" element= {<HomeChefProjet/>} />
       <Route path="/profile/chefProjet" element= {<ProfilePageCf/>} />
       <Route path="/projects/ChefProjet" element= {<ProjectChefProjet/>} />
       <Route path="/add_project" element= {<Add_Project_ChefProjet/>} />
       <Route path="/addProjet" element={<AddProject/>}/>
       <Route path="/clients/ChefProjet" element={<ClientProjetCf/>}/>
+      <Route path="/editClientCf/:id" element={<EditClientCF/>}/>
+      <Route path="/DetailClientCF/:id" element={<EditClientCF/>}/>
+      
       <Route path="/chat/ChefProjet" element={<MessagesPage/>}/>
       <Route path="/add_clients" element={<AddClientChef/>}/>
       <Route path="/tasks/ChefProjet" element={<TachesProjetCf/>}/>
@@ -77,6 +82,12 @@ function App() {
       <Route path="/documentation" element={<Documentation/>}/>
       <Route path="/edit-project/:id" element={<EditerProchetCf/>}/>
       <Route path="/editProfile/chefProjet" element={<EditProfileCf/>}/>
+
+      {/* Route Membre Equipe */}
+      <Route path="/documentation/Equipe" element={<DocumentationEquipe/>}/>
+      <Route path="/Home/Equipe" element={<HomeEquipe/>}/>
+      <Route path="/projects/Equipe" element={<ProjetEquipe/>}/>
+
 
     </Routes>
     </>
