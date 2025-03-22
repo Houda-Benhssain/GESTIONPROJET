@@ -2,8 +2,9 @@ import React from "react"
 import { useState, useEffect } from "react"
 import { User, Mail, Briefcase, ArrowLeft, ChevronLeft, ChevronRight, Calendar, MapPin } from "lucide-react"
 import { Link } from "react-router-dom"
-import Header from "../component/Header"
-import Footer from "../component/Footer"
+import HeaderEquipe from "../component/HeaderEquipe"
+import FooterEquipe from "../component/FooterEquipe"
+
 const ProfileEquipe = () => {
   // Profile state
   const [profile, setProfile] = useState({
@@ -168,7 +169,7 @@ const ProfileEquipe = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <Header />
+      <HeaderEquipe />
       <main className="flex-grow">
         <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8 mb-8">
           <div className="max-w-screen-xl mx-auto">
@@ -318,7 +319,7 @@ const ProfileEquipe = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      <FooterEquipe />
     </div>
   )
 }

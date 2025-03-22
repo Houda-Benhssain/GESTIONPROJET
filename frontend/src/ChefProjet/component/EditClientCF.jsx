@@ -131,7 +131,7 @@ const EditClientCF = ({ clients, setClients }) => {
 
   // Cancel edit and go back
   const handleCancel = () => {
-    navigate("/clients")
+    navigate("/clients/ChefProjet")
   }
 
   return (
@@ -332,16 +332,14 @@ const EditClientCF = ({ clients, setClients }) => {
                 <div className="px-6 py-4 bg-gray-50 flex flex-col sm:flex-row-reverse gap-3 sm:gap-2">
                   <button
                     type="submit"
-                    className="inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
+                    className="inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     <Save className="h-4 w-4 mr-2" />
                     Save Changes
                   </button>
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
+                    className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" >
                     Cancel
                   </button>
                 </div>

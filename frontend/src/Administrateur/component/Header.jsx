@@ -11,7 +11,6 @@ export default function Header() {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [notifications, setNotifications] = useState([])
 
   const profileMenuRef = useRef(null)
@@ -47,9 +46,6 @@ export default function Header() {
     if (isSettingsMenuOpen) setIsSettingsMenuOpen(false)
     if (isHelpMenuOpen) setIsHelpMenuOpen(false)
 
-    if (!isNotificationsOpen) {
-      loadNotifications()
-    }
   }
 
   const toggleHelpMenu = () => {
@@ -123,6 +119,15 @@ export default function Header() {
               </div>
 
               <Link
+                to="/"
+                className={`px-3 py-2 rounded flex items-center ${
+                  activeTab === "dashboards"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"}`}>
+                Dashboards
+              </Link>
+
+              <Link
                 to="/projects"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "projects"
@@ -131,27 +136,13 @@ export default function Header() {
                 }`} >
                 Projects
               </Link>
-
-              <Link
-                to="/"
-                className={`px-3 py-2 rounded flex items-center ${
-                  activeTab === "dashboards"
-                    ? "text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                }`}
-              >
-                {" "}
-                Dashboards
-              </Link>
-
               <Link
                 to="/clients"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "clients"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                }`}
-              >
+                }`}>
                 Clients
               </Link>
 
@@ -161,8 +152,7 @@ export default function Header() {
                   activeTab === "tasks"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                }`}
-              >
+                }`} >
                 Tasks
               </Link>
             </nav>
@@ -172,8 +162,7 @@ export default function Header() {
           <div className="flex items-center space-x-2">
             <Link
               to="/createUser"
-              className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700"
-            >
+              className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700" >
               Create
             </Link>
 
@@ -189,7 +178,7 @@ export default function Header() {
             </div>
 
             {/* Notifications Button with Dropdown */}
-        <div className="relative" ref={notificationsRef}>
+          <div className="relative" ref={notificationsRef}>
                     <button
                       onClick={toggleNotifications}
                       className="p-2 text-gray-500 hover:bg-gray-100 rounded-full relative" >
@@ -199,65 +188,9 @@ export default function Header() {
                           {unreadCount}
                         </span>)}
                     </button>
-      
-                    {isNotificationsOpen && (
-                      <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-50 border border-gray-200 max-h-96 overflow-y-auto">
-                        <div className="py-1">
-                          <div className="px-4 py-2 flex justify-between items-center border-b border-gray-200">
-                            <h3 className="text-sm font-medium text-gray-900">Notifications</h3>
-                            <button onClick={handleMarkAllAsRead} className="text-xs text-blue-600 hover:text-blue-800">
-                              Mark all as read
-                            </button>
-                          </div>
-      
-                          {loading ? (
-                            <div className="px-4 py-6 text-center text-gray-500">
-                              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-500 mx-auto mb-2"></div>
-                              <p>Loading notifications...</p>
-                            </div>
-                          ) : notifications.length === 0 ? (
-                            <div className="px-4 py-6 text-center text-gray-500">
-                              <p>No notifications</p>
-                            </div>
-                          ) : (
-                            notifications.map((notification) => (
-                              <div
-                                key={notification.id}
-                                className={`px-4 py-3 hover:bg-gray-50 border-b border-gray-100 ${
-                                  notification.read ? "bg-white" : "bg-blue-50"
-                                }`}
-                              >
-                                <div className="flex justify-between">
-                                  <div className="flex-1">
-                                    <p className="text-sm font-medium text-gray-900">{notification.title}</p>
-                                    <p className="text-xs text-gray-500 mt-1">{notification.message}</p>
-                                    <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
-                                  </div>
-                                  {!notification.read && (
-                                    <button
-                                      onClick={(e) => handleMarkAsRead(notification.id, e)}
-                                      className="text-blue-500 hover:text-blue-700"
-                                      title="Mark as read" >
-                                      <Check className="h-4 w-4" />
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-                            ))
-                          )}
-      
-                          <div className="px-4 py-2 text-center border-t border-gray-200">
-                            <Link to="/notifications" className="text-sm text-blue-600 hover:text-blue-800">
-                              View all notifications
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </div>
 
             {/* Help Button with Documentation Popup */}
-<<<<<<< HEAD
              <div className="relative" ref={helpMenuRef}>
                   <Link to="/documentationAdmin">
                     <button onClick={toggleHelpMenu} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none" >
@@ -265,16 +198,7 @@ export default function Header() {
                     </button>
                   </Link>
               </div>
-         
-=======
             <div className="relative" ref={helpMenuRef}>
-              <button
-                onClick={toggleHelpMenu}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none"
-              >
-                <HelpCircle className="h-5 w-5" />
-              </button>
-
               {isHelpMenuOpen && (
                 <div className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg z-50 border border-gray-200">
                   <div className="py-3 px-4">
@@ -293,7 +217,7 @@ export default function Header() {
               )}
             </div>
 
->>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
+
             {/* Settings Button with Dropdown */}
             <div className="relative" ref={settingsMenuRef}>
               <button
@@ -361,14 +285,10 @@ export default function Header() {
                     <div className="border-t border-gray-200 mt-1"></div>
 
                     <Link
-<<<<<<< HEAD
+
                       to="/login"
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
-=======
-                      to="/"
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
-                    >
->>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
+
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign out
                     </Link>

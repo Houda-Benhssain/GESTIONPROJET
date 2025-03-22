@@ -181,7 +181,7 @@ export default function HeaderEquipe() {
 
               
               <Link
-                to="/tasks/Equipe"
+                to="/tache/Equipe"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "tasks/Equipe"
                     ? "text-blue-600 border-b-2 border-blue-600"
@@ -190,7 +190,7 @@ export default function HeaderEquipe() {
               </Link>
 
               <Link
-                to="/chat/ChefProjet"
+                to="/chat/Equipe"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "messages"
                     ? "text-blue-600 border-b-2 border-blue-600"
@@ -308,7 +308,7 @@ export default function HeaderEquipe() {
                     <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">Settings</div>
 
                     <Link
-                      to="/profile/ChefProjet"
+                      to="/SettingProfile/Equipe"
                       className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                       <User className="h-4 w-4 mr-2" />
                       Profile settings
@@ -341,7 +341,7 @@ export default function HeaderEquipe() {
                     </div>
 
                     <Link
-                      to="/profile/chefProjet"
+                      to="/profile/Equipe"
                       className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                       <User className="h-4 w-4 mr-2" />
                       Your profile

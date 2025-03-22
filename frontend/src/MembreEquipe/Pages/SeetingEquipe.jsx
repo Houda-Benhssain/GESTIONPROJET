@@ -1,8 +1,8 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import { User, Rocket } from "lucide-react"
-import Header from "../component/Header"
-import Footer from "../component/Footer"
+import HeaderEquipe from "../component/HeaderEquipe"
+import FooterEquipe from "../component/FooterEquipe"
 import { Link } from "react-router-dom"
 
 const EditProfile = () => {
@@ -76,7 +76,7 @@ const EditProfile = () => {
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden m-0 p-0">
-      <Header />
+      <HeaderEquipe />
       <main className="flex-grow flex w-full h-full overflow-hidden">
         <div className="flex flex-col md:flex-row w-full h-full">
           {/* Left side with gradient background */}
@@ -92,7 +92,7 @@ const EditProfile = () => {
               </div>
               <h2 className="text-2xl font-bold mb-4">Welcome</h2>
               <p className="text-sm opacity-90 mb-8">You are 30 seconds away from updating your profile information!</p>
-              <Link to="/profile">
+              <Link to="/profile/Equipe">
                 <button className="bg-white text-blue-600 hover:bg-blue-50 px-6 py-2 rounded-md font-medium w-full transition-colors">
                   Back to Profile
                 </button>
@@ -206,7 +206,7 @@ const EditProfile = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      <FooterEquipe />
     </div>
   )
 }

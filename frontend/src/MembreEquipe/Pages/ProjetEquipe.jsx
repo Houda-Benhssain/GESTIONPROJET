@@ -1,4 +1,5 @@
 import React from "react"
+
 import { useState } from "react"
 import HeaderEquipe from "../component/HeaderEquipe"
 import FooterEquipe from "../component/FooterEquipe"
@@ -6,13 +7,12 @@ import {
   Search,
   Filter,
   Calendar,
-  Clock,
   MoreHorizontal,
   ChevronDown,
   Users,
   CheckCircle,
-  AlertCircle,
   XCircle,
+  FileText,
 } from "lucide-react"
 
 const ProjetEquipe = () => {
@@ -124,7 +124,7 @@ const ProjetEquipe = () => {
       case "completed":
         return { color: "bg-green-100 text-green-800", text: "Terminé" }
       case "planned":
-        return { color: "bg-purple-100 text-purple-800", text: "Planifié" }
+        return { color: "bg-indigo-100 text-indigo-800", text: "Planifié" }
       case "delayed":
         return { color: "bg-red-100 text-red-800", text: "En retard" }
       default:
@@ -141,104 +141,106 @@ const ProjetEquipe = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <HeaderEquipe />
-      <div className="flex flex-col gap-4 p-3 max-w-screen-2xl mx-auto">
-        {/* Page Header */}
-        <div className="mb-2">
-          <div className="flex items-center text-sm text-gray-500 mb-1">
-            <span>Équipes</span>
-            <span className="mx-2">/</span>
-            <span>Projets</span>
-          </div>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">Projets de l'équipe</h1>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center justify-center">
-              <span>+ Nouveau projet</span>
-            </button>
-          </div>
-        </div>
 
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Total des projets</p>
-                <h3 className="text-2xl font-bold text-gray-800">{projects.length}</h3>
+      {/* Blue gradient header like in the image */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center text-xs text-blue-100 mb-2">
+                <span>Équipes</span>
+                <span className="mx-2">›</span>
+                <span>Projets</span>
               </div>
-              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                <Users className="h-5 w-5 text-blue-600" />
-              </div>
+              <h1 className="text-2xl font-bold text-white">Projets de l'équipe</h1>
             </div>
-          </div>
-
-          <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">En cours</p>
-                <h3 className="text-2xl font-bold text-gray-800">
-                  {projects.filter((p) => p.status === "in-progress").length}
-                </h3>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                <Clock className="h-5 w-5 text-blue-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Terminés</p>
-                <h3 className="text-2xl font-bold text-gray-800">
-                  {projects.filter((p) => p.status === "completed").length}
-                </h3>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                <CheckCircle className="h-5 w-5 text-green-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">En retard</p>
-                <h3 className="text-2xl font-bold text-gray-800">
-                  {projects.filter((p) => p.status === "delayed").length}
-                </h3>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-                <AlertCircle className="h-5 w-5 text-red-600" />
+            <div className="hidden sm:flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-medium">
+                H
               </div>
             </div>
           </div>
         </div>
+      </div>
 
+      {/* Stats cards overlapping the gradient header */}
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white rounded-xl p-5 shadow-lg hover:shadow-xl transition-shadow border-l-4 border-green-500">
+            <div className="flex items-center">
+            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4">
+              <CheckCircle className="h-6 w-6 text-green-600" />
+            </div>
+
+            <div>
+              <div className="text-2xl font-bold">
+                {projects.reduce((acc, project) => acc + project.tasks.completed, 0)}
+              </div>
+              <div className="text-sm text-gray-500">Tâches terminées</div>
+            </div>
+          </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-5 shadow-lg flex items-center">
+            
+            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+              <Users className="h-6 w-6 text-blue-600" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">
+                {/* Count unique team members */}
+                {new Set(projects.flatMap((p) => p.teamMembers.map((m) => m.id))).size}
+              </div>
+              <div className="text-sm text-gray-500">Membres d'équipe</div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-5 shadow-lg flex items-center">
+            <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
+              <FileText className="h-6 w-6 text-purple-600" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">{projects.filter((p) => p.status === "in-progress").length}</div>
+              <div className="text-sm text-gray-500">Projets en cours</div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-5 shadow-lg flex items-center">
+            <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mr-4">
+              <Calendar className="h-6 w-6 text-orange-600" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">2</div>
+              <div className="text-sm text-gray-500">Réunions prévues</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4 p-4 sm:p-6 lg:p-8 max-w-screen-2xl mx-auto mt-6">
         {/* Filters and Search */}
-        <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm mb-6">
+        <div className="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-gray-400" />
+                <Search className="h-4 w-4 text-blue-400" />
               </div>
               <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full pl-10 pr-3 py-2 border border-blue-200 rounded-lg text-sm placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50"
                 placeholder="Rechercher un projet..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+                onChange={(e) => setSearchTerm(e.target.value)}/>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
               <div className="relative">
                 <div className="flex items-center">
-                  <Filter className="h-4 w-4 text-gray-400 mr-2" />
+                  <Filter className="h-4 w-4 text-blue-400 mr-2" />
                   <select
-                    className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                    className="block w-full pl-3 pr-10 py-2 text-base border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg bg-blue-50"
                     value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                  >
+                    onChange={(e) => setFilterStatus(e.target.value)}>
                     <option value="all">Tous les statuts</option>
                     <option value="in-progress">En cours</option>
                     <option value="completed">Terminé</option>
@@ -250,12 +252,11 @@ const ProjetEquipe = () => {
 
               <div className="relative">
                 <div className="flex items-center">
-                  <ChevronDown className="h-4 w-4 text-gray-400 mr-2" />
+                  <ChevronDown className="h-4 w-4 text-blue-400 mr-2" />
                   <select
-                    className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                    className="block w-full pl-3 pr-10 py-2 text-base border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg bg-blue-50"
                     value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                  >
+                    onChange={(e) => setSortBy(e.target.value)}>
                     <option value="date">Trier par date</option>
                     <option value="deadline">Trier par échéance</option>
                     <option value="progress">Trier par progression</option>
@@ -272,13 +273,13 @@ const ProjetEquipe = () => {
             sortedProjects.map((project) => (
               <div
                 key={project.id}
-                className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                className="bg-white rounded-xl border border-blue-100 shadow-md hover:shadow-lg transition-shadow overflow-hidden"
               >
                 <div className="p-5">
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <h2 className="text-xl font-bold text-gray-800">{project.name}</h2>
+                        <h2 className="text-xl font-bold text-blue-900">{project.name}</h2>
                         <span
                           className={`text-xs font-medium px-2 py-1 rounded-full ${getStatusBadge(project.status).color}`}
                         >
@@ -288,10 +289,7 @@ const ProjetEquipe = () => {
                       <p className="text-gray-600 text-sm">{project.description}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded text-sm font-medium transition-colors">
-                        Détails
-                      </button>
-                      <button className="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+                      <button className="text-blue-400 hover:text-blue-600 p-1.5 rounded-full hover:bg-blue-50 transition-colors">
                         <MoreHorizontal className="h-5 w-5" />
                       </button>
                     </div>
@@ -299,7 +297,7 @@ const ProjetEquipe = () => {
 
                   <div className="flex flex-col sm:flex-row gap-6 mb-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-1 text-sm text-gray-500 mb-1">
+                      <div className="flex items-center gap-1 text-sm text-blue-600 mb-1">
                         <Calendar className="h-4 w-4" />
                         <span>Échéance: {formatDate(project.deadline)}</span>
                       </div>
@@ -309,7 +307,7 @@ const ProjetEquipe = () => {
                           <span className="text-sm font-medium text-gray-700">Progression</span>
                           <span className="text-sm font-medium text-gray-700">{project.progress}%</span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-blue-100 rounded-full h-2">
                           <div
                             className={`h-2 rounded-full ${
                               project.status === "delayed"
@@ -334,12 +332,12 @@ const ProjetEquipe = () => {
                     </div>
 
                     <div className="sm:w-64">
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">Membres de l'équipe</h3>
+                      <h3 className="text-sm font-medium text-blue-700 mb-2">Membres de l'équipe</h3>
                       <div className="space-y-2">
                         {project.teamMembers.map((member) => (
                           <div
                             key={member.id}
-                            className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-lg transition-colors"
+                            className="flex items-center gap-2 p-2 hover:bg-blue-50 rounded-lg transition-colors"
                           >
                             <div
                               className={`w-8 h-8 rounded-full flex items-center justify-center text-white ${
@@ -366,15 +364,15 @@ const ProjetEquipe = () => {
               </div>
             ))
           ) : (
-            <div className="bg-white rounded-lg p-8 border border-gray-200 shadow-sm text-center">
-              <XCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-800 mb-1">Aucun projet trouvé</h3>
-              <p className="text-gray-500">Essayez de modifier vos filtres ou votre recherche</p>
+            <div className="bg-white rounded-xl p-8 border border-blue-100 shadow-md text-center">
+              <XCircle className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-blue-800 mb-1">Aucun projet trouvé</h3>
+              <p className="text-blue-500">Essayez de modifier vos filtres ou votre recherche</p>
             </div>
           )}
         </div>
       </div>
-      <FooterEquipe/>
+      <FooterEquipe />
     </div>
   )
 }

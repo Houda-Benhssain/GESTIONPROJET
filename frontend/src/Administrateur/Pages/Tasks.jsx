@@ -8,7 +8,6 @@ import TaskFilter from "../component/TaskFilter";
 const TasksPage = () => {
   const [tasks, setTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -160,7 +159,7 @@ const TasksPage = () => {
         <div className="max-w-screen-2xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Tasks</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Taches</h1>
               <p className="text-gray-500 mt-1">Manage and track all your tasks</p>
             </div>
             <Link
@@ -168,7 +167,7 @@ const TasksPage = () => {
               className="mt-4 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 flex items-center"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Task
+              Ajouter tache
             </Link>
           </div>
 
@@ -207,16 +206,9 @@ const TasksPage = () => {
               )}
             </div>
 
-<<<<<<< HEAD
+
             {filteredTasks.length === 0 ? (
-=======
-            {loading ? (
-              <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                <p className="mt-4 text-gray-500">Chargement des tâches...</p>
-              </div>
-            ) : filteredTasks.length === 0 ? (
->>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
+
               <div className="p-8 text-center">
                 <div className="bg-gray-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto">
                   <Filter className="h-8 w-8 text-gray-400" />
@@ -232,16 +224,6 @@ const TasksPage = () => {
                     ? "Essayez d'ajuster vos critères de recherche."
                     : "Il semble que vous n'ayez encore aucune tâche."}
                 </p>
-<<<<<<< HEAD
-
-=======
-                <Link
-                  to="/create-task"
-                  className="mt-6 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700"
-                >
-                  Ajouter une tâche
-                </Link>
->>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -249,11 +231,7 @@ const TasksPage = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-<<<<<<< HEAD
                         Task
-=======
-                        Tâche
->>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Project
@@ -262,12 +240,7 @@ const TasksPage = () => {
                         Status
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-<<<<<<< HEAD
-                        Priority
-                      </th>
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Due Date
-=======
+
                         Priorité
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -275,7 +248,7 @@ const TasksPage = () => {
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Attribuer à
->>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
+
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
@@ -311,23 +284,18 @@ const TasksPage = () => {
                             <span className="text-red-500 ml-2">(En retard)</span>
                           )}
                         </td>
-<<<<<<< HEAD
-=======
-                        <td className="px-4 py-3 text-sm text-gray-500">{task.user.nom}</td>
->>>>>>> 03da35fc5043c1b69cde32cbf4c2e69753f34b7f
                         <td className="px-4 py-3 text-sm font-medium">
-  <div className="flex justify-start gap-4 items-center">
-    <Link to={`/tasks/${task.id}/edit`} className="text-blue-600 hover:text-blue-800">
-      <Edit className="h-5 w-5" />
-    </Link>
-    <button
-      onClick={() => openDeleteModal(task)}
-      className="text-red-600 hover:text-red-800"
-    >
-      <Trash2 className="h-5 w-5" />
-    </button>
-  </div>
-</td>
+                          <div className="flex justify-start gap-4 items-center">
+                          <Link to={`/tasks/${task.id}/edit`} className="text-blue-600 hover:text-blue-800">
+                               <Edit className="h-5 w-5" />
+                           </Link>
+                          <button
+                            onClick={() => openDeleteModal(task)}
+                            className="text-red-600 hover:text-red-800"  >
+                         <Trash2 className="h-5 w-5" />
+                         </button>
+                         </div>
+                      </td>
                       </tr>
                     ))}
                   </tbody>

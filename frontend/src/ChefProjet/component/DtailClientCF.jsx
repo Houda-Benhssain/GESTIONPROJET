@@ -5,7 +5,7 @@ import {ArrowLeft,User,Phone,Mail,MapPin,} from "lucide-react"
 import FooterChefProjet from "./FooterChefProjet"
 import HeaderChefProjet from "./HeaderChefProjet"
 
-const DetailClientCF = () => {
+const DetailClient = () => {
   const { id } = useParams()
   const [client, setClient] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -57,41 +57,13 @@ const DetailClientCF = () => {
                 "Développement d'une application mobile iOS et Android pour la gestion des commandes clients.",
             },
           ],
-          factures: [
-            {
-              id: 101,
-              numero: "FACT-2023-101",
-              date: "2023-02-15",
-              montant: 5000,
-              status: "paid",
-            },
-            {
-              id: 102,
-              numero: "FACT-2023-102",
-              date: "2023-03-20",
-              montant: 7500,
-              status: "pending",
-            },
-          ],
-          notes: [
-            {
-              id: 1,
-              date: "2023-02-10",
-              contenu: "Réunion initiale pour discuter des besoins du projet e-commerce.",
-            },
-            {
-              id: 2,
-              date: "2023-03-05",
-              contenu:
-                "Client satisfait de l'avancement du projet. Demande quelques ajustements mineurs sur la page d'accueil.",
-            },
-          ],
+         
           statistiques: {
             valeur_totale_projets: 40000,
             projets_completes: 1,
             projets_en_cours: 2,
-            factures_payees: 1,
-            factures_en_attente: 1,
+            projets_AFaire: 5,
+          
           },
         }
 
@@ -106,14 +78,14 @@ const DetailClientCF = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col bg-gray-50">
-        <Header />
+        <HeaderChefProjet />
         <main className="flex-grow p-4 md:p-6 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
             <p className="mt-4 text-gray-600">Chargement des informations client...</p>
           </div>
         </main>
-        <Footer />
+        <FooterChefProjet />
       </div>
     )
   }
@@ -121,10 +93,6 @@ const DetailClientCF = () => {
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" }
     return new Date(dateString).toLocaleDateString("fr-FR", options)
-  }
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(amount)
   }
 
   return (
@@ -202,9 +170,9 @@ const DetailClientCF = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-blue-50 rounded-lg p-4">
-                    <p className="text-sm text-blue-700 mb-1">Valeur totale</p>
+                    <p className="text-sm text-blue-700 mb-1">Projets À faire</p>
                     <p className="text-xl font-bold text-blue-900">
-                      {formatCurrency(client.statistiques.valeur_totale_projets)}
+                    {client.statistiques.projets_AFaire}
                     </p>
                   </div>
 
@@ -248,5 +216,5 @@ const DetailClientCF = () => {
   )
 }
 
-export default DetailClientCF
+export default DetailClient
 
