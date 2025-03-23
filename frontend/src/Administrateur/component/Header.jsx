@@ -79,6 +79,15 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
+  const [userName, setUserName] = useState("")
+    const [userEmail, setUserEmail] = useState("")
+    useEffect(() => {
+      const user = JSON.parse(localStorage.getItem("user"))
+      if (user) {
+        setUserName(user.nom), 
+        setUserEmail(user.email) 
+      }
+    }, [])
 
 
 
@@ -274,8 +283,8 @@ export default function Header() {
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 border border-gray-200">
                   <div className="py-1">
                     <div className="px-4 py-3 border-b border-gray-200">
-                      <p className="text-sm font-medium text-gray-900">Howard Smith</p>
-                      <p className="text-xs text-gray-500 mt-1">howard.smith@example.com</p>
+                      <p className="text-sm font-medium text-gray-900">{userName}</p>
+                      <p className="text-xs text-gray-500 mt-1">{userEmail}</p>
                     </div>
 
                     <Link

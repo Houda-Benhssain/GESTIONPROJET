@@ -2,13 +2,21 @@ import React from "react"
 import { useState } from "react"
 import Header from "./Header"
 import Footer from "./Footer"
-import { CheckCircle, FileText, Calendar, Users, MessageSquare, Clock, Plus, Trash2, ChevronRight,} from "lucide-react"
+import { CheckCircle, FileText, Calendar, Users, MessageSquare, Clock, Plus, Trash2, ChevronRight,
+
+} from "lucide-react"
+import { useEffect } from "react"
 const HomeBody = () => {
   const [newTask, setNewTask] = useState("")
   const [tasks, setTasks] = useState([
     { id: 1, text: "Design a facebook ad", completed: false, color: "blue" },
     { id: 2, text: "Analyze Data", completed: false, color: "blue" },
+    { id: 3, text: "Youtube campaign", completed: false, color: "green" },
+    { id: 4, text: "Assign 10 employee", completed: false, color: "orange" },
+    { id: 5, text: "Meeting at 12", completed: false, color: "pink" },
+    { id: 6, text: "Meeting at 10", completed: false, color: "cyan" },
   ])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newTask.trim() !== "") {
@@ -111,12 +119,47 @@ const HomeBody = () => {
 
   // Count completed tasks
   const completedTasksCount = tasks.filter((task) => task.completed).length
+  const [tasksCount, setTasksCount] = useState(0);
+  const [teamMembersCount, setTeamMembersCount] = useState(0);
+  const [projectsCount, setProjectsCount] = useState(0);
+  const [meetingsCount, setMeetingsCount] = useState(0);
+
+  // Fetch data for tasks, team members, and projects
+  useEffect(() => {
+    // Fetch tasks count
+    fetch('http://127.0.0.1:8000/taches/')
+      .then(response => response.json())
+      .then(data => setTasksCount(data.filter(tsk => tsk.statut === 'terminee').length));
+    
+    // Fetch team members count
+    fetch('http://127.0.0.1:8000/utilisateurs/')
+      .then(response => response.json())
+      .then(data => setTeamMembersCount(data.filter(member => member.role === 'membre equipe').length));  // assuming the API returns an array of team members
+    
+    // Fetch projects count
+    fetch('http://127.0.0.1:8000/projets/')
+      .then(response => response.json())
+      .then(data => setProjectsCount(data.filter(project => project.statut === 'en cours').length)); // assuming the API returns an array of projects
+
+    // Fetch meetings count (if you have an API endpoint for meetings)
+    fetch('/api/meetings')
+      .then(response => response.json())
+      .then(data => setMeetingsCount(data.filter(meeting => new Date(meeting.date) > new Date()).length)); // assuming the API returns an array of meetings
+  }, []);
+  const [userName, setUserName] = useState("")
+  const [userEmail, setUserEmail] = useState("")
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"))
+    if (user) {
+      setUserName(user.nom), 
+      setUserEmail(user.email) 
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-
-      {/* Modern gradient header */}
+      
       <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-screen-2xl mx-auto">
           <div className="flex items-center justify-between">
@@ -146,7 +189,7 @@ const HomeBody = () => {
                 <CheckCircle className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">12</div>
+                <div className="text-2xl font-bold">{tasksCount}</div>
                 <div className="text-sm text-gray-500">Tâches terminées</div>
               </div>
             </div>
@@ -158,7 +201,7 @@ const HomeBody = () => {
                 <Users className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">5</div>
+                <div className="text-2xl font-bold">{teamMembersCount}</div>
                 <div className="text-sm text-gray-500">Membres d'équipe</div>
               </div>
             </div>
@@ -170,7 +213,7 @@ const HomeBody = () => {
                 <FileText className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">3</div>
+                <div className="text-2xl font-bold">{projectsCount}</div>
                 <div className="text-sm text-gray-500">Projets en cours</div>
               </div>
             </div>
@@ -182,7 +225,7 @@ const HomeBody = () => {
                 <Calendar className="h-6 w-6 text-amber-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">2</div>
+                <div className="text-2xl font-bold">{meetingsCount}</div>
                 <div className="text-sm text-gray-500">Réunions prévues</div>
               </div>
             </div>
@@ -195,7 +238,7 @@ const HomeBody = () => {
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
             <div className="border-b border-gray-200 pb-4 mb-5">
               <div className="text-sm text-blue-600 font-medium">{formattedDate}</div>
-              <h2 className="text-2xl font-bold text-gray-800">Bonjour, Houda!</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Bonjour, {userName|| 'Invité'}!</h2>
             </div>
 
             <h2 className="text-base font-bold mb-4 text-gray-800">Historique des transactions</h2>
@@ -464,8 +507,8 @@ const HomeBody = () => {
                 Planifier une réunion
               </button>
             </div>
+            
           </div>
-          
           <div className="space-y-1.5 w-full max-w-md">
             {tasks.map((task) => (
               <div key={task.id} className="flex items-center bg-gray-50 rounded-lg p-1.5 hover:bg-gray-100 transition-colors border border-gray-200">
@@ -491,6 +534,7 @@ const HomeBody = () => {
     </div>
   );
 };
+
 const Card = ({ icon, title, description }) => (
   <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
     <div className="flex items-center">{icon}</div>
@@ -500,7 +544,9 @@ const Card = ({ icon, title, description }) => (
     </div>
   </div>
 );
+
 export default HomeBody;
+
 
 
 
