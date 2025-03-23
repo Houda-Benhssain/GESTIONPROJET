@@ -167,7 +167,7 @@ const ProfilePageCf = () => {
       <main className="flex-grow bg-gray-50">
         <div className="max-w-screen-xl mx-auto px-4 py-8">
           <div className="flex items-center mb-6">
-            <Link to="/dashboard" className="text-gray-500 hover:text-gray-700 mr-4">
+            <Link to="/managerdashboard" className="text-gray-500 hover:text-gray-700 mr-4">
               <ArrowLeft className="h-5 w-5" />
             </Link>
             <h1 className="text-2xl font-bold text-gray-900">Profile</h1>

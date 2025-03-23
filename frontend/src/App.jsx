@@ -71,7 +71,7 @@ function App() {
       <Route path="/chat/ChefProjet" element={<MessagesPage/>}/>
       <Route path="/add_clients" element={<AddClientChef/>}/>
       <Route path="/tasks/ChefProjet" element={<TachesProjetCf/>}/>
-      <Route path="/create-task" element={<AddTskCf/>}/>
+      <Route path="/create-task-cf" element={<AddTskCf/>}/>
       <Route path="/tasks/edit/:id" element={<EditTaskCf/>}/>
       <Route path="/team/ChefProjet" element={<MembreEquipe/>}/>
       <Route path="/documentation" element={<Documentation/>}/>
