@@ -1,16 +1,24 @@
 import React from "react"
 import { useState } from "react"
-import Header from "./Header"
-import Footer from "./Footer"
-import { CheckCircle, FileText, Calendar, Users, MessageSquare, Clock, Plus, Trash2, ChevronRight,} from "lucide-react"
-const HomeBody = () => {
+import HeaderEquipe from "../component/HeaderEquipe"
+import FooterEquipe from "../component/FooterEquipe"
+import imagePlanIt from "../../Image/imagePlanIt.png"
+import {CheckCircle,FileText,Calendar,X,Users,MessageSquare,Clock,ExternalLink,User,DollarSign,ShoppingCart,Plus,Trash2,Bell,ChevronRight,BarChart2,Zap,Star,} from "lucide-react"
+
+const HomeEquipe = () => {
   const [newTask, setNewTask] = useState("")
   const [tasks, setTasks] = useState([
     { id: 1, text: "Design a facebook ad", completed: false, color: "blue" },
     { id: 2, text: "Analyze Data", completed: false, color: "blue" },
+    { id: 3, text: "Youtube campaign", completed: false, color: "green" },
+    { id: 4, text: "Assign 10 employee", completed: false, color: "orange" },
+    { id: 5, text: "Meeting at 12", completed: false, color: "pink" },
+    { id: 6, text: "Meeting at 10", completed: false, color: "cyan" },
   ])
+  const [welcomeVisible, setWelcomeVisible] = useState(true)
+
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (newTask.trim() !== "") {
       // Assign a random color from the available colors
       const colors = ["blue", "green", "orange", "pink", "cyan", "purple"]
@@ -19,36 +27,15 @@ const HomeBody = () => {
       setTasks([...tasks, { id: Date.now(), text: newTask, completed: false, color: randomColor }])
       setNewTask("")
     }
-  };
+  }
 
   const toggleTask = (id) => {
-    setTasks(tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)));
-  };
+    setTasks(tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)))
+  }
 
   const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
-
-  const calculateSummary = (projects) => {
-    const now = new Date();
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(now.getDate() - 7);
-
-    let createdCount = 0;
-    let updatedCount = 0;
-    let completedCount = 0;
-
-    projects.forEach((project) => {
-      const createdAt = project.created_at ? new Date(project.created_at) : null;
-      const updatedAt = project.updated_at ? new Date(project.updated_at) : null;
-
-      if (createdAt && createdAt >= sevenDaysAgo) createdCount++;
-      if (updatedAt && updatedAt >= sevenDaysAgo) updatedCount++;
-      if (project.statut === "termine" && updatedAt && updatedAt >= sevenDaysAgo) completedCount++;
-    });
-
-    setSummary({ created: createdCount, updated: updatedCount, completed: completedCount });
-  };
+    setTasks(tasks.filter((task) => task.id !== id))
+  }
 
   // Delete all completed tasks
   const deleteCompletedTasks = () => {
@@ -114,7 +101,7 @@ const HomeBody = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <HeaderEquipe />
 
       {/* Modern gradient header */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8">
@@ -124,9 +111,9 @@ const HomeBody = () => {
               <div className="flex items-center text-xs text-blue-100 mb-2">
                 <span>Équipes</span>
                 <ChevronRight className="h-3 w-3 mx-1" />
-                <span>Administrateur</span>
+                <span>Mon équipe</span>
               </div>
-              <h1 className="text-2xl font-bold text-white">Tableau de bord d'administrateur</h1>
+              <h1 className="text-2xl font-bold text-white">Tableau de bord d'équipe</h1>
             </div>
             <div className="hidden sm:flex items-center space-x-3">
               <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-medium">
@@ -191,6 +178,7 @@ const HomeBody = () => {
       </div>
 
       <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8 max-w-screen-2xl mx-auto mt-6">
+    
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
             <div className="border-b border-gray-200 pb-4 mb-5">
@@ -198,111 +186,108 @@ const HomeBody = () => {
               <h2 className="text-2xl font-bold text-gray-800">Bonjour, Houda!</h2>
             </div>
 
-            <h2 className="text-base font-bold mb-4 text-gray-800">Historique des transactions</h2>
-
-            <div className="relative w-36 h-36 mx-auto mb-4">
-              {/* Placeholder for chart */}
-              <svg className="absolute inset-0" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M18 35C27.3888 35 35 27.3888 35 18C35 8.61116 27.3888 1 18 1C8.61116 1 1 8.61116 1 18C1 27.3888 8.61116 35 18 35Z"
-                  stroke="#E5E7EB"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M18 35C27.3888 35 35 27.3888 35 18C35 8.61116 27.3888 1 18 1"
-                  stroke="#3B82F6"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-gray-800 text-sm font-semibold">75%</span>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold text-sm text-gray-800">Transférer vers PayPal</h3>
-                  <p className="text-gray-500 text-xs">07 Jan 2019, 09:12AM</p>
-                </div>
-                <span className="text-base font-bold text-blue-600">$236</span>
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-sm font-medium text-gray-700">Mises à jour d'hier</div>
+                <button className="text-xs text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                  Voir le rapport complet
+                  <ChevronRight className="h-3 w-3 ml-1" />
+                </button>
               </div>
 
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold text-sm text-gray-800">Transférer vers Stripe</h3>
-                  <p className="text-gray-500 text-xs">07 Jan 2019, 09:12AM</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl">
+                  <div className="flex items-center mb-2">
+                    <div className="bg-blue-500 p-2 rounded-lg mr-3">
+                      <User className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="text-sm font-medium text-blue-700">Visiteurs</div>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-800">2,110</div>
+                  <div className="flex items-center mt-2 text-xs text-blue-600">
+                    <BarChart2 className="h-3 w-3 mr-1" />
+                    <span>+12% par rapport à la semaine dernière</span>
+                  </div>
                 </div>
-                <span className="text-base font-bold text-blue-600">$593</span>
+
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl">
+                  <div className="flex items-center mb-2">
+                    <div className="bg-green-500 p-2 rounded-lg mr-3">
+                      <DollarSign className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="text-sm font-medium text-green-700">Revenus</div>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-800">8.2M€</div>
+                  <div className="flex items-center mt-2 text-xs text-green-600">
+                    <Zap className="h-3 w-3 mr-1" />
+                    <span>+8.3% par rapport au mois dernier</span>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-xl">
+                  <div className="flex items-center mb-2">
+                    <div className="bg-amber-500 p-2 rounded-lg mr-3">
+                      <ShoppingCart className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="text-sm font-medium text-amber-700">Commandes</div>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-800">1,124</div>
+                  <div className="flex items-center mt-2 text-xs text-amber-600">
+                    <Star className="h-3 w-3 mr-1" />
+                    <span>98% de satisfaction client</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-bold text-gray-800">Projets ouverts</h2>
-              <span className="text-gray-500 text-xs">Statut de vos données</span>
+            <div className="flex justify-between items-center mb-5">
+              <h2 className="text-xl font-bold text-gray-800">Membres de l'équipe</h2>
+              
             </div>
 
-            <div className="space-y-2">
-              <div className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor" >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between">
-                    <h3 className="font-semibold text-sm text-gray-800">
-                      Conception du tableau de bord administrateur
-                    </h3>
-                    <span className="text-gray-500 text-xs">Il y a 15 minutes</span>
+            <div className="space-y-3">
+              {teamMembers.map((member) => (
+                <div key={member.id} className="bg-gray-50 p-4 rounded-xl hover:bg-gray-100 transition-colors">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <div
+                        className={`w-10 h-10 rounded-xl ${member.color} flex items-center justify-center text-white font-medium mr-3`}
+                      >
+                        {member.avatars[0]}
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-800">{member.name}</div>
+                        <div className="text-xs text-gray-500">{member.role}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <span
+                        className={`text-xs px-2 py-1 rounded-full ${
+                          member.time === "En ligne"
+                            ? "bg-green-100 text-green-700"
+                            : member.time === "En pause"
+                              ? "bg-amber-100 text-amber-700"
+                              : "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {member.time}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between mt-0.5">
-                    <p className="text-gray-500 text-xs">Maquette d'application web de diffusion</p>
-                    <span className="text-gray-500 text-xs">30 tâches, 5 problèmes</span>
-                  </div>
                 </div>
-              </div>
+              ))}
+            </div>
 
-              <div className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors">
-                <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-500 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor" >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between">
-                    <h3 className="font-semibold text-sm text-gray-800">
-                      Conception du tableau de bord administrateur
-                    </h3>
-                    <span className="text-gray-500 text-xs">Il y a 15 minutes</span>
-                  </div>
-                  <div className="flex justify-between mt-0.5">
-                    <p className="text-gray-500 text-xs">Maquette d'application web de diffusion</p>
-                    <span className="text-gray-500 text-xs">30 tâches, 5 problèmes</span>
-                  </div>
-                </div>
-              </div>
+            <div className="mt-5 text-right">
+              <a
+                href="#"
+                className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center justify-end"
+              >
+                Voir tous les membres
+                <ExternalLink className="h-3 w-3 ml-1" />
+              </a>
             </div>
           </div>
         </div>
@@ -337,7 +322,8 @@ const HomeBody = () => {
                         onClick={() => toggleTask(task.id)}
                         className={`w-6 h-6 rounded-lg ${
                           task.completed ? "bg-gray-200 text-gray-500" : `border-2 ${getColorClass(task.color)}`
-                        } flex items-center justify-center mr-3 transition-colors`}>
+                        } flex items-center justify-center mr-3 transition-colors`}
+                      >
                         {task.completed && <CheckCircle className="h-4 w-4" />}
                       </button>
                       <span
@@ -350,8 +336,7 @@ const HomeBody = () => {
                       {task.completed && (
                         <button
                           onClick={() => deleteTask(task.id)}
-                          className="text-red-400 hover:text-red-600 p-1 rounded-full hover:bg-red-50"
-                        >
+                          className="text-red-400 hover:text-red-600 p-1 rounded-full hover:bg-red-50">
                           <Trash2 className="h-4 w-4" />
                         </button>
                       )}
@@ -382,18 +367,22 @@ const HomeBody = () => {
                 />
                 <button
                   type="submit"
-                  className="bg-blue-700 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                >
+                  className="bg-blue-700 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                   Ajouter
                 </button>
               </div>
             </form>
           </div>
 
-          {/* Réunions Section (Added as requested) */}
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
             <div className="flex justify-between items-center mb-5">
               <h2 className="text-xl font-bold text-gray-800">Prochaines réunions</h2>
+              <a
+                href="#"
+                className="text-blue-700 hover:text-indigo-800 text-sm font-medium px-3 py-1 bg-indigo-50 rounded-full"
+              >
+                Voir tout
+              </a>
             </div>
 
             <div className="space-y-4">
@@ -465,45 +454,12 @@ const HomeBody = () => {
               </button>
             </div>
           </div>
-          
-          <div className="space-y-1.5 w-full max-w-md">
-            {tasks.map((task) => (
-              <div key={task.id} className="flex items-center bg-gray-50 rounded-lg p-1.5 hover:bg-gray-100 transition-colors border border-gray-200">
-                <button onClick={() => toggleTask(task.id)} className={`w-4 h-4 rounded-sm border ${task.completed ? "bg-blue-500 border-blue-500" : "border-blue-500"} flex items-center justify-center mr-2`}>
-                  {task.completed && (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5 text-white" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </button>
-                <span className={`text-sm text-gray-800 flex-1 ${task.completed ? "line-through text-gray-400" : ""}`}>{task.text}</span>
-                <button onClick={() => deleteTask(task.id)} className="bg-red-100 hover:bg-red-200 text-red-600 p-0.5 rounded transition-colors ml-2" aria-label="Delete task">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M6.293 6.293a1 1 0 011.414 0L10 8.586l2.293-2.293a1 1 0 111.414 1.414L11.414 10l2.293 2.293a1 1 0 01-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 01-1.414-1.414L8.586 10 6.293 7.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
-      <Footer />
+      <FooterEquipe />
     </div>
-  );
-};
-const Card = ({ icon, title, description }) => (
-  <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-    <div className="flex items-center">{icon}</div>
-    <div>
-      <div className="text-lg font-semibold">{title}</div>
-      <div className="text-sm text-gray-500">{description}</div>
-    </div>
-  </div>
-);
-export default HomeBody;
+  )
+}
 
-
-
-
-
+export default HomeEquipe
 

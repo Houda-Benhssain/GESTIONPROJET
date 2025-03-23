@@ -11,10 +11,13 @@ const EditClient = () => {
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
   const [client, setClient] = useState({
-    nom: "",
-    email: "",
+    utilisateur: {
+      nom: "",
+      email: "",
+      role: "",
+    },
     telephone: "",
-    adresse: ""
+    adresse: "",
   });
 
   useEffect(() => {
@@ -39,10 +42,14 @@ const EditClient = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setClient({
-      ...client,
-      [name]: value,
-    });
+    const [field, key] = name.split(".");
+    setClient((prevClient) => ({
+      ...prevClient,
+      [field]: {
+        ...prevClient[field],
+        [key]: value,
+      },
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -50,11 +57,19 @@ const EditClient = () => {
     setSaving(true);
     setFormError("");
 
-    if (!client.nom || !client.email) {
+    if (!client.utilisateur.nom || !client.utilisateur.email) {
       setFormError("Veuillez remplir tous les champs obligatoires");
       setSaving(false);
       return;
     }
+
+    // Créer un objet avec la structure correcte pour l'API
+    const dataToSend = {
+      ...client,
+      utilisateur: {
+        ...client.utilisateur,
+      },
+    };
 
     try {
       const response = await fetch(`http://127.0.0.1:8000/clients/${id}`, {
@@ -62,7 +77,7 @@ const EditClient = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(client),
+        body: JSON.stringify(dataToSend),
       });
 
       if (response.ok) {
@@ -82,8 +97,13 @@ const EditClient = () => {
       <main className="flex-grow">
         <div className="max-w-screen-xl mx-auto px-4 py-6">
           <div className="flex items-center mb-6">
-            <ArrowLeft className="h-5 w-5 cursor-pointer" onClick={() => navigate("/clients")} />
-            <h1 className="text-2xl font-bold text-gray-900 ml-2">Modifier le client</h1>
+            <ArrowLeft
+              className="h-5 w-5 cursor-pointer"
+              onClick={() => navigate("/clients")}
+            />
+            <h1 className="text-2xl font-bold text-gray-900 ml-2">
+              Modifier le client
+            </h1>
           </div>
           {loading ? (
             <div className="bg-white rounded-lg shadow p-8 text-center">
@@ -99,29 +119,35 @@ const EditClient = () => {
               )}
               <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nom *
+                  </label>
                   <input
                     type="text"
-                    name="nom"
-                    value={client.nom}
+                    name="utilisateur.nom"
+                    value={client.utilisateur.nom}
                     onChange={handleInputChange}
                     className="block w-full border border-gray-300 rounded-md py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email *
+                  </label>
                   <input
                     type="email"
-                    name="email"
-                    value={client.email}
+                    name="utilisateur.email"
+                    value={client.utilisateur.email}
                     onChange={handleInputChange}
                     className="block w-full border border-gray-300 rounded-md py-2 px-3 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Téléphone
+                  </label>
                   <input
                     type="text"
                     name="telephone"
@@ -131,7 +157,9 @@ const EditClient = () => {
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Adresse
+                  </label>
                   <textarea
                     name="adresse"
                     rows="2"
@@ -147,7 +175,13 @@ const EditClient = () => {
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700 flex items-center"
                   disabled={saving}
                 >
-                  {saving ? "Enregistrement..." : <><Save className="inline mr-2 h-5 w-5" /> Enregistrer</>}
+                  {saving ? (
+                    "Enregistrement..."
+                  ) : (
+                    <>
+                      <Save className="inline mr-2 h-5 w-5" /> Enregistrer
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -160,5 +194,7 @@ const EditClient = () => {
 };
 
 export default EditClient;
+
+
 
 

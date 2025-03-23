@@ -2,7 +2,7 @@ import React from "react"
 import { useState } from "react"
 import HeaderChefProjet from "../component/HeaderChefProjet"
 import FooterChefProjet from "../component/FooterChefProjet"
-import imagePlanIt from "../../Image/imagePlanIt.jpg";
+import imagePlanIt from "../../Image/imagePlanIt.png";
 import {CheckCircle,FileEdit,Calendar,X,RefreshCw,Users,Clock,Filter,AlertTriangle,} from "lucide-react"
 
 const HomeChefProjet = () => {

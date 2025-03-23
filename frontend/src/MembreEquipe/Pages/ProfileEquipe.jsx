@@ -2,8 +2,9 @@ import React from "react"
 import { useState, useEffect } from "react"
 import { User, Mail, Briefcase, ArrowLeft, ChevronLeft, ChevronRight, Calendar, MapPin } from "lucide-react"
 import { Link } from "react-router-dom"
-import Header from "../component/Header"
-import Footer from "../component/Footer"
+import HeaderEquipe from "../component/HeaderEquipe"
+import FooterEquipe from "../component/FooterEquipe"
+
 const ProfileEquipe = () => {
   // Profile state
   const [profile, setProfile] = useState({
@@ -168,7 +169,7 @@ const ProfileEquipe = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <Header />
+      <HeaderEquipe />
       <main className="flex-grow">
         <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8 mb-8">
           <div className="max-w-screen-xl mx-auto">
@@ -185,8 +186,11 @@ const ProfileEquipe = () => {
           </div>
         </div>
         <div className="max-w-screen-xl mx-auto px-4 py-8">
-          <div className="flex items-center mb-6">
-            <Link to="/adminhome" className="text-gray-500 hover:text-gray-700 mr-4">
+          <div className="flex items-center mb-8">
+            <Link
+              to="/Home/Equipe"
+              className="text-gray-500 hover:text-primary transition-colors mr-4 flex items-center gap-1"
+            >
               <ArrowLeft className="h-5 w-5" />
               <span>Back to Dashboard</span>
             </Link>
@@ -315,7 +319,7 @@ const ProfileEquipe = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      <FooterEquipe />
     </div>
   )
 }

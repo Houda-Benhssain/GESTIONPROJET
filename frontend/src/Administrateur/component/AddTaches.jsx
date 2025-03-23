@@ -111,7 +111,7 @@ const AddTache = () => {
 
     try {
       // Appel à l'API pour créer une tâche
-      const response = await fetch("http://127.0.0.1:8000/taches", {
+      const response = await fetch("http://127.0.0.1:8000/taches/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -14,13 +14,12 @@ const AddProject = () => {
     statut: "en attente",
     dateDebut: "",
     dateFin: "",
-    user_id: "", // Ajouter manager_id pour le chef de projet
+    user_id: "",
   });
   const [clients, setClients] = useState([]);
-  const [managers, setManagers] = useState([]); // État pour les chefs de projet
+  const [managers, setManagers] = useState([]);
   const [errors, setErrors] = useState({});
 
-  // Récupérer les clients
   useEffect(() => {
     const fetchClients = async () => {
       try {
@@ -34,6 +33,7 @@ const AddProject = () => {
 
     fetchClients();
   }, []);
+
   useEffect(() => {
     const fetchManagers = async () => {
       try {
@@ -101,7 +101,7 @@ const AddProject = () => {
       dateFin: project.dateFin,
       statut: project.statut,
       client_id: project.client_id,
-      user_id: project.user_id, // Inclure le manager_id
+      user_id: project.user_id,
     };
 
     try {
@@ -131,7 +131,7 @@ const AddProject = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow bg-gray-50">
         <div className="max-w-screen-lg mx-auto px-4 py-6">
           <div className="flex items-center mb-6 space-x-4">
             <Link to="/projects" className="inline-flex items-center text-blue-600 hover:text-blue-800">
@@ -146,11 +146,8 @@ const AddProject = () => {
 
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Nom du projet */}
               <div className="md:col-span-2">
-                <label htmlFor="nom" className="block text-sm font-medium text-gray-700 mb-1">
-                  Nom du projet*
-                </label>
+                <label htmlFor="nom" className="block text-sm font-medium text-gray-700 mb-1">Nom du projet*</label>
                 <input
                   type="text"
                   id="nom"
@@ -162,11 +159,8 @@ const AddProject = () => {
                 {errors.nom && <p className="mt-1 text-sm text-red-600">{errors.nom}</p>}
               </div>
 
-              {/* Description */}
               <div className="md:col-span-2">
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                  Description*
-                </label>
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description*</label>
                 <textarea
                   id="description"
                   name="description"
@@ -178,11 +172,8 @@ const AddProject = () => {
                 {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
               </div>
 
-              {/* Client Dropdown */}
               <div>
-                <label htmlFor="client_id" className="block text-sm font-medium text-gray-700 mb-1">
-                  Client*
-                </label>
+                <label htmlFor="client_id" className="block text-sm font-medium text-gray-700 mb-1">Client*</label>
                 <select
                   id="client_id"
                   name="client_id"
@@ -192,42 +183,31 @@ const AddProject = () => {
                 >
                   <option value="">Sélectionner un client</option>
                   {clients.map((client) => (
-                    <option key={client.id} value={client.id}>
-                      {client.utilisateur.nom}
-                    </option>
+                    <option key={client.id} value={client.id}>{client.utilisateur.nom}</option>
                   ))}
                 </select>
                 {errors.client_id && <p className="mt-1 text-sm text-red-600">{errors.client_id}</p>}
               </div>
 
-              {/* Chef de projet Dropdown */}
-<div>
-  <label htmlFor="user_id" className="block text-sm font-medium text-gray-700 mb-1">
-    Chef de projet*
-  </label>
-  <select
-    id="user_id" // Utilisez user_id pour correspondre à votre état
-    name="user_id" // Utilisez user_id pour correspondre à votre état
-    value={project.user_id} // Cela doit être lié à user_id dans votre état
-    onChange={handleChange}
-    className={`w-full px-3 py-2 border ${errors.user_id ? "border-red-300" : "border-gray-300"} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
-  >
-    <option value="">Sélectionner un chef de projet</option>
-    {managers.map((manager) => (
-      <option key={manager.id} value={manager.id}>
-        {manager.nom} {/* Assurez-vous que manager.nom existe */}
-      </option>
-    ))}
-  </select>
-  {errors.user_id && <p className="mt-1 text-sm text-red-600">{errors.user_id}</p>} {/* Affichez l'erreur */}
-</div>
-
-
-              {/* Date de début */}
               <div>
-                <label htmlFor="dateDebut" className="block text-sm font-medium text-gray-700 mb-1">
-                  Date de début*
-                </label>
+                <label htmlFor="user_id" className="block text-sm font-medium text-gray-700 mb-1">Chef de projet*</label>
+                <select
+                  id="user_id"
+                  name="user_id"
+                  value={project.user_id}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border ${errors.user_id ? "border-red-300" : "border-gray-300"} rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                >
+                  <option value="">Sélectionner un chef de projet</option>
+                  {managers.map((manager) => (
+                    <option key={manager.id} value={manager.id}>{manager.nom}</option>
+                  ))}
+                </select>
+                {errors.user_id && <p className="mt-1 text-sm text-red-600">{errors.user_id}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="dateDebut" className="block text-sm font-medium text-gray-700 mb-1">Date de début*</label>
                 <input
                   type="date"
                   id="dateDebut"
@@ -239,11 +219,8 @@ const AddProject = () => {
                 {errors.startDate && <p className="mt-1 text-sm text-red-600">{errors.startDate}</p>}
               </div>
 
-              {/* Date de fin */}
               <div>
-                <label htmlFor="dateFin" className="block text-sm font-medium text-gray-700 mb-1">
-                  Date de fin*
-                </label>
+                <label htmlFor="dateFin" className="block text-sm font-medium text-gray-700 mb-1">Date de fin*</label>
                 <input
                   type="date"
                   id="dateFin"
@@ -256,23 +233,18 @@ const AddProject = () => {
               </div>
             </div>
 
-            <div className="flex justify-end mt-6 space-x-4">
-              <Link to="/projects" className="text-sm text-gray-600 hover:text-gray-800">
-                <X className="w-4 h-4 inline-block mr-1" /> Annuler
+            <div className="mt-6 flex justify-end space-x-4">
+              <Link to="/projects" className="inline-flex items-center px-4 py-2 bg-gray-300 text-white rounded-md hover:bg-gray-400">
+                <X className="mr-2 h-4 w-4" />
+                Annuler
               </Link>
+
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 rounded-md"
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                {saving ? (
-                  <span className="spinner-border animate-spin h-4 w-4 border-t-2 border-white rounded-full"></span>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Sauvegarder
-                  </>
-                )}
+                {saving ? "Sauvegarde..." : <><Save className="mr-2 h-4 w-4" /> Sauvegarder</>}
               </button>
             </div>
           </form>
@@ -284,6 +256,8 @@ const AddProject = () => {
 };
 
 export default AddProject;
+
+
 
 
 

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import HeaderChefProjet from "../component/HeaderChefProjet"
 import FooterChefProjet from "../component/FooterChefProjet"
 
-const ProfilePageCf = () => {
+const ProfilePage = () => {
   // Profile state
   const [profile, setProfile] = useState({
     name: "Chef de Projet",
@@ -176,7 +176,7 @@ const ProfilePageCf = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Profile Card */}
             <div className="bg-white rounded-lg shadow overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 flex flex-col items-center">
+              <div className="bg-gradient-to-r from-white-500 to-white-600 p-6 flex flex-col items-center">
                 <div className="relative">
                   <div className="h-24 w-24 rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-white">
                     {profile.avatar ? (
@@ -190,8 +190,8 @@ const ProfilePageCf = () => {
                     )}
                   </div>
                 </div>
-                <h2 className="mt-4 text-xl font-bold text-white">{profile.name}</h2>
-                <p className="text-blue-100">{profile.role}</p>
+                <h2 className="mt-4 text-xl font-bold text-black">{profile.name}</h2>
+                <p className="text-black-100">{profile.role}</p>
               </div>
 
               <div className="p-6">
@@ -217,14 +217,6 @@ const ProfilePageCf = () => {
                       <p className="text-gray-800">{profile.address}</p>
                     </div>
                   </div>
-                </div>
-                <div className="mt-6 flex justify-center">
-                  <Link
-                    to="/editProfile/chefProjet"
-                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
->
-                    Edit Profile
-                  </Link>
                 </div>
               </div>
             </div>
@@ -291,5 +283,5 @@ const ProfilePageCf = () => {
   )
 }
 
-export default ProfilePageCf
+export default ProfilePage
 
