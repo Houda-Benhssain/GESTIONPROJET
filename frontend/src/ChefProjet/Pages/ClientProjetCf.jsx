@@ -133,6 +133,13 @@ const ClientProjetCf = () => {
     }
   }
 
+  const handleDelete = (clientId, clientName) => {
+    setClientToDelete({ id: clientId, name: clientName });
+    setModalOpen(true); // Ouvrir le modal
+  };
+
+  
+
   return (
     <div className="min-h-screen flex flex-col bg-blue-50">
       <HeaderChefProjet />
@@ -275,6 +282,14 @@ const ClientProjetCf = () => {
         </div>
       </main>
       <FooterChefProjet />
+      
+      {/* Modal de confirmation */}
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={confirmDelete}
+        clientName={clientToDelete ? clientToDelete.name : ""}
+      />
     </div>
   )
 }

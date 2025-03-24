@@ -146,7 +146,11 @@ const confirmDelete = async () => {
     <div className="flex flex-col min-h-screen bg-blue-50">
   <div className="flex flex-col min-h-screen bg-blue-50">
   <Header />
+<<<<<<< HEAD
   <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-8 px-4 sm:px-6 lg:px-8">
+=======
+  <div className="bg-gradient-to-r from-blue-700 to-blue-500 py-6 px-4">
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
     <div className="max-w-screen-xl mx-auto">
       <div className="flex items-center text-xs text-blue-100 mb-2">
         <span>Projets</span>
@@ -217,8 +221,13 @@ const confirmDelete = async () => {
           <h3 className="mt-4 text-lg font-medium text-gray-900">Aucun projet trouvé</h3>
           <p className="mt-1 text-gray-500">
             {searchTerm || filters.status !== "all" || filters.client !== "all" || filters.dateRange !== "all"
+<<<<<<< HEAD
               ? "Essayez d'ajuster vos critères de recherche ou de filtrage"
               : "Commencez en créant votre premier projet"}
+=======
+              ? "Try adjusting your search or filter criteria"
+              : "Get started by creating your first project"}
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
           </p>
         </div>
       ) : (

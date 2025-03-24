@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 import { CheckCircle, FileText, Calendar, Users, MessageSquare, Clock, Plus, Trash2, ChevronRight,
 
 } from "lucide-react"
-
+import { useEffect } from "react"
 const HomeBody = () => {
   const [newTask, setNewTask] = useState("")
   const [tasks, setTasks] = useState([
@@ -15,7 +15,7 @@ const HomeBody = () => {
   ])
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (newTask.trim() !== "") {
       // Assign a random color from the available colors
       const colors = ["blue", "green", "orange", "pink", "cyan", "purple"]
@@ -24,15 +24,36 @@ const HomeBody = () => {
       setTasks([...tasks, { id: Date.now(), text: newTask, completed: false, color: randomColor }])
       setNewTask("")
     }
-  }
+  };
 
   const toggleTask = (id) => {
-    setTasks(tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)))
-  }
+    setTasks(tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)));
+  };
 
   const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id))
-  }
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const calculateSummary = (projects) => {
+    const now = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(now.getDate() - 7);
+
+    let createdCount = 0;
+    let updatedCount = 0;
+    let completedCount = 0;
+
+    projects.forEach((project) => {
+      const createdAt = project.created_at ? new Date(project.created_at) : null;
+      const updatedAt = project.updated_at ? new Date(project.updated_at) : null;
+
+      if (createdAt && createdAt >= sevenDaysAgo) createdCount++;
+      if (updatedAt && updatedAt >= sevenDaysAgo) updatedCount++;
+      if (project.statut === "termine" && updatedAt && updatedAt >= sevenDaysAgo) completedCount++;
+    });
+
+    setSummary({ created: createdCount, updated: updatedCount, completed: completedCount });
+  };
 
   // Delete all completed tasks
   const deleteCompletedTasks = () => {
@@ -95,12 +116,53 @@ const HomeBody = () => {
 
   // Count completed tasks
   const completedTasksCount = tasks.filter((task) => task.completed).length
+  const [tasksCount, setTasksCount] = useState(0);
+  const [teamMembersCount, setTeamMembersCount] = useState(0);
+  const [projectsCount, setProjectsCount] = useState(0);
+  const [meetingsCount, setMeetingsCount] = useState(0);
+
+  // Fetch data for tasks, team members, and projects
+  useEffect(() => {
+    // Fetch tasks count
+    fetch('http://127.0.0.1:8000/taches/')
+      .then(response => response.json())
+      .then(data => setTasksCount(data.filter(tsk => tsk.statut === 'terminee').length));
+    
+    // Fetch team members count
+    fetch('http://127.0.0.1:8000/utilisateurs/')
+      .then(response => response.json())
+      .then(data => setTeamMembersCount(data.filter(member => member.role === 'membre equipe').length));  // assuming the API returns an array of team members
+    
+    // Fetch projects count
+    fetch('http://127.0.0.1:8000/projets/')
+      .then(response => response.json())
+      .then(data => setProjectsCount(data.filter(project => project.statut === 'en cours').length)); // assuming the API returns an array of projects
+
+    // Fetch meetings count (if you have an API endpoint for meetings)
+    fetch('/api/meetings')
+      .then(response => response.json())
+      .then(data => setMeetingsCount(data.filter(meeting => new Date(meeting.date) > new Date()).length)); // assuming the API returns an array of meetings
+  }, []);
+  const [userName, setUserName] = useState("")
+  const [userEmail, setUserEmail] = useState("")
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"))
+    if (user) {
+      setUserName(user.nom), 
+      setUserEmail(user.email) 
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-blue-50">
       <Header />
+<<<<<<< HEAD
       {/* Modern gradient header */}
       <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-8 px-4 sm:px-6 lg:px-8">
+=======
+      
+      <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8">
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
         <div className="max-w-screen-2xl mx-auto">
           <div className="flex items-center justify-between">
             <div>
@@ -124,7 +186,7 @@ const HomeBody = () => {
                 <CheckCircle className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">12</div>
+                <div className="text-2xl font-bold">{tasksCount}</div>
                 <div className="text-sm text-gray-500">Tâches terminées</div>
               </div>
             </div>
@@ -136,7 +198,7 @@ const HomeBody = () => {
                 <Users className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">5</div>
+                <div className="text-2xl font-bold">{teamMembersCount}</div>
                 <div className="text-sm text-gray-500">Membres d'équipe</div>
               </div>
             </div>
@@ -148,7 +210,7 @@ const HomeBody = () => {
                 <FileText className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">3</div>
+                <div className="text-2xl font-bold">{projectsCount}</div>
                 <div className="text-sm text-gray-500">Projets en cours</div>
               </div>
             </div>
@@ -160,7 +222,7 @@ const HomeBody = () => {
                 <Calendar className="h-6 w-6 text-amber-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">2</div>
+                <div className="text-2xl font-bold">{meetingsCount}</div>
                 <div className="text-sm text-gray-500">Réunions prévues</div>
               </div>
             </div>
@@ -173,7 +235,7 @@ const HomeBody = () => {
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
             <div className="border-b border-gray-200 pb-4 mb-5">
               <div className="text-sm text-blue-600 font-medium">{formattedDate}</div>
-              <h2 className="text-2xl font-bold text-gray-800">Bonjour, Houda!</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Bonjour, {userName|| 'Invité'}!</h2>
             </div>
 
             <h2 className="text-base font-bold mb-4 text-gray-800">Historique des transactions</h2>
@@ -435,13 +497,49 @@ const HomeBody = () => {
               </button>
               </Link>
             </div>
+            
+          </div>
+          <div className="space-y-1.5 w-full max-w-md">
+            {tasks.map((task) => (
+              <div key={task.id} className="flex items-center bg-gray-50 rounded-lg p-1.5 hover:bg-gray-100 transition-colors border border-gray-200">
+                <button onClick={() => toggleTask(task.id)} className={`w-4 h-4 rounded-sm border ${task.completed ? "bg-blue-500 border-blue-500" : "border-blue-500"} flex items-center justify-center mr-2`}>
+                  {task.completed && (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </button>
+                <span className={`text-sm text-gray-800 flex-1 ${task.completed ? "line-through text-gray-400" : ""}`}>{task.text}</span>
+                <button onClick={() => deleteTask(task.id)} className="bg-red-100 hover:bg-red-200 text-red-600 p-0.5 rounded transition-colors ml-2" aria-label="Delete task">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M6.293 6.293a1 1 0 011.414 0L10 8.586l2.293-2.293a1 1 0 111.414 1.414L11.414 10l2.293 2.293a1 1 0 01-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 01-1.414-1.414L8.586 10 6.293 7.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       </div>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default HomeBody
+const Card = ({ icon, title, description }) => (
+  <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+    <div className="flex items-center">{icon}</div>
+    <div>
+      <div className="text-lg font-semibold">{title}</div>
+      <div className="text-sm text-gray-500">{description}</div>
+    </div>
+  </div>
+);
+
+export default HomeBody;
+
+
+
+
+
+
 

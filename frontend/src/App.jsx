@@ -1,7 +1,11 @@
 import React from "react";
 import { Routes,Route } from "react-router-dom";
+<<<<<<< HEAD
 
 import HomepageAdmin from "./Administrateur/Pages/HomePageAdmin";
+=======
+import EditProfile from "./Administrateur/Pages/SettingProfile";
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
 import ClientsPage from "./Administrateur/Pages/Clients";
 import AddClientPage from "./Administrateur/component/AddClient";
 import ProjectsPage from "./Administrateur/Pages/Projets";
@@ -67,11 +71,11 @@ function App() {
     <Routes>
 
       {/* Route Administrateur */}
-       <Route path="/login" element={<Login />} />
-       <Route path="/" element={<Home />} />   
+       {/* <Route path="/login" element={<Login />} />
+       <Route path="/" element={<Home />} />    */}
 
-       {/* <Route path="/" element={<Login />} />
-       <Route path="/adminhome" element={<Home />} />    */}
+       <Route path="/" element={<Login />} />
+       <Route path="/adminhome" element={<Home />} />   
 
        <Route path="/HomePageAdmine" element={<HomepageAdmin />} />
        <Route path="/clients" element={<ClientsPage />} />
@@ -85,6 +89,15 @@ function App() {
        <Route path="/tasks/:id/edit" element={<EditTaches />} />
        <Route path="/Profile" element= {<ProfilePage/>} />
        <Route path="/edit-task/:id" element= {<EditTaches/>} />
+       <Route path="/editProfileAdmin" element= {<EditProfile/>} /> 
+
+       <Route path="/documentationAdmin" element= {<DocumentationAdmin/>} /> 
+       <Route path="/users" element= {<UserPage/>} /> 
+
+
+
+          {/* route chef de projet  */}
+      <Route path="/managerdashboard" element= {<HomeChefProjet/>} />
        <Route path="/documentationAdmin" element= {<DocumentationAdmin/>} /> 
        <Route path="/createUser" element= {<UserPage/>} /> 
        <Route path="/DetailClient/:id" element= {<DetailClient/>} /> 
@@ -108,7 +121,12 @@ function App() {
       <Route path="/chat/ChefProjet" element={<MessagesPage/>}/>
       <Route path="/add_clients" element={<AddClientChef/>}/>
       <Route path="/tasks/ChefProjet" element={<TachesProjetCf/>}/>
+<<<<<<< HEAD
       <Route path="/create-task" element={<AddTskCf/>}/>
+=======
+      <Route path="/create-task-cf" element={<AddTskCf/>}/>
+      <Route path="/tasks/edit/:id" element={<EditTaskCf/>}/>
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
       <Route path="/team/ChefProjet" element={<MembreEquipe/>}/>
       <Route path="/documentation" element={<Documentation/>}/>
       <Route path="/editProfile/chefProjet" element={<EditProfileCf/>}/>
@@ -117,7 +135,7 @@ function App() {
       {/* Route Membre Equipe */}
 
       <Route path="/documentation/Equipe" element={<DocumentationEquipe/>}/>
-      <Route path="/Home/Equipe" element={<HomeEquipe/>}/>
+      <Route path="/memberdashboard" element={<HomeEquipe/>}/>
       <Route path="/projects/Equipe" element={<ProjetEquipe/>}/>
       <Route path="/tache/Equipe" element={<TachesEquipe/>}/>
       <Route path="/chat/Equipe" element={<MessagesEquipe/>}/>

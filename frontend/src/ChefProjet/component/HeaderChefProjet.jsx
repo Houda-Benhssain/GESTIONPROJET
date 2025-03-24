@@ -165,12 +165,12 @@ export default function HeaderChefProjet() {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-1">
               <Link
-                to="/dashboard"
+                to="/managerdashboard"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "dashboard"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`} >
-                Dashboard
+                Tableau de bord
               </Link>
 
               <Link
@@ -179,7 +179,7 @@ export default function HeaderChefProjet() {
                   activeTab === "projects"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}>
-                Projects
+                Projets
               </Link>
 
               <Link
@@ -197,7 +197,7 @@ export default function HeaderChefProjet() {
                   activeTab === "tasks"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-100" }`}  >
-                Taches
+                Tâches
               </Link>
 
               <Link

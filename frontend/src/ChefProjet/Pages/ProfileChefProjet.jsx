@@ -186,11 +186,16 @@ const ProfileEquipe = () => {
           </div>
         </div>
         <div className="max-w-screen-xl mx-auto px-4 py-8">
+<<<<<<< HEAD
           <div className="flex items-center mb-8">
             <Link
               to="/Home/Equipe"
               className="text-gray-500 hover:text-primary transition-colors mr-4 flex items-center gap-1"
             >
+=======
+          <div className="flex items-center mb-6">
+            <Link to="/managerdashboard" className="text-gray-500 hover:text-gray-700 mr-4">
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
               <ArrowLeft className="h-5 w-5" />
               <span>Back to Dashboard</span>
             </Link>

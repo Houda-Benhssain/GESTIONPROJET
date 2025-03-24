@@ -51,11 +51,19 @@ const DeleteTaskModal = ({ task, onCancel, onConfirm }) => {
 }
 
 const TasksPage = () => {
+<<<<<<< HEAD
   const [tasks, setTasks] = useState([])
   const [filteredTasks, setFilteredTasks] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
   const [showFilters, setShowFilters] = useState(false)
   const [loading, setLoading] = useState(false)
+=======
+  const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [loading, setLoading] = useState(false);
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
 
   const [filters, setFilters] = useState({
     statut: "all",
@@ -79,15 +87,29 @@ const TasksPage = () => {
   const loadTasks = async () => {
     setLoading(true)
     try {
+<<<<<<< HEAD
       const response = await fetch("http://127.0.0.1:8000/taches/")
       const data = await response.json()
       setTasks(data)
       setFilteredTasks(data)
+=======
+      const response = await fetch("http://127.0.0.1:8000/taches/");
+      const data = await response.json();
+      console.log(data); // Vérifie la structure des données ici
+      setTasks(data);
+      setFilteredTasks(data);
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
     } catch (error) {
       console.error("Erreur lors du chargement des tâches:", error)
     }
+<<<<<<< HEAD
     setLoading(false)
   }
+=======
+    setLoading(false);
+  };
+  
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
 
   const filterTasks = () => {
     let result = [...tasks]
@@ -211,6 +233,7 @@ const TasksPage = () => {
   }
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen flex flex-col bg-blue-50">
       <Header />
       <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-6 px-4">
@@ -240,6 +263,34 @@ const TasksPage = () => {
           </div>
 
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+=======
+    
+    <div className="flex flex-col min-h-screen bg-blue-50">
+  <div className="flex flex-col min-h-screen bg-blue-50">
+      <Header />
+      <div className="bg-gradient-to-r from-blue-700 to-blue-500 py-6 px-4">
+    <div className="max-w-screen-xl mx-auto">
+      <div className="flex items-center text-xs text-blue-100 mb-2">
+        <span>Projets</span>
+      </div>
+      <h1 className="text-2xl font-bold text-white">Gestion des Taches</h1>
+    </div>
+  </div>
+      <main className="flex-grow">
+        <div className="max-w-screen-2xl mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+
+
+          <div className="flex items-center">
+                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                      
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold">{tasks.length}</div>
+                      <div className="text-sm text-gray-500">Nombre de projets</div>
+                    </div>
+                  </div>
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
             <div>
               <h2 className="text-xl font-bold text-gray-800">Liste des Tâches</h2>
               <p className="text-sm text-gray-500 mt-1">Gérez et suivez toutes vos tâches</p>
@@ -405,6 +456,24 @@ const TasksPage = () => {
                             </button>
                           </div>
                         </td>
+<<<<<<< HEAD
+=======
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {task.user.nom}
+                        </td>
+                        <td className="px-4 py-3 text-sm font-medium">
+                          <div className="flex justify-start gap-4 items-center">
+                          <Link to={`/tasks/${task.id}/edit`} className="text-blue-600 hover:text-blue-800">
+                               <Edit className="h-5 w-5" />
+                           </Link>
+                          <button
+                            onClick={() => openDeleteModal(task)}
+                            className="text-red-600 hover:text-red-800"  >
+                         <Trash2 className="h-5 w-5" />
+                         </button>
+                         </div>
+                      </td>
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
                       </tr>
                     ))}
                   </tbody>
@@ -421,8 +490,14 @@ const TasksPage = () => {
         <DeleteTaskModal task={taskToDelete} onCancel={() => setIsModalOpen(false)} onConfirm={handleDelete} />
       )}
     </div>
+<<<<<<< HEAD
   )
 }
 
 export default TasksPage
+=======
+    </div>
+  );
+};
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
 

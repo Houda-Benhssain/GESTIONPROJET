@@ -1,11 +1,15 @@
-import React from "react"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
+<<<<<<< HEAD
 import { Search, Plus, Filter, Edit, Trash2, ChevronDown, ChevronRight, Briefcase, Calendar } from "lucide-react"
+=======
+import { Search, Plus, Filter, Edit, Trash2, ChevronDown, Calendar, Users } from "lucide-react"
+import ProjectFilter from "../component/ProjectFilter"
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
 import HeaderChefProjet from "../component/HeaderChefProjet"
 import FooterChefProjet from "../component/FooterChefProjet"
 
-const ProjectChefProjet = () => {
+const ProjectsPage = () => {
   const [projects, setProjects] = useState([])
   const [filteredProjects, setFilteredProjects] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
@@ -16,21 +20,22 @@ const ProjectChefProjet = () => {
   })
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [projectToDelete, setProjectToDelete] = useState(null)
-  const [clients, setClients] = useState([])
+  const [clients, setClients] = useState([]) // Nouveau state pour les clients
 
-  // Effect to load projects and clients
+  // Effect pour charger les projets et clients
   useEffect(() => {
     loadProjects()
 
   }, [])
 
-  // Effect to filter projects based on criteria
+  // Effect pour filtrer les projets selon les critères
   useEffect(() => {
     filterProjects()
   }, [searchTerm, filters, projects])
 
   const loadProjects = async () => {
     try {
+<<<<<<< HEAD
       // This would be replaced with your actual API call
       const data = [
         {
@@ -86,12 +91,31 @@ const ProjectChefProjet = () => {
       ]
       setProjects(data)
       setFilteredProjects(data)
+=======
+      const response = await fetch("http://127.0.0.1:8000/projets")
+      const data = await response.json()
+      setProjects(data) // Définir les projets récupérés
+      setFilteredProjects(data) // Initialiser les projets filtrés
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
     } catch (error) {
       console.error("Error fetching projects:", error)
     }
   }
 
+<<<<<<< HEAD
  
+=======
+  const loadClients = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/clients") // Adapter l'URL si nécessaire
+      const data = await response.json()
+      setClients(data) // Définir les clients récupérés
+    } catch (error) {
+      console.error("Error fetching clients:", error)
+    }
+  }
+
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
   const filterProjects = () => {
     let result = [...projects]
 
@@ -99,7 +123,7 @@ const ProjectChefProjet = () => {
       result = result.filter(
         (project) =>
           project.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          project.description.toLowerCase().includes(searchTerm.toLowerCase()),
+          project.description.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
@@ -108,17 +132,18 @@ const ProjectChefProjet = () => {
     }
 
     if (filters.client !== "all") {
+<<<<<<< HEAD
       const clientId = Number.parseInt(filters.client)
       result = result.filter((project) => project.client_id === clientId)
+=======
+      result = result.filter((project) => String(project.client_id) === String(filters.client))
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
     }
 
     if (filters.dateRange !== "all") {
       const now = new Date()
-      const thirtyDaysAgo = new Date(now)
-      thirtyDaysAgo.setDate(now.getDate() - 30)
-
-      const ninetyDaysAgo = new Date(now)
-      ninetyDaysAgo.setDate(now.getDate() - 90)
+      const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30))
+      const ninetyDaysAgo = new Date(now.setDate(now.getDate() - 90))
 
    
     }
@@ -134,22 +159,32 @@ const ProjectChefProjet = () => {
   const handleDeleteClick = (project) => {
     setProjectToDelete(project)
     setShowDeleteModal(true)
-  }
+}
 
-  const confirmDelete = async () => {
+const confirmDelete = async () => {
     if (projectToDelete) {
-      // This would be replaced with your actual API call
-      try {
-        // Simulate successful deletion
-        setProjects(projects.filter((p) => p.id !== projectToDelete.id))
-        setFilteredProjects(filteredProjects.filter((p) => p.id !== projectToDelete.id))
-        setShowDeleteModal(false)
-        setProjectToDelete(null)
-      } catch (error) {
-        console.error("Error deleting project:", error)
-      }
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/projets/${projectToDelete.id}`, {
+                method: "DELETE",
+            })
+            if (response.ok) {
+                // Mettre à jour les états après la suppression du projet
+                setProjects(projects.filter((p) => p.id !== projectToDelete.id))
+                setFilteredProjects(filteredProjects.filter((p) => p.id !== projectToDelete.id))
+                setShowDeleteModal(false)
+                setProjectToDelete(null)
+            } else {
+                // Gérer l'échec de la suppression
+                console.error("Error deleting project")
+            }
+        } catch (error) {
+            console.error("Error deleting project:", error)
+        }
     }
-  }
+}
+
+
+  
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -181,6 +216,7 @@ const ProjectChefProjet = () => {
     }
   }
 
+<<<<<<< HEAD
   // ProjectFilter component
  
   return (
@@ -228,6 +264,25 @@ const ProjectChefProjet = () => {
                 />
               </div>
             </div>
+=======
+  return (
+    <div className="flex flex-col min-h-screen">
+      <HeaderChefProjet />
+      <main className="flex-grow">
+        <div className="max-w-screen-2xl mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Projets</h1>
+              <p className="text-gray-500 mt-1">Gérer et suivre tous vos projets</p>
+            </div>
+            <Link
+              to="/addProjet"
+              className="mt-4 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 flex items-center"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Ajouter projet
+            </Link>
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
           </div>
 
           {filteredProjects.length === 0 ? (
@@ -250,6 +305,7 @@ const ProjectChefProjet = () => {
                 </Link>
               )}
             </div>
+<<<<<<< HEAD
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-blue-100">
@@ -369,11 +425,114 @@ const ProjectChefProjet = () => {
           )}
 
       
+=======
+
+            {filteredProjects.length === 0 ? (
+              <div className="p-8 text-center">
+                <div className="bg-gray-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto">
+                  <Filter className="h-8 w-8 text-gray-400" />
+                </div>
+                <h3 className="mt-4 text-lg font-medium text-gray-900">Aucun projet trouvé</h3>
+                <p className="mt-1 text-gray-500">
+                  {searchTerm || filters.status !== "all" || filters.client !== "all" || filters.dateRange !== "all"
+                    ? "Try adjusting your search or filter criteria"
+                    : "Get started by creating your first project"}
+                </p>
+           
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Projet
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Client
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Statut
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Date
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {filteredProjects.map((project) => {
+                      const client = clients.find((client) => client.id === project.client_id) // Trouver le client par ID
+                      return (
+                        <tr key={project.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center text-blue-600 font-bold">
+                                {project.nom.substring(0, 2).toUpperCase()}
+                              </div>
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-900">{project.nom}</div>
+                                <div className="text-sm text-gray-500 truncate max-w-xs">{project.description}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{client ? client.utilisateur.nom : "Client non trouvé"}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`px-2 py-1 text-xs font-semibold inline-block rounded-full ${getStatusColor(project.statut)}`}>
+                              {project.statut}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{new Date(project.dateDebut).toLocaleDateString()}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+  <div className="flex justify-start gap-4 items-center">
+    <Link to={`/edit/${project.id}`} className="text-blue-600 hover:text-blue-800">
+      <Edit className="h-5 w-5" />
+    </Link>
+    <button
+      onClick={() => handleDeleteClick(project)}
+      className="text-red-600 hover:text-red-800"
+    >
+      <Trash2 className="h-5 w-5" />
+    </button>
+  </div>
+</td>
+
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
         </div>
       </main>
 
       <FooterChefProjet />
 
+<<<<<<< HEAD
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-blue-900/50 flex items-center justify-center z-50">
@@ -397,6 +556,25 @@ const ProjectChefProjet = () => {
                 onClick={confirmDelete}
                 className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-colors">
                 Supprimer
+=======
+      {showDeleteModal && (
+        <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-10">
+          <div className="bg-white p-6 rounded-md shadow-lg">
+            <h3 className="text-lg font-semibold">Confirmer la suppression</h3>
+            <p className="mt-2">Êtes-vous sûr de vouloir supprimer ce projet ??</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-md"
+              >
+                Delete
+>>>>>>> 21e0198e247f1c500c979e8b47dcc03834bda3a0
               </button>
             </div>
           </div>
@@ -406,5 +584,5 @@ const ProjectChefProjet = () => {
   )
 }
 
-export default ProjectChefProjet
+export default ProjectsPage
 
