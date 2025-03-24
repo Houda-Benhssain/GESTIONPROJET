@@ -509,25 +509,6 @@ const HomeBody = () => {
             </div>
             
           </div>
-          <div className="space-y-1.5 w-full max-w-md">
-            {tasks.map((task) => (
-              <div key={task.id} className="flex items-center bg-gray-50 rounded-lg p-1.5 hover:bg-gray-100 transition-colors border border-gray-200">
-                <button onClick={() => toggleTask(task.id)} className={`w-4 h-4 rounded-sm border ${task.completed ? "bg-blue-500 border-blue-500" : "border-blue-500"} flex items-center justify-center mr-2`}>
-                  {task.completed && (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5 text-white" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </button>
-                <span className={`text-sm text-gray-800 flex-1 ${task.completed ? "line-through text-gray-400" : ""}`}>{task.text}</span>
-                <button onClick={() => deleteTask(task.id)} className="bg-red-100 hover:bg-red-200 text-red-600 p-0.5 rounded transition-colors ml-2" aria-label="Delete task">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M6.293 6.293a1 1 0 011.414 0L10 8.586l2.293-2.293a1 1 0 111.414 1.414L11.414 10l2.293 2.293a1 1 0 01-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 01-1.414-1.414L8.586 10 6.293 7.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
       <Footer />
