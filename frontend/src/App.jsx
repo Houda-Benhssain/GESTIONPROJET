@@ -84,14 +84,12 @@ function App() {
        <Route path="/settings/profile" element= {<SettingProfile/>} /> 
        
           {/* Route chef de projet  */}
-      <Route path="/dashboard" element= {<HomeChefProjet/>} />
       <Route path="/profile/chefProjet" element= {<ProfilePageCf/>} />
       <Route path="/projects/ChefProjet" element= {<ProjectChefProjet/>} />
-      <Route path="/add_project" element= {<Add_Project_ChefProjet/>} />
-      <Route path="/addProjet" element={<AddProject/>}/>
+      <Route path="/addProjetCf" element= {<Add_Project_ChefProjet/>} />
       <Route path="/clients/ChefProjet" element={<ClientProjetCf/>}/>
       <Route path="/editClientCf/:id" element={<EditClientCF/>}/>
-      <Route path="/DetailClientCF/:id" element={<DetailClientCF/>}/>
+      <Route path="/clients/ChefProjet/DetailClientCF/:id" element={<DetailClientCF/>}/>
   
       <Route path="/chat/ChefProjet" element={<MessagesPage/>}/>
       <Route path="/add_clients" element={<AddClientChef/>}/>

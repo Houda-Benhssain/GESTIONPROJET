@@ -74,7 +74,7 @@ const AddClientChef = ({ addClient }) => {
         <div className="max-w-screen-lg mx-auto">
           <div className="mb-6">
             <button
-              onClick={() => navigate("/clients")}
+              onClick={() => navigate("/clients/ChefProjet")}
               className="flex items-center text-blue-600 hover:text-blue-800 mb-4">
               <ArrowLeft className="h-4 w-4 mr-1" />
               Retour aux clients

@@ -20,6 +20,15 @@ const AddTskCf = () => {
   const [projets, setProjets] = useState([]);  // Liste des projets
   const [utilisateurs, setUtilisateurs] = useState([]); // Liste des utilisateurs
   const [errors, setErrors] = useState({});
+  const [userId, setUserId] = useState("");
+
+  // Récupérer l'ID de l'utilisateur connecté
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setUserId(user.id); // Assurez-vous que l'utilisateur a un champ id
+    }
+  }, []);
 
   // Récupérer la liste des projets
   useEffect(() => {
@@ -27,14 +36,19 @@ const AddTskCf = () => {
       try {
         const response = await fetch("http://127.0.0.1:8000/projets");
         const data = await response.json();
-        setProjets(data); // Stocker les projets dans le state
+        
+        // Filtrer les projets pour afficher seulement ceux appartenant à l'utilisateur connecté
+        const filteredProjects = data.filter((projet) => projet.user_id === userId);
+        setProjets(filteredProjects); // Stocker les projets filtrés dans l'état
       } catch (error) {
         console.error("Error fetching projects:", error);
       }
     };
 
-    fetchProjets();
-  }, []);
+    if (userId) {
+      fetchProjets(); // Ne charger les projets que si un utilisateur est connecté
+    }
+  }, [userId]);
 
   // Récupérer la liste des utilisateurs ayant le rôle "Membre équipe"
   useEffect(() => {

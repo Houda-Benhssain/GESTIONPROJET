@@ -1,9 +1,10 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { ArrowLeft, Calendar, Save } from "lucide-react"
+import { ArrowLeft, Calendar, Save ,X} from "lucide-react"
 import HeaderChefProjet from "./HeaderChefProjet"
 import FooterChefProjet from "./FooterChefProjet"
+import { Link } from "react-router-dom"
 
 const EditTaskCf = () => {
   const { id } = useParams();
@@ -163,7 +164,7 @@ const EditTaskCf = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <HeaderChefProjet />
       <main className="flex-grow">
         <div className="max-w-screen-lg mx-auto px-4 py-6">
           <div className="bg-white rounded-lg shadow p-6">
