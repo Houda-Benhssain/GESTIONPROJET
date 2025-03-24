@@ -2,10 +2,10 @@ import React from "react"
 import { useState, useEffect } from "react"
 import { User, Rocket } from "lucide-react"
 import { Link } from "react-router-dom"
-import FooterChefProjet from "./FooterChefProjet"
-import HeaderChefProjet from "./HeaderChefProjet"
+import FooterClient from "../component/FooterClient"
+import HeaderClient from "../component/HeaderClient"
 
-const EditProfile = () => {
+const ParametreProfile = () => {
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -76,9 +76,10 @@ const EditProfile = () => {
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden m-0 p-0">
-      <HeaderChefProjet/>
+      <HeaderClient />
       <main className="flex-grow flex w-full h-full overflow-hidden">
         <div className="flex flex-col md:flex-row w-full h-full">
+          {/* Left side with gradient background */}
           <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-400 p-8 text-white md:w-1/3 flex flex-col items-center justify-center relative">
             <div className="absolute top-0 right-0 h-full w-16 md:block hidden">
               <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
@@ -91,7 +92,7 @@ const EditProfile = () => {
               </div>
               <h2 className="text-2xl font-bold mb-4">Welcome</h2>
               <p className="text-sm opacity-90 mb-8">You are 30 seconds away from updating your profile information!</p>
-              <Link to="/profile/chefProjet">
+              <Link to="/profile/client">
                 <button className="bg-white text-blue-600 hover:bg-blue-50 px-6 py-2 rounded-md font-medium w-full transition-colors">
                   Back to Profile
                 </button>
@@ -205,10 +206,10 @@ const EditProfile = () => {
           </div>
         </div>
       </main>
-      <FooterChefProjet />
+      <FooterClient />
     </div>
   )
 }
 
-export default EditProfile
+export default ParametreProfile
 

@@ -2,10 +2,10 @@ import React from "react"
 import { useState, useEffect } from "react"
 import { User, Mail, Briefcase, ArrowLeft, ChevronLeft, ChevronRight, Calendar, MapPin } from "lucide-react"
 import { Link } from "react-router-dom"
-import HeaderChefProjet from "../component/HeaderChefProjet"
-import FooterChefProjet from "../component/FooterChefProjet"
+import FooterClient from "../component/FooterClient"
+import HeaderClient from "../component/HeaderClient"
 
-const ProfileEquipe = () => {
+const ProfileClient = () => {
   // Profile state
   const [profile, setProfile] = useState({
     name: "Chef de Projet",
@@ -169,7 +169,7 @@ const ProfileEquipe = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <HeaderChefProjet />
+      <HeaderClient />
       <main className="flex-grow">
         <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8 mb-8">
           <div className="max-w-screen-xl mx-auto">
@@ -319,10 +319,10 @@ const ProfileEquipe = () => {
           </div>
         </div>
       </main>
-      <FooterChefProjet />
+      <FooterClient />
     </div>
   )
 }
 
-export default ProfileEquipe
+export default ProfileClient
 

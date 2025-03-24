@@ -43,7 +43,15 @@ import TachesEquipe from "./MembreEquipe/Pages/TacheEquipe";
 import MessagesEquipe from "./MembreEquipe/Pages/MessageEquipe";
 import ProfileEquipe from "./MembreEquipe/Pages/ProfileEquipe";
 import EditProfileEquipe from "./MembreEquipe/Pages/SeetingEquipe";
-
+// Client
+import ClientDashboard from "./Clients.jsx/Pages/BodyClient";
+import Payment from "./Clients.jsx/Pages/Payment";
+import ProjectClient from "./Clients.jsx/Pages/ProjetClient";
+import DocumentationClient from "./Clients.jsx/Pages/DocumentationClient";
+import TacheClient from "./Clients.jsx/Pages/TacheClient";
+import ProfileClient from "./Clients.jsx/Pages/ProfileClient";
+import ParametreProfile from "./Clients.jsx/Pages/ParametreProfile";
+import Homepage from "./Clients.jsx/Pages/HomePage";
 
 function App() {
   return (
@@ -74,6 +82,8 @@ function App() {
        <Route path="/DetailClient/:id" element= {<DetailClient/>} /> 
        <Route path="/settings/profile" element= {<SettingProfile/>} /> 
        
+
+       
           {/* Route chef de projet  */}
       <Route path="/dashboard" element= {<HomeChefProjet/>} />
       <Route path="/profile/chefProjet" element= {<ProfilePageCf/>} />
@@ -103,7 +113,18 @@ function App() {
       <Route path="/chat/Equipe" element={<MessagesEquipe/>}/>
       <Route path="/profile/Equipe" element={<ProfileEquipe/>}/>
       <Route path="/SettingProfile/Equipe" element={<EditProfileEquipe/>}/>
+      {/* Route client  */}
+      <Route path="/Home" element={<Homepage/>}/>
+      <Route path="/dashboard/Client" element={<ClientDashboard/>}/>
+      <Route path="/payments/client" element={<Payment/>}/>
+      <Route path="/projects/client" element={<ProjectClient/>}/>
+      <Route path="/documentation/client" element={<DocumentationClient/>}/>
+      <Route path="/tasks/client" element={<TacheClient/>}/>
+      <Route path="/profile/client" element={<ProfileClient/>}/>
+      <Route path="/Parametre/client" element={<ParametreProfile/>}/>
+
      
+
 
     </Routes>
     </>

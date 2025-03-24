@@ -135,9 +135,9 @@ const ClientsPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-blue-50">
       <Header />
-      <div className="bg-gradient-to-r from-blue-700 to-blue-500 py-6 px-4">
+      <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-6 px-4">
         <div className="max-w-screen-2xl mx-auto">
           <div className="flex items-center text-xs text-blue-100 mb-2">
             <span>Dashboard</span>
@@ -246,7 +246,7 @@ const ClientsPage = () => {
                               <Eye className="h-4 w-4" />
                             </Link>
                             <Link
-                              to={`/editClientCf/${client.id}`}
+                              to={`/editClient/${client.id}`}
                               className="p-1.5 bg-blue-50 rounded-md text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors">
                               <Edit className="h-4 w-4" />
                             </Link>

@@ -102,9 +102,8 @@ const HomeBody = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-
       {/* Modern gradient header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-screen-2xl mx-auto">
           <div className="flex items-center justify-between">
             <div>
@@ -114,11 +113,6 @@ const HomeBody = () => {
                 <span>Administrateur</span>
               </div>
               <h1 className="text-2xl font-bold text-white">Tableau de bord d'administrateur</h1>
-            </div>
-            <div className="hidden sm:flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-medium">
-                H
-              </div>
             </div>
           </div>
         </div>
@@ -193,14 +187,12 @@ const HomeBody = () => {
                 <path
                   d="M18 35C27.3888 35 35 27.3888 35 18C35 8.61116 27.3888 1 18 1C8.61116 1 1 8.61116 1 18C1 27.3888 8.61116 35 18 35Z"
                   stroke="#E5E7EB"
-                  strokeWidth="2"
-                />
+                  strokeWidth="2" />
                 <path
                   d="M18 35C27.3888 35 35 27.3888 35 18C35 8.61116 27.3888 1 18 1"
                   stroke="#3B82F6"
                   strokeWidth="2"
-                  strokeLinecap="round"
-                />
+                  strokeLinecap="round"/>
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-gray-800 text-sm font-semibold">75%</span>
@@ -302,8 +294,7 @@ const HomeBody = () => {
               {completedTasksCount > 0 && (
                 <button
                   onClick={deleteCompletedTasks}
-                  className="flex items-center text-red-500 hover:text-red-700 text-sm font-medium px-3 py-1 bg-red-50 rounded-full"
-                >
+                  className="flex items-center text-red-500 hover:text-red-700 text-sm font-medium px-3 py-1 bg-red-50 rounded-full" >
                   <Trash2 className="h-4 w-4 mr-1" />
                   Supprimer terminées
                 </button>
@@ -313,12 +304,10 @@ const HomeBody = () => {
             {tasks.length > 0 ? (
               <div className="space-y-3 mb-6">
                 {tasks.map((task) => (
-                  <div
-                    key={task.id}
+                  <div key={task.id}
                     className={`p-4 rounded-xl flex items-center justify-between ${
                       task.completed ? "bg-gray-50" : getColorClass(task.color)
-                    } transition-colors`}
-                  >
+                    } transition-colors`}>
                     <div className="flex items-center">
                       <button
                         onClick={() => toggleTask(task.id)}
@@ -328,8 +317,7 @@ const HomeBody = () => {
                         {task.completed && <CheckCircle className="h-4 w-4" />}
                       </button>
                       <span
-                        className={`font-medium ${task.completed ? "line-through text-gray-400" : "text-gray-700"}`}
-                      >
+                        className={`font-medium ${task.completed ? "line-through text-gray-400" : "text-gray-700"}`}>
                         {task.text}
                       </span>
                     </div>
@@ -337,8 +325,7 @@ const HomeBody = () => {
                       {task.completed && (
                         <button
                           onClick={() => deleteTask(task.id)}
-                          className="text-red-400 hover:text-red-600 p-1 rounded-full hover:bg-red-50"
-                        >
+                          className="text-red-400 hover:text-red-600 p-1 rounded-full hover:bg-red-50" >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       )}
@@ -369,8 +356,7 @@ const HomeBody = () => {
                 />
                 <button
                   type="submit"
-                  className="bg-blue-700 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                >
+                  className="bg-blue-700 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                   Ajouter
                 </button>
               </div>
@@ -445,11 +431,6 @@ const HomeBody = () => {
                   </div>
                 </div>
               </div>
-
-              <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
-                <Plus className="h-4 w-4 mr-2" />
-                Planifier une réunion
-              </button>
             </div>
           </div>
         </div>

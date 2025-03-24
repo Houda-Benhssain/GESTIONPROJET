@@ -15,7 +15,6 @@ const HomeEquipe = () => {
     { id: 5, text: "Meeting at 12", completed: false, color: "pink" },
     { id: 6, text: "Meeting at 10", completed: false, color: "cyan" },
   ])
-  const [welcomeVisible, setWelcomeVisible] = useState(true)
 
   const handleSubmit = (e) => {
     e.preventDefault()
