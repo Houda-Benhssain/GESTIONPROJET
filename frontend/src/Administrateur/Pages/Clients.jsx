@@ -7,7 +7,7 @@ import Footer from "../component/Footer"
 
 const DeleteClientModal = ({ client, onCancel, onConfirm }) => {
   return (
-    <div className="fixed inset-0  flex items-center justify-center z-50">
+    <div className="fixed inset-0  flex items-center justify-center z-50 ">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mx-auto mb-4">
           <Trash2 className="h-6 w-6 text-red-600" />

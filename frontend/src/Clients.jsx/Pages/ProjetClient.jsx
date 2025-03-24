@@ -116,7 +116,7 @@ const ProjectClient = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-blue-50">
       <HeaderClient />
 
       {/* Blue gradient header like in the image */}

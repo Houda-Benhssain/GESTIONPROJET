@@ -1,13 +1,13 @@
 import React from "react"
-import HeaderClient from "../component/HeaderClient"
-import FooterClient from "../component/FooterClient"
 import ImageHome from "../../Image/ImageHome.gif"
 import { Link } from "react-router-dom"
+import FooterEquipe from "../component/FooterEquipe"
+import HeaderEquipe from "../component/HeaderEquipe"
 
-export default function Homepage() {
+export default function HomePageEquipe() {
   return (
     <div className="min-h-screen bg-blue-50 flex flex-col">
-      <HeaderClient />
+      <HeaderEquipe />
       <main className="flex-grow">
         <section className="bg-gradient-to-r from-blue-800 to-blue-700 text-white py-16 px-4 rounded-3xl mx-4 my-8 md:mx-8 lg:mx-16">
           <div className="container mx-auto grid md:grid-cols-2 gap-8 items-center">
@@ -19,7 +19,7 @@ export default function Homepage() {
                 Libérez tout le potentiel de vos projets grâce à notre plateforme riche en fonctionnalités
               </p>
               <div className="flex flex-col sm:flex-row gap-4 max-w-md">
-                <Link to="/dashboard/Client">
+                <Link to="/Home/Equipe">
                 <button className="px-4 py-2 rounded-md bg-white text-blue-600 hover:bg-white/90 font-medium transition-colors">
                   Commencer
                 </button>
@@ -387,28 +387,10 @@ export default function Homepage() {
           </div>
         </section>
 
-        {/* CTA Section */}
-        {/* <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-3xl mx-4 my-12 md:mx-8 lg:mx-16">
-          <div className="container mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Prêt à transformer votre gestion de projet ?</h2>
-            <p className="text-xl text-blue-100 max-w-2xl mx-auto mb-8">
-              Rejoignez des milliers d'équipes qui ont déjà amélioré leur flux de travail et leur productivité avec
-              PlanIt.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button className="px-6 py-3 rounded-md bg-white text-blue-600 hover:bg-blue-50 font-medium transition-colors shadow-lg">
-                Essai gratuit
-              </button>
-              <button className="px-6 py-3 rounded-md bg-transparent border-2 border-white text-white hover:bg-white/10 font-medium transition-colors">
-                Demander une démo
-              </button>
-            </div>
-          </div>
-        </section> */}
       </main>
 
       {/* Footer */}
-      <FooterClient />
+      <FooterEquipe />
     </div>
   )
 }

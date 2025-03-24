@@ -124,7 +124,7 @@ const DocumentationAdmin = () => {
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Header />
       <main className="flex-grow">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white">
+        <div className="bg-gradient-to-r from-blue-800 to-blue-600 text-white">
           <div className="max-w-screen-xl mx-auto px-4 py-16 sm:py-24">
             <div
               className={`transition-all duration-700 ease-out transform ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}>

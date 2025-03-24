@@ -156,7 +156,7 @@ const UserPage = () => {
   return (
     <div className="flex flex-col min-h-screen bg-blue-50">
       <Header />
-      <div className="bg-gradient-to-r from-blue-700 to-blue-500 py-6 px-4">
+      <div className="bg-gradient-to-r from-blue-800 to-blue-700 py-6 px-4">
         <div className="max-w-screen-xl mx-auto">
           <div className="flex items-center text-xs text-blue-100 mb-2">
             <span>Dashboard</span>
@@ -405,7 +405,7 @@ const UserPage = () => {
 
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && userToDelete && (
-        <div className="fixed inset-0 bg-blue-900/50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mx-auto mb-4">
               <Trash2 className="h-6 w-6 text-blue-600" />

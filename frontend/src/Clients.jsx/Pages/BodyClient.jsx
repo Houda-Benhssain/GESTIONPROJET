@@ -145,8 +145,8 @@ export default function ClientDashboard() {
           </div>
 
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow border border-blue-100">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-bold text-black">Projets actifs</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-black">Projets actifs</h2>
               <span className="text-blue-500 text-xs">Mises à jour du statut</span>
             </div>
 

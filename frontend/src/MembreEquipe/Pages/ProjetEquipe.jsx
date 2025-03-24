@@ -139,11 +139,11 @@ const ProjetEquipe = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-blue-50">
       <HeaderEquipe />
 
       {/* Blue gradient header like in the image */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-screen-2xl mx-auto">
           <div className="flex items-center justify-between">
             <div>
@@ -154,11 +154,7 @@ const ProjetEquipe = () => {
               </div>
               <h1 className="text-2xl font-bold text-white">Projets de l'équipe</h1>
             </div>
-            <div className="hidden sm:flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-medium">
-                H
-              </div>
-            </div>
+          
           </div>
         </div>
       </div>

@@ -204,7 +204,7 @@ const TacheClient = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-blue-50">
       <HeaderClient />
 
       {/* Blue gradient header */}
@@ -300,8 +300,7 @@ const TacheClient = () => {
                   <select
                     className="block w-full pl-3 pr-10 py-2 text-base border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg bg-blue-50"
                     value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                  >
+                    onChange={(e) => setFilterStatus(e.target.value)}>
                     <option value="all">Tous les statuts</option>
                     <option value="pending">En attente</option>
                     <option value="in-progress">En cours</option>
@@ -317,8 +316,7 @@ const TacheClient = () => {
                   <select
                     className="block w-full pl-3 pr-10 py-2 text-base border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-lg bg-blue-50"
                     value={filterPriority}
-                    onChange={(e) => setFilterPriority(e.target.value)}
-                  >
+                    onChange={(e) => setFilterPriority(e.target.value)} >
                     <option value="all">Toutes les priorités</option>
                     <option value="high">Haute</option>
                     <option value="medium">Moyenne</option>
@@ -366,17 +364,11 @@ const TacheClient = () => {
                         <span
                           className={`text-xs font-medium flex items-center gap-1 ${getPriorityBadge(task.priority).color}`}
                         >
-                          {getPriorityBadge(task.priority).icon}
                           Priorité {getPriorityBadge(task.priority).text}
                         </span>
                       </div>
                       <p className="text-gray-600 text-sm mb-2">{task.description}</p>
                       <div className="text-xs text-blue-600 font-medium">Projet: {task.projectName}</div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button className="text-blue-400 hover:text-blue-600 p-1.5 rounded-full hover:bg-blue-50 transition-colors">
-                        <MoreHorizontal className="h-5 w-5" />
-                      </button>
                     </div>
                   </div>
 
@@ -384,13 +376,6 @@ const TacheClient = () => {
                     <div className="flex items-center gap-2 text-sm">
                       <Calendar className="h-4 w-4 text-gray-400" />
                       <span className="text-gray-600">Échéance: {formatDate(task.deadline)}</span>
-                    </div>
-
-                    <div
-                      className={`flex items-center gap-1 text-sm ${getDaysRemainingText(task.deadline, task.status).color}`}
-                    >
-                      <Clock className="h-4 w-4" />
-                      <span>{getDaysRemainingText(task.deadline, task.status).text}</span>
                     </div>
 
                     <div className="flex items-center gap-4 text-sm text-gray-500 mt-2 sm:mt-0">
@@ -414,25 +399,7 @@ const TacheClient = () => {
                         </span>
                       )}
 
-                      {task.comments > 0 && (
-                        <span className="flex items-center gap-1">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                            />
-                          </svg>
-                          {task.comments}
-                        </span>
-                      )}
+                     
                     </div>
                   </div>
                 </div>

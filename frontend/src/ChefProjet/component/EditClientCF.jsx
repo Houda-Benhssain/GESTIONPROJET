@@ -1,354 +1,257 @@
-import React from "react";
+import React from "react"
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { ArrowLeft, Save, User, Mail, Phone, MapPin, Check, X } from "lucide-react"
-import HeaderChefProjet from "./HeaderChefProjet";
-import FooterChefProjet from "./FooterChefProjet";
+import { ArrowLeft, Save, User, Mail, Phone, MapPin, Building, AlertCircle } from "lucide-react"
+import HeaderChefProjet from "./HeaderChefProjet"
+import FooterChefProjet from "./FooterChefProjet"
 
-const EditClientCF = ({ clients, setClients }) => {
+const EditClientCF = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [notification, setNotification] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [formData, setFormData] = useState({
-    name: "",
-    contact: "",
-    email: "",
-    phone: "",
-    address: "",
-    status: "active",
-    industry: "",
-    notes: "",
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [formError, setFormError] = useState("")
+  const [client, setClient] = useState({
+    utilisateur: {
+      nom: "",
+      email: "",
+      role: "",
+    },
+    telephone: "",
+    adresse: "",
   })
 
-  // Fallback data if no clients prop is provided
-  const [localClients, setLocalClients] = useState([
-    {
-      id: 1,
-      name: "Acme Corporation",
-      contact: "John Doe",
-      email: "john@acmecorp.com",
-      phone: "+1 (555) 123-4567",
-      address: "123 Business Ave, New York, NY 10001",
-      status: "active",
-      projects: 3,
-      totalSpent: 12500,
-      lastActivity: "2023-03-15",
-      industry: "Technology",
-      notes: "Key client for Q2 objectives. Looking to expand services in coming months.",
-    },
-    {
-      id: 2,
-      name: "Globex Industries",
-      contact: "Jane Smith",
-      email: "jane@globex.com",
-      phone: "+1 (555) 987-6543",
-      address: "456 Corporate Blvd, Chicago, IL 60601",
-      status: "active",
-      projects: 1,
-      totalSpent: 8750,
-      lastActivity: "2023-04-02",
-      industry: "Manufacturing",
-      notes: "New client, started with a small project. Potential for growth.",
-    },
-    {
-      id: 3,
-      name: "Initech LLC",
-      contact: "Michael Johnson",
-      email: "michael@initech.com",
-      phone: "+1 (555) 456-7890",
-      address: "789 Tech Park, San Francisco, CA 94105",
-      status: "inactive",
-      projects: 0,
-      totalSpent: 0,
-      lastActivity: "2023-01-10",
-      industry: "Finance",
-      notes: "Previous client, currently inactive. Follow up in Q3 for potential new projects.",
-    },
-  ])
-
-  // Use provided clients or local state
-  const clientsList = clients || localClients
-  const updateClients = setClients || setLocalClients
-
-  // Find the client to edit
   useEffect(() => {
-    const clientId = Number.parseInt(id)
-    const clientToEdit = clientsList.find((client) => client.id === clientId)
+    loadClient()
+  }, [id])
 
-    if (clientToEdit) {
-      setFormData({
-        name: clientToEdit.name,
-        contact: clientToEdit.contact,
-        email: clientToEdit.email,
-        phone: clientToEdit.phone || "",
-        address: clientToEdit.address || "",
-        status: clientToEdit.status,
-        industry: clientToEdit.industry || "",
-        notes: clientToEdit.notes || "",
-      })
-      setIsLoading(false)
-    } else {
-      // Client not found
-      setNotification({
-        type: "error",
-        message: "Client not found",
-      })
-      setIsLoading(false)
+  const loadClient = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/clients/${id}`)
+      if (response.ok) {
+        const clientData = await response.json()
+        setClient(clientData)
+      } else {
+        setFormError("Client non trouvé")
+      }
+    } catch (error) {
+      setFormError("Erreur lors du chargement du client : " + error.message)
     }
-  }, [id, clientsList])
+    setLoading(false)
+  }
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData({
-      ...formData,
-      [name]: value,
-    })
+    if (name.includes(".")) {
+      const [field, key] = name.split(".")
+      setClient((prevClient) => ({
+        ...prevClient,
+        [field]: {
+          ...prevClient[field],
+          [key]: value,
+        },
+      }))
+    } else {
+      setClient((prevClient) => ({
+        ...prevClient,
+        [name]: value,
+      }))
+    }
   }
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const clientId = Number.parseInt(id)
+    setSaving(true)
+    setFormError("")
 
-    // Update client data
-    const updatedClients = clientsList.map((client) => (client.id === clientId ? { ...client, ...formData } : client))
+    if (!client.utilisateur.nom || !client.utilisateur.email) {
+      setFormError("Veuillez remplir tous les champs obligatoires")
+      setSaving(false)
+      return
+    }
 
-    updateClients(updatedClients)
+    // Créer un objet avec la structure correcte pour l'API
+    const dataToSend = {
+      ...client,
+      utilisateur: {
+        ...client.utilisateur,
+      },
+    }
 
-    // Show success notification
-    setNotification({
-      type: "success",
-      message: "Client updated successfully",
-    })
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/clients/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      })
 
-    // Navigate back to clients page after a short delay
-    setTimeout(() => {
-      navigate("/clients", { state: { message: "Client updated successfully" } })
-    }, 1500)
-  }
-
-  // Cancel edit and go back
-  const handleCancel = () => {
-    navigate("/clients/ChefProjet")
+      if (response.ok) {
+        navigate("/clients")
+      } else {
+        setFormError("Échec de la mise à jour du client")
+      }
+    } catch (error) {
+      setFormError("Erreur lors de la mise à jour : " + error.message)
+    }
+    setSaving(false)
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-blue-50">
       <HeaderChefProjet />
-
-      <main className="flex-grow p-4 md:p-6">
-        <div className="max-w-screen-lg mx-auto">
-          {/* Back button and page title */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-            <div className="flex items-center mb-4 sm:mb-0">
-              <button onClick={handleCancel} className="mr-3 text-gray-500 hover:text-gray-700">
-                <ArrowLeft className="h-5 w-5" />
-              </button>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">Edit Client</h1>
-                <p className="text-sm text-gray-500 mt-1">Update client information</p>
-              </div>
-            </div>
+      <main className="flex-grow">
+        <div className="max-w-screen-xl mx-auto px-4 py-8">
+          <div className="flex items-center mb-6">
+            <button
+              onClick={() => navigate("/clients/ChefProjet")}
+              className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              <span className="font-medium">Retour à la liste</span>
+            </button>
           </div>
 
-          {/* Notification */}
-          {notification && (
-            <div
-              className={`mb-6 p-4 rounded-md ${notification.type === "success" ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}
-            >
-              <div className="flex items-center">
-                {notification.type === "success" ? <Check className="h-5 w-5 mr-2" /> : <X className="h-5 w-5 mr-2" />}
-                <p>{notification.message}</p>
-              </div>
-            </div>
-          )}
-
-          {isLoading ? (
-            <div className="bg-white rounded-lg shadow-sm p-8 flex justify-center">
-              <p>Loading client data...</p>
+          {loading ? (
+            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+              <p className="mt-4 text-gray-500">Chargement des informations...</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit}>
-              <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-gray-200">
-                  <h2 className="text-lg font-medium text-gray-900">Client Information</h2>
-                  <p className="mt-1 text-sm text-gray-500">Basic information about the client.</p>
+            <div className="bg-white rounded-lg shadow-lg border-t-4 border-blue-600 overflow-hidden">
+              <div className="flex items-center p-6 bg-gradient-to-r">
+                <div className="bg-white p-3 rounded-full mr-4">
+                  <Building className="h-6 w-6 text-blue-600" />
                 </div>
+                <h1 className="text-2xl font-bold text-black">Modifier le client</h1>
+              </div>
 
+              {formError && (
+                <div className="p-4 mx-6 mt-6 bg-red-50 border-l-4 border-red-500 text-red-700 rounded flex items-start">
+                  <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+                  <p>{formError}</p>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit}>
                 <div className="p-6 space-y-6">
-                  {/* Company Information */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                        Company Name *
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        required
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="industry" className="block text-sm font-medium text-gray-700">
-                        Industry
-                      </label>
-                      <input
-                        type="text"
-                        id="industry"
-                        name="industry"
-                        value={formData.industry}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
+                  <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                    <h2 className="text-lg font-medium text-blue-800 mb-4 flex items-center">
+                      <User className="h-5 w-5 mr-2 text-blue-600" />
+                      Informations personnelles
+                    </h2>
 
-                  {/* Contact Information */}
-                  <div>
-                    <h3 className="text-md font-medium text-gray-700 mb-3">Contact Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label htmlFor="contact" className="block text-sm font-medium text-gray-700">
-                          Contact Person *
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-blue-800 mb-1">
+                          Nom complet <span className="text-red-500">*</span>
                         </label>
-                        <div className="mt-1 relative rounded-md shadow-sm">
+                        <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <User className="h-4 w-4 text-gray-400" />
+                            <User className="h-5 w-5 text-blue-400" />
                           </div>
                           <input
                             type="text"
-                            id="contact"
-                            name="contact"
-                            required
-                            value={formData.contact}
+                            name="utilisateur.nom"
+                            value={client.utilisateur.nom}
                             onChange={handleInputChange}
-                            className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            className="block w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            placeholder="Nom du client"
+                            required
                           />
                         </div>
                       </div>
+
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                          Email *
+                        <label className="block text-sm font-medium text-blue-800 mb-1">
+                          Email <span className="text-red-500">*</span>
                         </label>
-                        <div className="mt-1 relative rounded-md shadow-sm">
+                        <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Mail className="h-4 w-4 text-gray-400" />
+                            <Mail className="h-5 w-5 text-blue-400" />
                           </div>
                           <input
                             type="email"
-                            id="email"
-                            name="email"
+                            name="utilisateur.email"
+                            value={client.utilisateur.email}
+                            onChange={handleInputChange}
+                            className="block w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            placeholder="email@exemple.com"
                             required
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                           />
                         </div>
                       </div>
+
                       <div>
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                          Phone
-                        </label>
-                        <div className="mt-1 relative rounded-md shadow-sm">
+                        <label className="block text-sm font-medium text-blue-800 mb-1">Téléphone</label>
+                        <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Phone className="h-4 w-4 text-gray-400" />
+                            <Phone className="h-5 w-5 text-blue-400" />
                           </div>
                           <input
                             type="text"
-                            id="phone"
-                            name="phone"
-                            value={formData.phone}
+                            name="telephone"
+                            value={client.telephone}
                             onChange={handleInputChange}
-                            className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                          Address
-                        </label>
-                        <div className="mt-1 relative rounded-md shadow-sm">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <MapPin className="h-4 w-4 text-gray-400" />
-                          </div>
-                          <input
-                            type="text"
-                            id="address"
-                            name="address"
-                            value={formData.address}
-                            onChange={handleInputChange}
-                            className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            className="block w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            placeholder="+33 6 12 34 56 78"
                           />
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Additional Information */}
-                  <div>
-                    <h3 className="text-md font-medium text-gray-700 mb-3">Additional Information</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-                          Status
-                        </label>
-                        <select
-                          id="status"
-                          name="status"
-                          value={formData.status}
+                  <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                    <h2 className="text-lg font-medium text-blue-800 mb-4 flex items-center">
+                      <MapPin className="h-5 w-5 mr-2 text-blue-600" />
+                      Adresse
+                    </h2>
+
+                    <div>
+                      <label className="block text-sm font-medium text-blue-800 mb-1">Adresse complète</label>
+                      <div className="relative">
+                        <div className="absolute top-3 left-3 flex items-start pointer-events-none">
+                          <MapPin className="h-5 w-5 text-blue-400" />
+                        </div>
+                        <textarea
+                          name="adresse"
+                          rows="3"
+                          value={client.adresse}
                           onChange={handleInputChange}
-                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        >
-                          <option value="active">Active</option>
-                          <option value="inactive">Inactive</option>
-                        </select>
+                          className="block w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          placeholder="Numéro, rue, code postal, ville, pays"
+                        ></textarea>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Notes */}
-                  <div>
-                    <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
-                      Notes
-                    </label>
-                    <textarea
-                      id="notes"
-                      name="notes"
-                      rows="4"
-                      value={formData.notes}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Add any additional notes about this client..."
-                    ></textarea>
                   </div>
                 </div>
 
-                <div className="px-6 py-4 bg-gray-50 flex flex-col sm:flex-row-reverse gap-3 sm:gap-2">
+                <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+                  <div className="text-sm text-gray-500">
+                    <span className="text-red-500">*</span> Champs obligatoires
+                  </div>
                   <button
                     type="submit"
-                    className="inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    <Save className="h-4 w-4 mr-2" />
-                    Save Changes
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleCancel}
-                    className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" >
-                    Cancel
+                    className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors shadow-md flex items-center"
+                    disabled={saving}
+                  >
+                    {saving ? (
+                      "Enregistrement..."
+                    ) : (
+                      <>
+                        <Save className="h-5 w-5 mr-2" />
+                        Enregistrer les modifications
+                      </>
+                    )}
                   </button>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           )}
         </div>
       </main>
-
       <FooterChefProjet />
     </div>
   )

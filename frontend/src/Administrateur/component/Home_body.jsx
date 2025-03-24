@@ -2,6 +2,7 @@ import React from "react"
 import { useState } from "react"
 import Header from "./Header"
 import Footer from "./Footer"
+import { Link } from "react-router-dom"
 import { CheckCircle, FileText, Calendar, Users, MessageSquare, Clock, Plus, Trash2, ChevronRight,
 
 } from "lucide-react"
@@ -9,10 +10,6 @@ import { CheckCircle, FileText, Calendar, Users, MessageSquare, Clock, Plus, Tra
 const HomeBody = () => {
   const [newTask, setNewTask] = useState("")
   const [tasks, setTasks] = useState([
-    { id: 1, text: "Design a facebook ad", completed: false, color: "blue" },
-    { id: 2, text: "Analyze Data", completed: false, color: "blue" },
-    { id: 3, text: "Youtube campaign", completed: false, color: "green" },
-    { id: 4, text: "Assign 10 employee", completed: false, color: "orange" },
     { id: 5, text: "Meeting at 12", completed: false, color: "pink" },
     { id: 6, text: "Meeting at 10", completed: false, color: "cyan" },
   ])
@@ -100,7 +97,7 @@ const HomeBody = () => {
   const completedTasksCount = tasks.filter((task) => task.completed).length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-blue-50">
       <Header />
       {/* Modern gradient header */}
       <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-8 px-4 sm:px-6 lg:px-8">
@@ -431,6 +428,12 @@ const HomeBody = () => {
                   </div>
                 </div>
               </div>
+              <Link to="/AddReunionAdmin" >
+              <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
+                <Plus className="h-4 w-4 mr-2" />
+                Planifier une réunion
+              </button>
+              </Link>
             </div>
           </div>
         </div>

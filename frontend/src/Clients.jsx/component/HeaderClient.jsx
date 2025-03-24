@@ -1,5 +1,4 @@
 import React from "react"
-
 import { useState, useRef, useEffect } from "react"
 import {
   Bell,
@@ -10,7 +9,6 @@ import {
   LogOut,
   Globe,
   Check,
-  MessageSquare,
   Calendar,
   CreditCard,
 } from "lucide-react"
@@ -177,8 +175,7 @@ export default function HeaderClient() {
                   activeTab === "dashboard"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                }`}
-              >
+                }`} >
                 Dashboard
               </Link>
 

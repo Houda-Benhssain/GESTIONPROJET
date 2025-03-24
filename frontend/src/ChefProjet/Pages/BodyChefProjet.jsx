@@ -121,11 +121,9 @@ const HomeChefProjet = () => {
     },
   ]
 
-  // Get impact color class
-  
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-blue-50">
       <HeaderChefProjet />
       <div className="bg-gradient-to-r from-blue-800 to-blue-700 py-6 px-4">
         <div className="max-w-screen-2xl mx-auto">
@@ -201,7 +199,7 @@ const HomeChefProjet = () => {
                     {projects.length}
                   </div>
                 </div>
-                <Link to="/addProjet">
+                <Link to="/add_project">
                 <button className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium">
                   <Plus className="h-4 w-4 mr-1" />
                   Nouveau projet
@@ -249,9 +247,6 @@ const HomeChefProjet = () => {
                                 <span>{project.status}</span>
                               </div>
                             </div>
-
-                            {/* Progress bar */}
-                           
 
                             {/* Team members */}
                             <div className="flex -space-x-2 mt-2">
@@ -503,6 +498,7 @@ const HomeChefProjet = () => {
                   <div className="flex flex-col items-end">
                     <span className="text-xs font-medium text-gray-700">10:00 - 10:45</span>
                     
+                    
                   </div>
                 </div>
               </div>
@@ -567,6 +563,12 @@ const HomeChefProjet = () => {
                   </div>
                 </div>
               </div>
+              <Link to="/AddRéunionCF">
+              <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
+                <Plus className="h-4 w-4 mr-2" />
+                Planifier une réunion
+              </button>
+              </Link>  
             </div>
           </div>
         </div>
