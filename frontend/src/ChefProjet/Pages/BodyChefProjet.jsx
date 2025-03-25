@@ -2,18 +2,27 @@ import React from "react"
 import { useState } from "react"
 import HeaderChefProjet from "../component/HeaderChefProjet"
 import FooterChefProjet from "../component/FooterChefProjet"
-import imagePlanIt from "../../Image/imagePlanIt.png";
-import {CheckCircle,FileEdit,Calendar,X,RefreshCw,Users,Clock,Filter,AlertTriangle,} from "lucide-react"
+import { Link } from "react-router-dom"
+import {CheckCircle,FileEdit,Calendar,Users,Clock,Filter,ChevronRight,BarChart2,PieChart,FileText,Plus,MessageSquare,Bell,
+  ArrowRight,
+  Briefcase,
+  Target,
+  CheckSquare,
+  Trash2,
+} from "lucide-react"
 
 const HomeChefProjet = () => {
   const [newTask, setNewTask] = useState("")
-  const [tasks, setTasks] = useState([])
-  const [welcomeVisible, setWelcomeVisible] = useState(true)
+  const [tasks, setTasks] = useState([
+    { id: 1, text: "Finaliser le cahier des charges", completed: false, priority: "high" },
+    { id: 2, text: "Planifier la réunion de lancement", completed: true, priority: "medium" },
+    { id: 3, text: "Valider les maquettes avec le client", completed: false, priority: "high" },
+  ])
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (newTask.trim() !== "") {
-      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }])
+      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false, priority: "medium" }])
       setNewTask("")
     }
   }
@@ -34,7 +43,12 @@ const HomeChefProjet = () => {
       methodology: "GTMS",
       lead: "oumaima affroukh",
       icon: "💼",
-      color: "bg-cyan-500",
+      color: "bg-blue-500",
+      progress: 75,
+      status: "En cours",
+      deadline: "15 Juin 2023",
+      budget: "€25,000",
+      team: ["JD", "ML", "PB"],
     },
     {
       id: 2,
@@ -42,176 +56,240 @@ const HomeChefProjet = () => {
       methodology: "SCRUM",
       lead: "oumaima affroukh",
       icon: "🔄",
-      color: "bg-blue-500",
+      color: "bg-indigo-500",
+      progress: 45,
+      status: "En cours",
+      deadline: "30 Juillet 2023",
+      budget: "€18,500",
+      team: ["JD", "SM"],
+    },
+    {
+      id: 3,
+      name: "Application Mobile",
+      methodology: "Agile",
+      lead: "Jean Dupont",
+      icon: "📱",
+      color: "bg-cyan-500",
+      progress: 30,
+      status: "En cours",
+      deadline: "10 Août 2023",
+      budget: "€32,000",
+      team: ["ML", "PB", "SM"],
     },
   ]
 
+  // Sample team members data
+  const teamMembers = [
+    {
+      id: 1,
+      name: "Jean Dupont",
+      role: "Développeur Frontend",
+      avatar: "JD",
+      color: "bg-blue-600",
+      status: "En ligne",
+    },
+    { id: 2, name: "Marie Leclerc", role: "Designer UI/UX", avatar: "ML", color: "bg-purple-600", status: "En ligne" },
+    { id: 3, name: "Pierre Blanc", role: "Développeur Backend", avatar: "PB", color: "bg-green-600", status: "Absent" },
+    { id: 4, name: "Sophie Martin", role: "Analyste QA", avatar: "SM", color: "bg-amber-600", status: "En pause" },
+  ]
+
+  // Sample risks data
+  const risks = [
+    {
+      id: 1,
+      title: "Retard de livraison API",
+      project: "Exemple Commercialisation",
+      impact: "high",
+      probability: "medium",
+      mitigation: "Développer des mocks pour continuer le développement frontend",
+    },
+    {
+      id: 2,
+      title: "Budget insuffisant",
+      project: "Application Mobile",
+      impact: "high",
+      probability: "low",
+      mitigation: "Réviser le périmètre du projet avec le client",
+    },
+    {
+      id: 3,
+      title: "Ressources insuffisantes",
+      project: "Gestion de projet",
+      impact: "medium",
+      probability: "high",
+      mitigation: "Recruter des freelances pour les pics d'activité",
+    },
+  ]
+
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-blue-50">
       <HeaderChefProjet />
-      <div className="flex flex-col gap-4 p-3 max-w-screen-2xl mx-auto">
-        {/* Project Summary Section */}
-        <div className="mb-2">
-          <div className="flex items-center text-sm text-gray-500 mb-1">
+      <div className="bg-gradient-to-r from-blue-800 to-blue-700 py-6 px-4">
+        <div className="max-w-screen-2xl mx-auto">
+          <div className="flex items-center text-xs text-blue-100 mb-2">
             <span>Dashboard</span>
-            <span className="mx-2">/</span>
+            <ChevronRight className="h-3 w-3 mx-1" />
             <span>Chef de Projet</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Tableau de Bord</h1>
+          <h1 className="text-2xl font-bold text-white">Tableau de Bord</h1>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
+      <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-screen-2xl mx-auto -mt-6">
+        {/* Project Summary Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow border-l-4 border-green-500">
+            <div className="flex items-center">
+              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4">
+                <CheckCircle className="h-6 w-6 text-green-600" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold">12</div>
+                <div className="text-sm text-gray-500">Tâches terminées</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow border-l-4 border-blue-500">
+            <div className="flex items-center">
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                <FileEdit className="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold">8</div>
+                <div className="text-sm text-gray-500">Projets mis à jour</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow border-l-4 border-purple-500">
+            <div className="flex items-center">
+              <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
+                <Users className="h-6 w-6 text-purple-600" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold">5</div>
+                <div className="text-sm text-gray-500">Membres d'équipe</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow border-l-4 border-amber-500">
+            <div className="flex items-center">
+              <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mr-4">
+                <Calendar className="h-6 w-6 text-amber-600" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold">3</div>
+                <div className="text-sm text-gray-500">Échéances proches</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Projects Overview Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Projects List */}
+          <div className="lg:col-span-2 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-blue-100">
+            <div className="p-4 border-b border-blue-100">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <h2 className="text-xl font-bold text-gray-800">Projets</h2>
+                  <div className="ml-2 px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">
+                    {projects.length}
+                  </div>
                 </div>
-                <div>
-                  <div className="text-lg font-semibold">12 completed</div>
-                  <div className="text-xs text-gray-500">in the last 7 days</div>
-                </div>
+                <Link to="/add_project">
+                <button className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium">
+                  <Plus className="h-4 w-4 mr-1" />
+                  Nouveau projet
+                </button>
+                </Link>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                  <FileEdit className="h-4 w-4 text-blue-600" />
-                </div>
-                <div>
-                  <div className="text-lg font-semibold">8 updated</div>
-                  <div className="text-xs text-gray-500">in the last 7 days</div>
-                </div>
-              </div>
-            </div>
+            <div className="overflow-x-auto">
+              <div className="min-w-full">
+                {projects.map((project) => (
+                  <div key={project.id} className="border-b border-blue-100 hover:bg-blue-50 transition-colors">
+                    <div className="p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start">
+                          <div
+                            className={`w-10 h-10 ${project.color} rounded-lg flex items-center justify-center text-white mr-3 shadow-sm`}>
+                            <span>{project.icon}</span>
+                          </div>
+                          <div>
+                            <div className="flex items-center">
+                              <h3 className="font-semibold text-blue-700 hover:underline cursor-pointer">
+                                {project.name}
+                              </h3>
+                              <span className="text-gray-500 text-sm ml-2">({project.methodology})</span>
+                            </div>
+                            <div className="mt-1 grid grid-cols-2 gap-x-4 gap-y-1">
+                              <div className="flex items-center text-xs text-gray-600">
+                                <Users className="h-3 w-3 mr-1" />
+                                <span>Lead: </span>
+                                <span className="text-blue-600 hover:underline cursor-pointer ml-1">
+                                  {project.lead}
+                                </span>
+                              </div>
+                              <div className="flex items-center text-xs text-gray-600">
+                                <Calendar className="h-3 w-3 mr-1" />
+                                <span>{project.deadline}</span>
+                              </div>
+                              <div className="flex items-center text-xs text-gray-600">
+                                <Briefcase className="h-3 w-3 mr-1" />
+                                <span>{project.budget}</span>
+                              </div>
+                              <div className="flex items-center text-xs text-gray-600">
+                                <Target className="h-3 w-3 mr-1" />
+                                <span>{project.status}</span>
+                              </div>
+                            </div>
 
-            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
-                  <Users className="h-4 w-4 text-purple-600" />
-                </div>
-                <div>
-                  <div className="text-lg font-semibold">5 team members</div>
-                  <div className="text-xs text-gray-500">active on projects</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center mr-3">
-                  <Calendar className="h-4 w-4 text-amber-600" />
-                </div>
-                <div>
-                  <div className="text-lg font-semibold">3 due soon</div>
-                  <div className="text-xs text-gray-500">in the next 7 days</div>
-                </div>
+                            {/* Team members */}
+                            <div className="flex -space-x-2 mt-2">
+                              {project.team.map((member, index) => (
+                                <div key={index}
+                                  className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs border-2 border-white">
+                                  {member}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex space-x-1">
+                          <button className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors">
+                            <FileText className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
-
-        {welcomeVisible && (
-          <div className="bg-white rounded-lg p-5 border border-gray-200 shadow-sm mb-2">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-bold text-gray-800">Introduction</h2>
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Project Progress Section */}
+          <div className="w-full md:w-1/2 bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow border border-blue-100">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-800">Progression des Projets</h2>
               <div className="flex space-x-2">
-                <button
-                  onClick={() => setWelcomeVisible(false)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                  aria-label="Close">
-                  <X className="h-4 w-4" />
+                <button className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors">
+                  <PieChart className="h-4 w-4" />
+                </button>
+                <button className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors">
+                  <BarChart2 className="h-4 w-4" />
                 </button>
               </div>
             </div>
 
-             <div className="flex flex-col md:flex-row items-center gap-6">
-                      <div className="w-full md:w-1/3 flex justify-center">
-                        <img src={imagePlanIt} alt="Welcome illustration" className="max-w-full h-auto max-h-48"/>
-                      </div>
-                      <div className="w-full md:w-2/3">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Welcome to PlanIt</h3>
-                        <p className="text-gray-700 mb-3">
-                          New to PlanIt? Check out the{" "}
-                          <a href="/documentation" className="text-blue-600 hover:underline">
-                            Documentation
-                          </a>
-                          .
-                        </p>
-                        <div className="flex items-center text-gray-500 text-sm mt-4">
-                          <RefreshCw className="h-4 w-4 mr-2" />
-                          <span></span>
-                        </div>
-                      </div>
-                    </div>
-            </div>
-        )}
-
-        {/* Projects List Section - Added based on the image */}
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
-          <div className="p-4 border-b border-gray-200">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <h2 className="text-xl font-bold text-gray-800">Projects</h2>
-                <AlertTriangle className="h-5 w-5 text-amber-500 ml-2" />
-              </div>
-            </div>
-          </div>
-          
-          <div className="overflow-x-auto">
-            <div className="min-w-full">
-              {projects.map((project) => (
-                <div key={project.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                  <div className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start">
-                        <div
-                          className={`w-8 h-8 ${project.color} rounded flex items-center justify-center text-white mr-3`}>
-                          <span>{project.icon}</span>
-                        </div>
-                        <div>
-                          <div className="flex items-center">
-                            <h3 className="font-semibold text-blue-600 hover:underline cursor-pointer">
-                              {project.name}
-                            </h3>
-                            <span className="text-gray-500 text-sm ml-2">({project.methodology})</span>
-                          </div>
-                          <div className="mt-1">
-                            <div className="flex items-center">
-                              <span className="text-sm text-gray-700 font-medium">Lead</span>
-                              <span className="text-sm text-blue-600 hover:underline cursor-pointer ml-2">
-                                {project.lead}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex space-x-1">
-                        <button className="p-1 text-gray-500 hover:text-gray-700 transition-colors">
-                          <Filter className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="p-3 border-t border-gray-200 flex justify-between items-center text-sm text-gray-600">
-            <div>1–2 of 2</div>
-            <div className="text-gray-500">
-              <span>31 seconds ago</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="w-full md:w-1/2 bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <h2 className="text-base font-bold mb-4 text-gray-800">Progression des Projets</h2>
-
-            <div className="relative w-36 h-36 mx-auto mb-4">
-              {/* Placeholder for chart */}
+            <div className="relative w-40 h-40 mx-auto mb-6">
+              {/* Circular progress chart */}
               <svg className="absolute inset-0" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M18 35C27.3888 35 35 27.3888 35 18C35 8.61116 27.3888 1 18 1C8.61116 1 1 8.61116 1 18C1 27.3888 8.61116 35 18 35Z"
@@ -226,55 +304,41 @@ const HomeChefProjet = () => {
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-gray-800 text-sm font-semibold">68%</span>
+                <span className="text-gray-800 text-sm font-semibold">75%</span>
               </div>
             </div>
 
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold text-sm text-gray-800">Refonte Site Web</h3>
-                  <p className="text-gray-500 text-xs">Progression: 75%</p>
+            <div className="space-y-4">
+              {projects.map((project) => (
+                <div key={project.id} className="flex justify-between items-center">
+                  <div>
+                    <h3 className="font-semibold text-sm text-gray-800">{project.name}</h3>
+                    <div className="flex items-center mt-1">
+                      <div className="w-full bg-gray-200 rounded-full h-1.5 mr-2">
+                        <div className="bg-blue-600 h-1.5 rounded-full" style={{ width: `${project.progress}%` }}></div>
+                      </div>
+                      <span className="text-xs font-medium text-blue-600">{project.progress}%</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <Clock className="h-3.5 w-3.5 text-amber-500 mr-1" />
+                    <span className="text-xs text-gray-500">{project.deadline}</span>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <Clock className="h-3.5 w-3.5 text-amber-500 mr-1" />
-                  <span className="text-xs text-gray-500">5 jours restants</span>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold text-sm text-gray-800">Application Mobile</h3>
-                  <p className="text-gray-500 text-xs">Progression: 45%</p>
-                </div>
-                <div className="flex items-center">
-                  <Clock className="h-3.5 w-3.5 text-amber-500 mr-1" />
-                  <span className="text-xs text-gray-500">12 jours restants</span>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold text-sm text-gray-800">Système de Gestion</h3>
-                  <p className="text-gray-500 text-xs">Progression: 90%</p>
-                </div>
-                <div className="flex items-center">
-                  <Clock className="h-3.5 w-3.5 text-green-500 mr-1" />
-                  <span className="text-xs text-gray-500">2 jours restants</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-bold text-gray-800">Activité de l'équipe</h2>
-              <span className="text-gray-500 text-xs">Dernières 24 heures</span>
+          {/* Team Activity Section */}
+          <div className="w-full md:w-1/2 bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow border border-blue-100">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-800">Activité de l'équipe</h2>
+              <span className="text-gray-500 text-xs">Membre d'equipe</span>
             </div>
 
-            <div className="space-y-2">
-              <div className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
+            <div className="space-y-3">
+              <div className="flex gap-3 hover:bg-blue-50 p-2 rounded-lg transition-colors">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shrink-0 shadow-sm">
                   <span className="text-xs font-bold text-white">JD</span>
                 </div>
                 <div className="flex-1">
@@ -282,15 +346,15 @@ const HomeChefProjet = () => {
                     <h3 className="font-semibold text-sm text-gray-800">Jean Dupont a terminé 3 tâches</h3>
                     <span className="text-gray-500 text-xs">Il y a 35 minutes</span>
                   </div>
-                  <div className="flex justify-between mt-0.5">
+                  <div className="flex justify-between mt-1">
                     <p className="text-gray-500 text-xs">Projet: Refonte Site Web</p>
                     <span className="text-gray-500 text-xs">Module: Frontend</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors">
-                <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center shrink-0">
+              <div className="flex gap-3 hover:bg-blue-50 p-2 rounded-lg transition-colors">
+                <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center shrink-0 shadow-sm">
                   <span className="text-xs font-bold text-white">ML</span>
                 </div>
                 <div className="flex-1">
@@ -298,25 +362,9 @@ const HomeChefProjet = () => {
                     <h3 className="font-semibold text-sm text-gray-800">Marie Leclerc a ajouté un commentaire</h3>
                     <span className="text-gray-500 text-xs">Il y a 2 heures</span>
                   </div>
-                  <div className="flex justify-between mt-0.5">
+                  <div className="flex justify-between mt-1">
                     <p className="text-gray-500 text-xs">Projet: Application Mobile</p>
                     <span className="text-gray-500 text-xs">Tâche: API Integration</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors">
-                <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="text-xs font-bold text-white">PB</span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between">
-                    <h3 className="font-semibold text-sm text-gray-800">Pierre Blanc a créé 2 nouvelles tâches</h3>
-                    <span className="text-gray-500 text-xs">Il y a 5 heures</span>
-                  </div>
-                  <div className="flex justify-between mt-0.5">
-                    <p className="text-gray-500 text-xs">Projet: Système de Gestion</p>
-                    <span className="text-gray-500 text-xs">Module: Backend</span>
                   </div>
                 </div>
               </div>
@@ -324,47 +372,58 @@ const HomeChefProjet = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="w-full md:w-1/2 bg-white rounded-lg p-4 flex flex-col items-center border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <h2 className="text-base font-bold mb-3 text-gray-800">Tâches Prioritaires</h2>
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Priority Tasks Section */}
+          <div className="w-full md:w-1/2 bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow border border-blue-100">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-800">Tâches Prioritaires</h2>
+              <div className="flex space-x-2">
+                <button className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors">
+                  <CheckSquare className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
 
-            <form onSubmit={handleSubmit} className="mb-3 w-full max-w-md">
-              <div className="flex items-center gap-1">
+            <form onSubmit={handleSubmit} className="mb-4">
+              <div className="flex items-center gap-2">
                 <input
                   type="text"
                   value={newTask}
                   onChange={(e) => setNewTask(e.target.value)}
                   placeholder="Ajouter une tâche prioritaire..."
-                  className="flex-1 bg-gray-100 text-gray-800 px-2 py-1.5 text-sm rounded-l border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-1 bg-blue-50 text-gray-800 px-3 py-2 text-sm rounded-lg border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 text-sm rounded-r font-medium transition-colors shadow-sm"
-                >
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm rounded-lg font-medium transition-colors shadow-sm">
                   Ajouter
                 </button>
               </div>
             </form>
 
-            <div className="space-y-1.5 w-full max-w-md">
+            <div className="space-y-2">
               {tasks.map((task) => (
                 <div
                   key={task.id}
-                  className="flex items-center bg-gray-50 rounded-lg p-1.5 hover:bg-gray-100 transition-colors border border-gray-200"
+                  className={`flex items-center rounded-lg p-3 hover:bg-blue-50 transition-colors border ${
+                    task.priority === "high"
+                      ? "border-red-200 bg-red-50"
+                      : task.priority === "medium"
+                        ? "border-amber-200 bg-amber-50"
+                        : "border-blue-200 bg-blue-50"
+                  }`}
                 >
                   <button
                     onClick={() => toggleTask(task.id)}
-                    className={`w-4 h-4 rounded-sm border ${
+                    className={`w-5 h-5 rounded-md border ${
                       task.completed ? "bg-blue-500 border-blue-500" : "border-blue-500"
-                    } flex items-center justify-center mr-2`}
-                  >
+                    } flex items-center justify-center mr-3`} >
                     {task.completed && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-2.5 w-2.5 text-white"
+                        className="h-3 w-3 text-white"
                         viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
+                        fill="currentColor">
                         <path
                           fillRule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -374,89 +433,192 @@ const HomeChefProjet = () => {
                     )}
                   </button>
                   <span
-                    className={`text-sm text-gray-800 flex-1 ${task.completed ? "line-through text-gray-400" : ""}`}
-                  >
+                    className={`text-sm text-gray-800 flex-1 ${task.completed ? "line-through text-gray-400" : ""}`}>
                     {task.text}
                   </span>
-                  <button
-                    onClick={() => deleteTask(task.id)}
-                    className="bg-red-100 hover:bg-red-200 text-red-600 p-0.5 rounded transition-colors ml-2"
-                    aria-label="Delete task"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-3.5 w-3.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
-                  </button>
+                  <div className="flex items-center">
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full mr-2 ${
+                        task.priority === "high"
+                          ? "bg-red-100 text-red-700"
+                          : task.priority === "medium"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-green-100 text-green-700"}`} >
+                      {task.priority === "high" ? "Haute" : task.priority === "medium" ? "Moyenne" : "Basse"}
+                    </span>
+                    <button
+                      onClick={() => deleteTask(task.id)}
+                      className="bg-red-100 hover:bg-red-200 text-red-600 p-1 rounded-md transition-colors"
+                      aria-label="Delete task" >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
 
               {tasks.length === 0 && (
-                <div className="text-center py-4 text-gray-500 text-sm">
+                <div className="text-center py-6 text-gray-500 text-sm bg-blue-50 rounded-lg">
                   Aucune tâche prioritaire. Ajoutez-en une ci-dessus.
                 </div>
               )}
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 bg-white rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-bold text-gray-800">Réunions à venir</h2>
-              <a href="#" className="text-blue-600 hover:text-blue-700 transition-colors text-xs">
-                Voir tout
-              </a>
+          {/* Upcoming Meetings Section */}
+          <div className="w-full md:w-1/2 bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow border border-blue-100">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-800">Réunions à venir</h2>
             </div>
 
-            <div className="space-y-3">
-              <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="space-y-4">
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-sm text-gray-800">Revue de Sprint</h3>
-                    <p className="text-gray-500 text-xs mt-1">Équipe de développement</p>
+                  <div className="flex gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
+                      <span className="text-sm font-bold">24</span>
+                      <span className="text-xs">Mar</span>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">Revue de Sprint</h3>
+                      <p className="text-gray-600 text-xs mt-1">Équipe de développement</p>
+                      <div className="flex items-center mt-2">
+                        <div className="flex -space-x-2">
+                          {teamMembers.slice(0, 3).map((member, index) => (
+                            <div
+                              key={index}
+                              className={`w-6 h-6 rounded-full ${member.color} flex items-center justify-center text-white text-xs border-2 border-white`} >
+                              {member.avatar}
+                            </div>
+                          ))}
+                        </div>
+                        <span className="text-xs text-gray-500 ml-2">+2 autres</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-xs font-medium text-gray-700">Demain, 10:00</span>
-                    <span className="text-xs text-gray-500 mt-1">45 minutes</span>
+                    <span className="text-xs font-medium text-gray-700">10:00 - 10:45</span>
+                    
+                    
                   </div>
                 </div>
               </div>
 
-              <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-sm text-gray-800">Présentation Client</h3>
-                    <p className="text-gray-500 text-xs mt-1">Projet: Refonte Site Web</p>
+                  <div className="flex gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
+                      <span className="text-sm font-bold">26</span>
+                      <span className="text-xs">Mar</span>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">Présentation Client</h3>
+                      <p className="text-gray-600 text-xs mt-1">Projet: Refonte Site Web</p>
+                      <div className="flex items-center mt-2">
+                        <div className="flex -space-x-2">
+                          {teamMembers.slice(1, 3).map((member, index) => (
+                            <div
+                              key={index}
+                              className={`w-6 h-6 rounded-full ${member.color} flex items-center justify-center text-white text-xs border-2 border-white`}
+                            >
+                              {member.avatar}
+                            </div>
+                          ))}
+                        </div>
+                        <span className="text-xs text-gray-500 ml-2">+1 client</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-xs font-medium text-gray-700">Jeudi, 14:30</span>
-                    <span className="text-xs text-gray-500 mt-1">60 minutes</span>
+                    <span className="text-xs font-medium text-gray-700">14:30 - 15:30</span>
                   </div>
                 </div>
               </div>
 
-              <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-sm text-gray-800">Planification de Projet</h3>
-                    <p className="text-gray-500 text-xs mt-1">Nouveau projet: E-commerce</p>
+                  <div className="flex gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
+                      <span className="text-sm font-bold">28</span>
+                      <span className="text-xs">Mar</span>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">Planification de Projet</h3>
+                      <p className="text-gray-600 text-xs mt-1">Nouveau projet: E-commerce</p>
+                      <div className="flex items-center mt-2">
+                        <div className="flex -space-x-2">
+                          {teamMembers.map((member, index) => (
+                            <div
+                              key={index}
+                              className={`w-6 h-6 rounded-full ${member.color} flex items-center justify-center text-white text-xs border-2 border-white`}
+                            >
+                              {member.avatar}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-xs font-medium text-gray-700">Vendredi, 09:00</span>
-                    <span className="text-xs text-gray-500 mt-1">90 minutes</span>
+                    <span className="text-xs font-medium text-gray-700">09:00 - 10:30</span>
                   </div>
                 </div>
               </div>
+              <Link to="/AddRéunionCF">
+              <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
+                <Plus className="h-4 w-4 mr-2" />
+                Planifier une réunion
+              </button>
+              </Link>  
             </div>
+          </div>
+        </div>
+
+        {/* Team Management Section - New Element */}
+        <div className="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow border border-blue-100">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Gestion d'Équipe</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {teamMembers.map((member) => (
+              <div key={member.id} className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                <div className="flex items-center mb-3">
+                  <div
+                    className={`w-10 h-10 rounded-lg ${member.color} flex items-center justify-center text-white font-medium mr-3`}
+                  >
+                    {member.avatar}
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-800">{member.name}</div>
+                    <div className="text-xs text-gray-500">{member.role}</div>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span
+                    className="text-xs px-2 py-0.5 rounded-full " >
+                  </span>
+                  <div className="flex space-x-1">
+                   <Link to="/chat/ChefProjet">
+                   <button className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded transition-colors">
+                      <MessageSquare className="h-4 w-4" />
+                    </button>
+                   </Link>
+                    <button className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded transition-colors">
+                      <Bell className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-blue-100">
+            <a
+              href="/team/ChefProjet"
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center">
+              Gérer les équipes
+              <ArrowRight className="h-4 w-4 ml-1" />
+            </a>
           </div>
         </div>
       </div>

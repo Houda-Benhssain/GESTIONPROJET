@@ -29,40 +29,17 @@ const ProjectsPage = () => {
   useEffect(() => {
     filterProjects()
   }, [searchTerm, filters, projects])
-  
-  const [userId, setUserId] = useState("")
 
-  
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"))
-    if (user) {
-      setUserId(user.nom)
-    }
-  }, [])
-  console.log(userId)
-  
   const loadProjects = async () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/projets")
       const data = await response.json()
-  
-      // Filtrer les projets selon userId
-      const userProjects = data.filter(project => project.user.nom === userId)
-  
-      setProjects(userProjects) 
-      setFilteredProjects(userProjects) 
+      setProjects(data) // Définir les projets récupérés
+      setFilteredProjects(data) // Initialiser les projets filtrés
     } catch (error) {
       console.error("Error fetching projects:", error)
     }
   }
-  
-  // Charger les projets quand userId est défini
-  useEffect(() => {
-    if (userId) {
-      loadProjects()
-    }
-  }, [userId])
-  
 
   const loadClients = async () => {
     try {
@@ -215,7 +192,7 @@ const confirmDelete = async () => {
             Filters
           </button>
           <Link
-  to="/addProjetCf" 
+  to="/addProjet"  // Make sure this matches the route for adding a project
   className="mt-4 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 flex items-center"
 >
   <Plus className="h-4 w-4 mr-2" />
@@ -313,7 +290,7 @@ const confirmDelete = async () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex justify-start gap-4 items-center">
-                        <Link to={`/edit-project/${project.id}`} className="text-blue-600 hover:text-blue-800">
+                        <Link to={`/edit/${project.id}`} className="text-blue-600 hover:text-blue-800">
                           <Edit className="h-5 w-5" />
                         </Link>
                         <button

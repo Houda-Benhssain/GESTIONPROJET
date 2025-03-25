@@ -2,20 +2,14 @@ import React from "react"
 import { useState } from "react"
 import HeaderEquipe from "../component/HeaderEquipe"
 import FooterEquipe from "../component/FooterEquipe"
-import imagePlanIt from "../../Image/imagePlanIt.png"
 import {CheckCircle,FileText,Calendar,X,Users,MessageSquare,Clock,ExternalLink,User,DollarSign,ShoppingCart,Plus,Trash2,Bell,ChevronRight,BarChart2,Zap,Star,} from "lucide-react"
 
 const HomeEquipe = () => {
   const [newTask, setNewTask] = useState("")
   const [tasks, setTasks] = useState([
-    { id: 1, text: "Design a facebook ad", completed: false, color: "blue" },
-    { id: 2, text: "Analyze Data", completed: false, color: "blue" },
-    { id: 3, text: "Youtube campaign", completed: false, color: "green" },
-    { id: 4, text: "Assign 10 employee", completed: false, color: "orange" },
     { id: 5, text: "Meeting at 12", completed: false, color: "pink" },
     { id: 6, text: "Meeting at 10", completed: false, color: "cyan" },
   ])
-  const [welcomeVisible, setWelcomeVisible] = useState(true)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -100,11 +94,11 @@ const HomeEquipe = () => {
   const completedTasksCount = tasks.filter((task) => task.completed).length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-blue-50">
       <HeaderEquipe />
 
       {/* Modern gradient header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-screen-2xl mx-auto">
           <div className="flex items-center justify-between">
             <div>
@@ -114,11 +108,6 @@ const HomeEquipe = () => {
                 <span>Mon équipe</span>
               </div>
               <h1 className="text-2xl font-bold text-white">Tableau de bord d'équipe</h1>
-            </div>
-            <div className="hidden sm:flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-medium">
-                H
-              </div>
             </div>
           </div>
         </div>
@@ -187,14 +176,6 @@ const HomeEquipe = () => {
             </div>
 
             <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="text-sm font-medium text-gray-700">Mises à jour d'hier</div>
-                <button className="text-xs text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
-                  Voir le rapport complet
-                  <ChevronRight className="h-3 w-3 ml-1" />
-                </button>
-              </div>
-
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl">
                   <div className="flex items-center mb-2">
@@ -209,7 +190,6 @@ const HomeEquipe = () => {
                     <span>+12% par rapport à la semaine dernière</span>
                   </div>
                 </div>
-
                 <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl">
                   <div className="flex items-center mb-2">
                     <div className="bg-green-500 p-2 rounded-lg mr-3">
@@ -223,20 +203,6 @@ const HomeEquipe = () => {
                     <span>+8.3% par rapport au mois dernier</span>
                   </div>
                 </div>
-
-                <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-xl">
-                  <div className="flex items-center mb-2">
-                    <div className="bg-amber-500 p-2 rounded-lg mr-3">
-                      <ShoppingCart className="h-5 w-5 text-white" />
-                    </div>
-                    <div className="text-sm font-medium text-amber-700">Commandes</div>
-                  </div>
-                  <div className="text-2xl font-bold text-gray-800">1,124</div>
-                  <div className="flex items-center mt-2 text-xs text-amber-600">
-                    <Star className="h-3 w-3 mr-1" />
-                    <span>98% de satisfaction client</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -244,7 +210,6 @@ const HomeEquipe = () => {
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
             <div className="flex justify-between items-center mb-5">
               <h2 className="text-xl font-bold text-gray-800">Membres de l'équipe</h2>
-              
             </div>
 
             <div className="space-y-3">
@@ -300,8 +265,7 @@ const HomeEquipe = () => {
               {completedTasksCount > 0 && (
                 <button
                   onClick={deleteCompletedTasks}
-                  className="flex items-center text-red-500 hover:text-red-700 text-sm font-medium px-3 py-1 bg-red-50 rounded-full"
-                >
+                  className="flex items-center text-red-500 hover:text-red-700 text-sm font-medium px-3 py-1 bg-red-50 rounded-full" >
                   <Trash2 className="h-4 w-4 mr-1" />
                   Supprimer terminées
                 </button>
@@ -377,12 +341,6 @@ const HomeEquipe = () => {
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
             <div className="flex justify-between items-center mb-5">
               <h2 className="text-xl font-bold text-gray-800">Prochaines réunions</h2>
-              <a
-                href="#"
-                className="text-blue-700 hover:text-indigo-800 text-sm font-medium px-3 py-1 bg-indigo-50 rounded-full"
-              >
-                Voir tout
-              </a>
             </div>
 
             <div className="space-y-4">
@@ -448,10 +406,6 @@ const HomeEquipe = () => {
                 </div>
               </div>
 
-              <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
-                <Plus className="h-4 w-4 mr-2" />
-                Planifier une réunion
-              </button>
             </div>
           </div>
         </div>

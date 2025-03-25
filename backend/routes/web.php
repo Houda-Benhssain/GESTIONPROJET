@@ -47,3 +47,14 @@ Route::get('/utilisateurs/{id}', [UtilisateurController::class, 'show']);
 Route::post('/utilisateurs', [UtilisateurController::class, 'store']);
 Route::put('/utilisateurs/{id}', [UtilisateurController::class, 'update']);
 Route::delete('/utilisateurs/{id}', [UtilisateurController::class, 'destroy']);
+
+use App\Http\Controllers\ReunionController;
+
+
+Route::prefix('/reunions')->group(function () {
+    Route::get('/', [ReunionController::class, 'index']); 
+    Route::post('/', [ReunionController::class, 'store']);
+    Route::get('/{id}', [ReunionController::class, 'show']);  
+    Route::put('/{id}', [ReunionController::class, 'update']); 
+    Route::delete('/{id}', [ReunionController::class, 'destroy']); 
+});

@@ -1,157 +1,184 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Building, ArrowLeft } from "lucide-react";
-import Header from "./Header";
-import Footer from "./Footer";
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { ArrowLeft, Save, User, Mail, Phone, MapPin, Building, AlertCircle } from "lucide-react"
+import Header from "./Header"
+import Footer from "./Footer"
 
 const AddClientPage = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({ telephone: "", addresse: "", user_id: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/utilisateurs")
-      .then((response) => response.json())
-      .then((data) => {
-        const clientUsers = data.filter(user => user.role === "client");
-        setUsers(clientUsers);
-      })
-      .catch((error) => console.error("Error fetching users:", error));
-  }, []);
+  const navigate = useNavigate()
+  const [saving, setSaving] = useState(false)
+  const [formError, setFormError] = useState("")
+  const [client, setClient] = useState({
+    nom: "",
+    email: "",
+    role: "client",  // Assurez-vous que le rôle est défini
+    telephone: "",
+    adresse: "",
+  })
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: null,
-      });
+    const { name, value } = e.target
+    setClient((prevClient) => ({
+      ...prevClient,
+      [name]: value, // Mise à jour directe des champs dans client
+    }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setSaving(true)
+    setFormError("")
+
+    // Vérification des champs obligatoires
+    if (!client.nom || !client.email) {
+      setFormError("Veuillez remplir tous les champs obligatoires")
+      setSaving(false)
+      return
     }
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const newClient = {
-      telephone: formData.telephone,
-      adresse: formData.addresse,
-      user_id: formData.user_id,
-    };
-
-    fetch("http://127.0.0.1:8000/clients", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newClient),
-    })
-      .then(async (response) => {
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message || "Erreur inconnue");
-
-        setIsSubmitting(false);
-        navigate("/clients", { state: { message: "Client ajouté avec succès !" } });
+    try {
+      const response = await fetch("http://127.0.0.1:8000/clients", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(client), // On envoie directement client sans 'utilisateur'
       })
-      .catch((error) => {
-        setIsSubmitting(false);
-        console.error("Erreur :", error);
-      });
-  };
+
+      if (response.ok) {
+        navigate("/clients")
+      } else {
+        setFormError("Échec de l'ajout du client")
+      }
+    } catch (error) {
+      setFormError("Erreur lors de l'ajout : " + error.message)
+    }
+    setSaving(false)
+  }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-blue-50">
       <Header />
-      <main className="flex-grow p-4 md:p-6">
-        <div className="max-w-screen-lg mx-auto">
-          <div className="mb-6">
+      <main className="flex-grow">
+        <div className="max-w-screen-xl mx-auto px-4 py-8">
+          <div className="flex items-center mb-6">
             <button
               onClick={() => navigate("/clients")}
-              className="flex items-center text-blue-600 hover:text-blue-800 mb-4">
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Retour aux clients
+              className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              <span className="font-medium">Retour à la liste</span>
             </button>
-            <div className="flex flex-col md:flex-row md:items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">Ajouter un nouveau client</h1>
-                <p className="text-sm text-gray-500 mt-1">Fournissez les informations d'un client.</p>
-              </div>
-            </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center">
-                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                  <Building className="h-5 w-5 text-blue-600" />
-                </div>
-                <h2 className="text-lg font-medium text-gray-900">Informations sur le client</h2>
+          <div className="bg-white rounded-lg shadow-lg border-t-4 border-blue-600 overflow-hidden">
+            <div className="flex items-center p-6 bg-gradient-to-r">
+              <div className="bg-white p-3 rounded-full mr-4">
+                <Building className="h-6 w-6 text-blue-600" />
               </div>
+              <h1 className="text-2xl font-bold text-black">Ajouter un client</h1>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="telephone" className="block text-sm font-medium text-gray-700">
-                  Téléphone
-                  </label>
-                  <input
-                    type="text"
-                    id="telephone"
-                    name="telephone"
-                    value={formData.telephone}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
+            {formError && (
+              <div className="p-4 mx-6 mt-6 bg-red-50 border-l-4 border-red-500 text-red-700 rounded flex items-start">
+                <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+                <p>{formError}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit}>
+              <div className="p-6 space-y-6">
+                <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                  <h2 className="text-lg font-medium text-blue-800 mb-4 flex items-center">
+                    <User className="h-5 w-5 mr-2 text-blue-600" />
+                    Informations personnelles
+                  </h2>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-blue-800 mb-1">
+                        Nom complet <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="nom" // Accès directement à nom dans l'objet client
+                          value={client.nom}
+                          onChange={handleInputChange}
+                          className="block w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          placeholder="Nom du client"
+                          required />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-blue-800 mb-1">
+                        Email <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="email"
+                          name="email" // Accès directement à email dans l'objet client
+                          value={client.email}
+                          onChange={handleInputChange}
+                          className="block w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          placeholder="email@exemple.com"
+                          required />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-blue-800 mb-1">Téléphone</label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          name="telephone" // Accès directement à telephone dans l'objet client
+                          value={client.telephone}
+                          onChange={handleInputChange}
+                          className="block w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          placeholder="+33 6 12 34 56 78" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="addresse" className="block text-sm font-medium text-gray-700">
-                    Addresse
-                  </label>
-                  <input
-                    type="text"
-                    id="addresse"
-                    name="addresse"
-                    value={formData.addresse}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="user_id" className="block text-sm font-medium text-gray-700">
-                    Client
-                  </label>
-                  <select
-                    id="user_id"
-                    name="user_id"
-                    value={formData.user_id}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Select User</option>
-                    {users.map((user) => (
-                      <option key={user.id} value={user.id}>{user.nom}</option>
-                    ))}
-                  </select>
+
+                <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                  <h2 className="text-lg font-medium text-blue-800 mb-4 flex items-center">
+                    <MapPin className="h-5 w-5 mr-2 text-blue-600" />
+                    Adresse
+                  </h2>
+
+                  <div>
+                    <label className="block text-sm font-medium text-blue-800 mb-1">Adresse complète</label>
+                    <div className="relative">
+                      <textarea
+                        name="adresse" // Accès directement à adresse dans l'objet client
+                        rows="3"
+                        value={client.adresse}
+                        onChange={handleInputChange}
+                        className="block w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        placeholder="Numéro, rue, code postal, ville, pays"
+                      ></textarea>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
-                <button
-                  type="button"
-                  onClick={() => navigate("/clients")}
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                  Annuler
-                </button>
+
+              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+                <div className="text-sm text-gray-500">
+                  <span className="text-red-500">*</span> Champs obligatoires
+                </div>
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 flex items-center ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}>
-                  {isSubmitting ? "Adding..." : "Add Client"}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors shadow-md flex items-center"
+                  disabled={saving}
+                >
+                  {saving ? (
+                    "Enregistrement..."
+                  ) : (
+                    <>
+                      Enregistrer le client
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -160,7 +187,7 @@ const AddClientPage = () => {
       </main>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default AddClientPage;
+export default AddClientPage

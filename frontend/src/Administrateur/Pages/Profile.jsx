@@ -233,15 +233,7 @@ const ProfileEquipe = () => {
                       <p className="text-gray-800 font-medium">{profile.role}</p>
                     </div>
                   </div>
-                  <div className="flex items-start">
-                    <div className="bg-primary/10 p-3 rounded-lg mr-4">
-                      <MapPin className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Address</p>
-                      <p className="text-gray-800 font-medium">{profile.address}</p>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>

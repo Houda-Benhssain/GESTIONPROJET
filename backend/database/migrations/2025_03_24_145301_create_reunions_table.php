@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->enum('type', ['Réunion de lancement', 'Réunion de planification', 'Réunion de suivi', 'Réunion de revue','Réunion de rétrospective','Réunion de clôture '])->default('Réunion de lancement');
             $table->date('date');
-            $table->time('heure');
-            $table->integer('duree');
+            $table->dateTime('dateDebut');
+            $table->dateTime('dateFin');
             $table->foreignId('user_id')->constrained('utilisateurs')->onDelete('cascade');
             $table->foreignId('project_id')->constrained('projets')->onDelete('cascade');
             $table->timestamps();

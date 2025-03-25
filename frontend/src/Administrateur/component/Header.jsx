@@ -1,7 +1,7 @@
 import React from "react"
 import { useState, useRef, useEffect } from "react"
-import { Bell, HelpCircle, Settings, Search, User, LogOut, Globe, ChevronDown, Check } from "lucide-react"
 import { Link } from "react-router-dom"
+import { Bell, HelpCircle, Search, User, LogOut, ChevronDown, } from "lucide-react"
 import logo from "../../Image/square.png";
 
 export default function Header() {
@@ -22,20 +22,10 @@ export default function Header() {
     setActiveTab(tab)
   }
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
-
+ 
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen)
     if (isSettingsMenuOpen) setIsSettingsMenuOpen(false)
-    if (isNotificationsOpen) setIsNotificationsOpen(false)
-    if (isHelpMenuOpen) setIsHelpMenuOpen(false)
-  }
-
-  const toggleSettingsMenu = () => {
-    setIsSettingsMenuOpen(!isSettingsMenuOpen)
-    if (isProfileMenuOpen) setIsProfileMenuOpen(false)
     if (isNotificationsOpen) setIsNotificationsOpen(false)
     if (isHelpMenuOpen) setIsHelpMenuOpen(false)
   }
@@ -98,35 +88,16 @@ export default function Header() {
           <div className="flex items-center">
             {/* Logo */}
             <div className="flex items-center mr-4">
+              <Link to="/HomePageAdmine">
               <div className="text-gray-500 p-2 rounded hover:bg-gray-100">
                 <img  src={logo}/>
               </div>
+              </Link>
               <span className="text-xl font-bold ml-1">PlanIt</span>
             </div>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-1">
-              <div className="relative group">
-                <button
-                  className={`px-3 py-2 rounded flex items-center ${
-                    activeTab === "your-work"
-                      ? "text-blue-600 border-b-2 border-blue-600"
-                      : "text-gray-600 hover:bg-gray-100"
-                  }`}
-                  onClick={() => handleTabClick("your-work")}
-                >
-                  Your work
-                  <ChevronDown className="ml-1 h-4 w-4" />
-                </button>
-                <div className="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg z-50 border border-gray-200 hidden group-hover:block">
-                  <div className="py-1">
-                    <Link to="/your-work/boards" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Boards
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
               <Link
                 to="/adminhome"
                 className={`px-3 py-2 rounded flex items-center ${
@@ -179,11 +150,6 @@ export default function Header() {
 
           {/* Right side - Actions */}
           <div className="flex items-center space-x-2">
-            <Link
-              to="/createUser"
-              className="bg-blue-600 text-white px-4 py-2 rounded font-medium hidden md:block hover:bg-blue-700" >
-              Create
-            </Link>
 
             <div className="relative hidden md:block w-64">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -217,58 +183,6 @@ export default function Header() {
                     </button>
                   </Link>
               </div>
-            <div className="relative" ref={helpMenuRef}>
-              {isHelpMenuOpen && (
-                <div className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg z-50 border border-gray-200">
-                  <div className="py-3 px-4">
-                    <div className="text-lg font-medium mb-2">Documentation</div>
-                    <p className="text-sm text-gray-600 mb-3">
-                    PlanIt est un outil de gestion de projet qui aide les équipes à organiser les tâches, suivre les progrès et collaborer efficacement. Utilisez le menu de navigation pour accéder à vos projets, tableaux de bord et tâches. Le bouton de création vous permet d'ajouter de nouveaux éléments à votre espace de travail.
-                    </p>
-                    <p className="text-sm text-gray-600 mb-3">
-                    La section Projets vous permet de créer et de gérer vos projets. Vous pouvez attribuer des membres d'équipe, définir des échéances et suivre les progrès. Le tableau de bord offre une vue d'ensemble de tous vos projets et tâches. Utilisez la section Clients pour gérer les informations des clients et les affectations de projets.
-                    </p>
-                    <p className="text-sm text-gray-600">
-                    Les tâches peuvent être créées, attribuées et suivies via la section Tâches. Vous pouvez définir des priorités, des dates d'échéance et suivre l'état de chaque tâche. Utilisez la fonction de notifications pour rester informé des changements et des affectations. Pour des instructions plus détaillées, veuillez contacter le support.
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-
-            {/* Settings Button with Dropdown */}
-            <div className="relative" ref={settingsMenuRef}>
-              <button
-                onClick={toggleSettingsMenu}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none" >
-                <Settings className="h-5 w-5" />
-              </button>
-
-              {isSettingsMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 border border-gray-200">
-                  <div className="py-1">
-                    <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">Settings</div>
-
-                    <Link
-                      to="/settings/profile"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
-                      <User className="h-4 w-4 mr-2" />
-                      Profile settings
-                    </Link>
-
-                    <Link
-                      to="/settings/language"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                    >
-                      <Globe className="h-4 w-4 mr-2" />
-                      Language & region
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
 
             {/* Profile Button with Dropdown */}
             <div className="relative" ref={profileMenuRef}>
@@ -291,18 +205,16 @@ export default function Header() {
                       to="/profile"
                       className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                       <User className="h-4 w-4 mr-2" />
-                      Your profile
+                      Votre profil
                     </Link>
 
                     <Link
-                      to="/settings"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                      <Settings className="h-4 w-4 mr-2" />
-                      Settings
+                      to="/settings/profile"
+                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                      <User className="h-4 w-4 mr-2" />
+                      Paramètres du profil
                     </Link>
-
                     <div className="border-t border-gray-200 mt-1"></div>
-
                     <Link
                       to="/"
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
@@ -321,37 +233,8 @@ export default function Header() {
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <div className="space-y-1">
-              <button
-                className={`flex items-center justify-between px-3 py-2 rounded-md text-base font-medium w-full text-left ${
-                  activeTab === "your-work"
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                }`}
-                onClick={() => handleTabClick("your-work")}
-              >
-                Your work
-                <ChevronDown className="h-4 w-4" />
-              </button>
-              <div className="pl-4 space-y-1 border-l-2 border-gray-200 ml-3">
-                <Link
-                  to="/your-work/boards"
-                  className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                  Gant
-                </Link>
-              </div>
-            </div>
-            <Link
-              to="/projects"
-              className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
-                activeTab === "projects"
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-              }`}
-            >
-              Projects
-            </Link>
-            <Link
+
+          <Link
               to="/"
               className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
                 activeTab === "dashboards"
@@ -361,6 +244,17 @@ export default function Header() {
             >
               Dashboards
             </Link>
+            <Link
+              to="/projects"
+              className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
+                activeTab === "projects"
+                  ? "bg-blue-50 text-blue-700"
+                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              }`}
+            >
+              Projets
+            </Link>
+          
             <Link
               to="/clients"
               className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
@@ -374,19 +268,25 @@ export default function Header() {
             <Link
               to="/tasks"
               className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
-                activeTab === "status"
+                activeTab === "taches"
                   ? "bg-blue-50 text-blue-700"
                   : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
               }`}
             >
-              Tasks
+              Taches
             </Link>
-
             <Link
               to="/creatUser"
-              className="w-full mt-2 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700" >
-              Create
+              className={`block px-3 py-2 rounded-md text-base font-medium w-full text-left ${
+                activeTab === "user"
+                  ? "bg-blue-50 text-blue-700"
+                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              }`}
+            >
+              Utilisateur
             </Link>
+
+         
             <div className="relative mt-3">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-gray-400" />

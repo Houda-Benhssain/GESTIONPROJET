@@ -142,7 +142,7 @@ export default function HeaderChefProjet() {
             {/* Logo */}
             <div className="flex items-center mr-4">
               <div className="text-gray-500 p-2 rounded hover:bg-gray-100">
-                <Link to="/dashbord">
+                <Link to="/HomePageCF">
                 <img src={logo} />
                 </Link>
               </div>
@@ -293,11 +293,6 @@ export default function HeaderChefProjet() {
                       ))
                     )}
 
-                    <div className="px-4 py-2 text-center border-t border-gray-200">
-                      <Link to="/notifications" className="text-sm text-blue-600 hover:text-blue-800">
-                        View all notifications
-                      </Link>
-                    </div>
                   </div>
                 </div>
               )}
@@ -311,38 +306,7 @@ export default function HeaderChefProjet() {
                 className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none" >
                 <HelpCircle className="h-5 w-5" />
               </button>
-
              </Link>
-            </div>
-
-            {/* Settings Button with Dropdown */}
-            <div className="relative" ref={settingsMenuRef}>
-              <button
-                onClick={toggleSettingsMenu}
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-full focus:outline-none">
-                <Settings className="h-5 w-5" />
-              </button>
-
-              {isSettingsMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 border border-gray-200">
-                  <div className="py-1">
-                    <div className="px-4 py-2 text-sm text-gray-700 font-medium border-b border-gray-200">Settings</div>
-
-                    <Link
-                      to="/profile/ChefProjet"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                      <User className="h-4 w-4 mr-2" />
-                      Profile settings
-                    </Link>
-                    <Link
-                      to="/settings/language"
-                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" >
-                      <Globe className="h-4 w-4 mr-2" />
-                      Language & region
-                    </Link>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Profile Button with Dropdown */}
@@ -367,14 +331,12 @@ export default function HeaderChefProjet() {
                       <User className="h-4 w-4 mr-2" />
                       Your profile
                     </Link>
-
                     <Link
-                      to="/settings"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                      <Settings className="h-4 w-4 mr-2" />
-                      Settings
+                      to="/editProfile/chefProjet"
+                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                      <User className="h-4 w-4 mr-2" />
+                      Profile settings
                     </Link>
-
                     <div className="border-t border-gray-200 mt-1"></div>
 
                     <Link

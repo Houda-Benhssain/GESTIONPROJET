@@ -82,7 +82,7 @@ const DetailClient = () => {
   const { projetsAFaire, projetsEnCours, projetsTermines } = calculateStats(client?.projets || []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-blue-50">
       <Header />
       <main className="flex-grow p-4 md:p-6">
         <div className="max-w-screen-xl mx-auto">

@@ -113,7 +113,7 @@ const MessagesEquipe = () => {
   )
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-blue-50">
       <HeaderEquipe />
       <main className="flex-grow">
         <div className="max-w-screen-xl mx-auto px-3 py-4">

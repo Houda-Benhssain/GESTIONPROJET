@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import HeaderChefProjet from "../component/HeaderChefProjet"
 import FooterChefProjet from "../component/FooterChefProjet"
 
-const ProfilePage = () => {
+const ProfileEquipe = () => {
   // Profile state
   const [profile, setProfile] = useState({
     name: "Chef de Projet",
@@ -113,7 +113,10 @@ const ProfilePage = () => {
     for (let i = firstDayOfMonth - 1; i >= 0; i--) {
       const date = new Date(year, month - 1, daysInPrevMonth - i)
       days.push(
-        <div key={`prev-${i}`} className="text-gray-400 p-2 text-center">
+        <div
+          key={`prev-${i}`}
+          className="text-gray-400 p-1 text-center text-xs h-7 w-7 flex items-center justify-center"
+        >
           {daysInPrevMonth - i}
         </div>,
       )
@@ -127,15 +130,15 @@ const ProfilePage = () => {
       days.push(
         <div
           key={`current-${i}`}
-          className={`p-2 text-center cursor-pointer hover:bg-gray-100 rounded-md ${
-            isToday(date) ? "border border-blue-500" : ""
-          } ${isSelected(date) ? "bg-blue-500 text-white hover:bg-blue-600" : ""} ${
-            hasEvent && !isSelected(date) ? "font-bold" : ""
-          }`}
+          className={`p-1 text-center text-xs cursor-pointer transition-all duration-200 ${
+            isToday(date) ? "border border-primary" : ""
+          } ${isSelected(date) ? "bg-primary text-white hover:bg-primary/90" : "hover:bg-gray-100"} ${
+            hasEvent && !isSelected(date) ? "font-medium" : ""
+          } rounded-full h-7 w-7 flex items-center justify-center`}
           onClick={() => setSelectedDate(date)}
         >
           {i}
-          {hasEvent && !isSelected(date) && <div className="w-1 h-1 bg-blue-500 rounded-full mx-auto mt-1"></div>}
+          {hasEvent && !isSelected(date) && <div className="absolute bottom-1 w-1 h-1 bg-primary rounded-full"></div>}
         </div>,
       )
     }
@@ -147,7 +150,10 @@ const ProfilePage = () => {
     for (let i = 1; i <= remainingCells; i++) {
       const date = new Date(year, month + 1, i)
       days.push(
-        <div key={`next-${i}`} className="text-gray-400 p-2 text-center">
+        <div
+          key={`next-${i}`}
+          className="text-gray-400 p-1 text-center text-xs h-7 w-7 flex items-center justify-center"
+        >
           {i}
         </div>,
       )
@@ -162,23 +168,37 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-white">
       <HeaderChefProjet />
-      <main className="flex-grow bg-gray-50">
+      <main className="flex-grow">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-400 py-8 px-4 sm:px-6 lg:px-8 mb-8">
+          <div className="max-w-screen-xl mx-auto">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center text-xs text-blue-100 mb-2">
+                  <span>Équipes</span>
+                  <span className="mx-2">›</span>
+                  <span>Profil</span>
+                </div>
+                <h1 className="text-2xl font-bold text-white">Profil</h1>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="max-w-screen-xl mx-auto px-4 py-8">
           <div className="flex items-center mb-6">
             <Link to="/managerdashboard" className="text-gray-500 hover:text-gray-700 mr-4">
               <ArrowLeft className="h-5 w-5" />
+              <span>Back to Dashboard</span>
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 -mt-16">
             {/* Profile Card */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-              <div className="bg-gradient-to-r from-white-500 to-white-600 p-6 flex flex-col items-center">
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 border-l-4 border-l-primary">
+              <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-8 flex flex-col items-center">
                 <div className="relative">
-                  <div className="h-24 w-24 rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-white">
+                  <div className="h-28 w-28 rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
                     {profile.avatar ? (
                       <img
                         src={profile.avatar || "/placeholder.svg"}
@@ -186,35 +206,41 @@ const ProfilePage = () => {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <User className="h-12 w-12 text-blue-500" />
+                      <User className="h-14 w-14 text-primary" />
                     )}
                   </div>
                 </div>
-                <h2 className="mt-4 text-xl font-bold text-black">{profile.name}</h2>
-                <p className="text-black-100">{profile.role}</p>
+                <h2 className="mt-4 text-lg font-bold text-gray-900">{profile.name}</h2>
+                <p className="text-primary font-medium">{profile.role}</p>
               </div>
 
               <div className="p-6">
-                <div className="space-y-4">
-                  <div className="flex items-center">
-                    <Mail className="h-5 w-5 text-gray-400 mr-3" />
+                <div className="space-y-6">
+                  <div className="flex items-start">
+                    <div className="bg-primary/10 p-3 rounded-lg mr-4">
+                      <Mail className="h-5 w-5 text-primary" />
+                    </div>
                     <div>
-                      <p className="text-sm text-gray-500">Email</p>
-                      <p className="text-gray-800">{profile.email}</p>
+                      <p className="text-sm font-medium text-gray-500">Email</p>
+                      <p className="text-gray-800 font-medium">{profile.email}</p>
                     </div>
                   </div>
-                  <div className="flex items-center">
-                    <Briefcase className="h-5 w-5 text-gray-400 mr-3" />
+                  <div className="flex items-start">
+                    <div className="bg-primary/10 p-3 rounded-lg mr-4">
+                      <Briefcase className="h-5 w-5 text-primary" />
+                    </div>
                     <div>
-                      <p className="text-sm text-gray-500">Role</p>
-                      <p className="text-gray-800">{profile.role}</p>
+                      <p className="text-sm font-medium text-gray-500">Role</p>
+                      <p className="text-gray-800 font-medium">{profile.role}</p>
                     </div>
                   </div>
-                  <div className="flex items-center">
-                    <MapPin className="h-5 w-5 text-gray-400 mr-3" />
+                  <div className="flex items-start">
+                    <div className="bg-primary/10 p-3 rounded-lg mr-4">
+                      <MapPin className="h-5 w-5 text-primary" />
+                    </div>
                     <div>
-                      <p className="text-sm text-gray-500">Address</p>
-                      <p className="text-gray-800">{profile.address}</p>
+                      <p className="text-sm font-medium text-gray-500">Address</p>
+                      <p className="text-gray-800 font-medium">{profile.address}</p>
                     </div>
                   </div>
                 </div>
@@ -223,38 +249,44 @@ const ProfilePage = () => {
 
             {/* Calendar */}
             <div className="md:col-span-2">
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {/* Calendar */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex justify-between items-center mb-4">
+                <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 border-l-4 border-l-blue-500">
+                  <div className="flex justify-between items-center mb-6">
                     <button
                       onClick={prevMonth}
-                      className="p-2 rounded-full hover:bg-gray-100"
+                      className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                       aria-label="Previous month"
                     >
                       <ChevronLeft className="h-5 w-5 text-gray-600" />
                     </button>
-                    <h2 className="text-xl font-bold text-gray-800">{formatMonthYear(currentDate)}</h2>
-                    <button onClick={nextMonth} className="p-2 rounded-full hover:bg-gray-100" aria-label="Next month">
+                    <h2 className="text-base font-bold text-gray-800">{formatMonthYear(currentDate)}</h2>
+                    <button
+                      onClick={nextMonth}
+                      className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                      aria-label="Next month"
+                    >
                       <ChevronRight className="h-5 w-5 text-gray-600" />
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-7 gap-1 mb-2">
+                  <div className="grid grid-cols-7 gap-1 mb-4">
                     {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                      <div key={day} className="text-gray-500 font-medium text-center p-2">
+                      <div key={day} className="text-gray-500 font-medium text-center p-1 text-xs">
                         {day}
                       </div>
                     ))}
                   </div>
-                  <div className="grid grid-cols-7 gap-1">{renderCalendar()}</div>
+                  <div className="grid grid-cols-7 gap-1 relative">{renderCalendar()}</div>
                 </div>
 
                 {/* Events for selected date */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center mb-4">
-                    <Calendar className="h-5 w-5 text-blue-500 mr-2" />
-                    <h3 className="text-lg font-medium text-gray-900">
+                <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 border-l-4 border-l-orange-500">
+                  <div className="flex items-center mb-6">
+                    <div className="bg-primary/10 p-2 rounded-lg mr-3">
+                      <Calendar className="h-5 w-5 text-primary" />
+                    </div>
+                    <h3 className="text-base font-bold text-gray-900">
                       Events for{" "}
                       {selectedDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                     </h3>
@@ -263,14 +295,20 @@ const ProfilePage = () => {
                   {getEventsForDate(selectedDate).length > 0 ? (
                     <div className="space-y-4">
                       {getEventsForDate(selectedDate).map((event, index) => (
-                        <div key={index} className="border-l-4 border-blue-500 pl-4 py-2">
-                          <p className="font-bold text-gray-800">{event.title}</p>
-                          <p className="text-gray-600">{event.time}</p>
+                        <div
+                          key={index}
+                          className="border-l-4 border-primary pl-4 py-3 bg-gray-50 rounded-r-lg hover:bg-gray-100 transition-colors"
+                        >
+                          <p className="font-bold text-gray-800 text-sm">{event.title}</p>
+                          <p className="text-primary font-medium text-xs">{event.time}</p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-600">No events scheduled for this day.</p>
+                    <div className="text-center py-8 bg-gray-50 rounded-lg">
+                      <Calendar className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                      <p className="text-gray-500 font-medium">No events scheduled for this day.</p>
+                    </div>
                   )}
                 </div>
               </div>
@@ -283,5 +321,5 @@ const ProfilePage = () => {
   )
 }
 
-export default ProfilePage
+export default ProfileEquipe
 

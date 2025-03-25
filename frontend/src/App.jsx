@@ -16,6 +16,8 @@ import DocumentationAdmin from "./Administrateur/Pages/DocumentationAdmin";
 import DetailClient from "./Administrateur/component/DetailClient";
 import SettingProfile from "./Administrateur/Pages/SettingProfile";
 import DetailClientCF from "./ChefProjet/component/DtailClientCF";
+import HomepageAdmin from "./Administrateur/Pages/HomePageAdmin";
+
 
 // chef de projet
 import HomeChefProjet from "./ChefProjet/Pages/BodyChefProjet";
@@ -29,12 +31,16 @@ import MessagesPage from "./ChefProjet/Pages/Messages";
 import AddClientChef from "./ChefProjet/component/AddClientChef";
 import TachesProjetCf from "./ChefProjet/Pages/TaskProjetCf";
 import AddTskCf from "./ChefProjet/component/AddTaskCf";
-import EditTaskCf from "./ChefProjet/component/EditeTaskCf";
 import MembreEquipe from "./ChefProjet/Pages/MembreEquipe";
 import Documentation from "./ChefProjet/component/Documentation";
 import EditProfileCf from "./ChefProjet/component/EditProfileCf";
 import UserPage from "./Administrateur/Pages/UsersPage";
 import EditClientCF from "./ChefProjet/component/EditClientCF";
+import EditerTaches from "./ChefProjet/component/EditerTache";
+import AddReunions from "./Administrateur/Pages/AddReunionAdmin";
+import AddReunionsCF from "./ChefProjet/Pages/AddReunionCF";
+
+
 // Membre Equipe
 import HomeEquipe from "./MembreEquipe/Pages/BodyEquipe";
 import DocumentationEquipe from "./MembreEquipe/Pages/DocumentationEquipe";
@@ -43,7 +49,17 @@ import TachesEquipe from "./MembreEquipe/Pages/TacheEquipe";
 import MessagesEquipe from "./MembreEquipe/Pages/MessageEquipe";
 import ProfileEquipe from "./MembreEquipe/Pages/ProfileEquipe";
 import EditProfileEquipe from "./MembreEquipe/Pages/SeetingEquipe";
-
+import HomePageEquipe from "./MembreEquipe/Pages/HomePageEquipe";
+// Client
+import ClientDashboard from "./Clients.jsx/Pages/BodyClient";
+import Payment from "./Clients.jsx/Pages/Payment";
+import ProjectClient from "./Clients.jsx/Pages/ProjetClient";
+import DocumentationClient from "./Clients.jsx/Pages/DocumentationClient";
+import TacheClient from "./Clients.jsx/Pages/TacheClient";
+import ProfileClient from "./Clients.jsx/Pages/ProfileClient";
+import ParametreProfile from "./Clients.jsx/Pages/ParametreProfile";
+import Homepage from "./Clients.jsx/Pages/HomePage";
+import HomePageCf from "./ChefProjet/Pages/HomePageCf";
 
 function App() {
   return (
@@ -57,6 +73,7 @@ function App() {
        <Route path="/" element={<Login />} />
        <Route path="/adminhome" element={<Home />} />   
 
+       <Route path="/HomePageAdmine" element={<HomepageAdmin />} />
        <Route path="/clients" element={<ClientsPage />} />
        <Route path="/add" element={<AddClientPage/>} />
        <Route path="/editClient/:id" element={<EditClient/>}/>
@@ -65,14 +82,15 @@ function App() {
        <Route path="/addProjet" element={<AddProject/>}/>
        <Route path="/tasks" element={<TasksPage/>} />
        <Route path="/create-task" element= {<AddTaches/>} />
-       <Route path="/tasks/:id/edit" element={<EditTaches />} />
+       <Route path="/tasks/:id" element={<EditTaches />} />
        <Route path="/Profile" element= {<ProfilePage/>} />
-      
        <Route path="/edit-task/:id" element= {<EditTaches/>} />
        <Route path="/editProfileAdmin" element= {<EditProfile/>} /> 
 
        <Route path="/documentationAdmin" element= {<DocumentationAdmin/>} /> 
        <Route path="/users" element= {<UserPage/>} /> 
+
+       
 
 
 
@@ -82,24 +100,30 @@ function App() {
        <Route path="/createUser" element= {<UserPage/>} /> 
        <Route path="/DetailClient/:id" element= {<DetailClient/>} /> 
        <Route path="/settings/profile" element= {<SettingProfile/>} /> 
+       <Route path="/AddReunionAdmin" element= {<AddReunions/>} /> 
+       
+
        
           {/* Route chef de projet  */}
+      <Route path="/HomePageCF" element= {<HomePageCf/>} />
+      <Route path="/dashboard" element= {<HomeChefProjet/>} />
       <Route path="/profile/chefProjet" element= {<ProfilePageCf/>} />
       <Route path="/projects/ChefProjet" element= {<ProjectChefProjet/>} />
       <Route path="/addProjetCf" element= {<Add_Project_ChefProjet/>} />
       <Route path="/clients/ChefProjet" element={<ClientProjetCf/>}/>
       <Route path="/editClientCf/:id" element={<EditClientCF/>}/>
-      <Route path="/clients/ChefProjet/DetailClientCF/:id" element={<DetailClientCF/>}/>
-  
+      <Route path="/DetailClientCF/:id" element={<DetailClientCF/>}/>
+      <Route path="/edit-project/:id" element={<EditerProchetCf/>}/>
+      <Route path="/tasks/edit/:id" element={<EditerTaches/>}/>
       <Route path="/chat/ChefProjet" element={<MessagesPage/>}/>
       <Route path="/add_clients" element={<AddClientChef/>}/>
       <Route path="/tasks/ChefProjet" element={<TachesProjetCf/>}/>
       <Route path="/create-task-cf" element={<AddTskCf/>}/>
-      <Route path="/tasks/edit/:id" element={<EditTaskCf/>}/>
+      <Route path="/tasks/edit/:id" element={<EditerTaches/>}/>
       <Route path="/team/ChefProjet" element={<MembreEquipe/>}/>
       <Route path="/documentation" element={<Documentation/>}/>
-      <Route path="/edit-project/:id" element={<EditerProchetCf/>}/>
       <Route path="/editProfile/chefProjet" element={<EditProfileCf/>}/>
+      <Route path="/AddRéunionCF" element={<AddReunionsCF/>}/>
 
       {/* Route Membre Equipe */}
 
@@ -110,7 +134,20 @@ function App() {
       <Route path="/chat/Equipe" element={<MessagesEquipe/>}/>
       <Route path="/profile/Equipe" element={<ProfileEquipe/>}/>
       <Route path="/SettingProfile/Equipe" element={<EditProfileEquipe/>}/>
+      <Route path="/HomePageEquipe" element={<HomePageEquipe/>}/>
+
+      {/* Route client  */}
+      <Route path="/Home" element={<Homepage/>}/>
+      <Route path="/dashboard/Client" element={<ClientDashboard/>}/>
+      <Route path="/payments/client" element={<Payment/>}/>
+      <Route path="/projects/client" element={<ProjectClient/>}/>
+      <Route path="/documentation/client" element={<DocumentationClient/>}/>
+      <Route path="/tasks/client" element={<TacheClient/>}/>
+      <Route path="/profile/client" element={<ProfileClient/>}/>
+      <Route path="/Parametre/client" element={<ParametreProfile/>}/>
+
      
+
 
     </Routes>
     </>

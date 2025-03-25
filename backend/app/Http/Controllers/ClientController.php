@@ -48,32 +48,35 @@ class ClientController extends Controller
 }
 
 
-    public function store(Request $request)
+public function store(Request $request)
 {
     // Validation des données entrantes
     $request->validate([
-        'user_id' => 'required|exists:utilisateurs,id',
+        'nom' => 'required|string|max:255',
+        'email' => 'required|email|unique:utilisateurs,email',
         'telephone' => 'nullable|string|max:20',
         'adresse' => 'nullable|string|max:255',
     ]);
 
-    // Vérifier si l'utilisateur a bien le rôle "client"
-    $utilisateur = \App\Models\Utilisateur::find($request->user_id);
+    // Créer un utilisateur avec un mot de passe par défaut
+    $utilisateur = \App\Models\Utilisateur::create([
+        'nom' => $request->nom,
+        'email' => $request->email,
+        'password' => bcrypt('password123'), // Mot de passe par défaut
+        'role' => 'client', // Role par défaut 'client'
+    ]);
 
-    if (!$utilisateur || $utilisateur->role !== 'client') {
-        return response()->json(['message' => 'Seuls les utilisateurs avec le rôle "client" peuvent être ajoutés en tant que client.'], 403);
-    }
-
-    // Création du client
+    // Création du client avec l'ID de l'utilisateur nouvellement créé
     $client = Client::create([
-        
         'telephone' => $request->telephone,
         'adresse' => $request->adresse,
-        'user_id' => $request->user_id,
+        'user_id' => $utilisateur->id, // Utilisation de l'ID de l'utilisateur
     ]);
 
     return response()->json(['message' => 'Client ajouté avec succès', 'client' => $client], 201);
 }
+
+
 
 public function destroy($id)
 {

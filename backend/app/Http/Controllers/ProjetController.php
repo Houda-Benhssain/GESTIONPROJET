@@ -79,6 +79,10 @@ class ProjetController extends Controller
         $clients = Client::with('projets')->get();
         return response()->json($clients);
     }
+    public function reunions()
+    {
+        return $this->hasMany(Reunion::class);
+    }
 }
 
 
