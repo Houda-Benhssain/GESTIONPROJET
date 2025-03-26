@@ -13,8 +13,8 @@ const AddReunions = () => {
   const [reunion, setReunion] = useState({
     type: "Réunion de lancement", // Default type
     date: "", // Format: 2025-03-25
-    dateDebut: "",
-    dateFin: "",
+    heure_debut: "",
+    heure_fin: "",
     user_id: 2, // Assuming a static user_id for now, or it could come from user authentication context
     project_id: "",
 
@@ -82,8 +82,8 @@ const AddReunions = () => {
     const requestData = {
       type: reunion.type,
       date: reunion.date, // Format: 2025-03-25
-      dateDebut: reunion.dateDebut, // Including the time (2025-03-25 10:00:00)
-      dateFin: reunion.dateFin, // Including the time (2025-03-25 12:00:00)
+      heure_debut: reunion.heure_debut, // Including the time (2025-03-25 10:00:00)
+      heure_fin: reunion.heure_fin, // Including the time (2025-03-25 12:00:00)
       user_id: reunion.user_id,
       project_id: reunion.project_id,
     }
@@ -100,8 +100,7 @@ const AddReunions = () => {
 
       // Handle response from API
       setLoading(false)
-      alert("Réunion créée avec succès!")
-      navigate("/")
+      navigate("/adminhome")
     } catch (error) {
       setLoading(false)
       console.error("Error creating reunion:", error)
@@ -114,11 +113,11 @@ const AddReunions = () => {
     if (!reunion.date) {
       newErrors.date = "La date est requise"
     }
-    if (!reunion.dateDebut) {
-      newErrors.dateDebut = "La date de début est requise"
+    if (!reunion.heure_debut) {
+      newErrors.heure_debut = "L'heure de début est requise"
     }
-    if (!reunion.dateFin) {
-      newErrors.dateFin = "La date de fin est requise"
+    if (!reunion.heure_fin) {
+      newErrors.heure_fin = "L'heure de fin est requise"
     } else if (reunion.dateDebut && new Date(reunion.dateFin) <= new Date(reunion.dateDebut)) {
       newErrors.dateFin = "La date de fin doit être postérieure à la date de début"
     }
@@ -279,40 +278,40 @@ const AddReunions = () => {
                     </p>
                   )}
                   <label htmlFor="dateDebut" className="block text-sm font-medium text-blue-800 mb-1">
-                    Date et heure de début <span className="text-red-500">*</span>
+                    Heure de début <span className="text-red-500">*</span>
                   </label>
                   <input
-                    id="dateDebut"
-                    name="dateDebut"
-                    type="datetime-local"
-                    value={reunion.dateDebut}
+                    id="heure_debut"
+                    name="heure_debut"
+                    type="time"
+                    value={reunion.heure_debut}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   />
-                  {errors.dateDebut && (
+                  {errors.heure_debut && (
                     <p className="text-red-600 mt-1 text-sm flex items-center">
                       <AlertCircle className="h-4 w-4 mr-1" />
-                      {errors.dateDebut}
+                      {errors.heure_debut}
                     </p>
                   )}
                 </div>
 
                 <div>
                   <label htmlFor="dateFin" className="block text-sm font-medium text-blue-800 mb-1">
-                    Date et heure de fin <span className="text-red-500">*</span>
+                    Heure de fin <span className="text-red-500">*</span>
                   </label>
                   <input
-                    id="dateFin"
-                    name="dateFin"
-                    type="datetime-local"
-                    value={reunion.dateFin}
+                    id="heure_fin"
+                    name="heure_fin"
+                    type="time"
+                    value={reunion.heure_fin}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   />
-                  {errors.dateFin && (
+                  {errors.heure_fin && (
                     <p className="text-red-600 mt-1 text-sm flex items-center">
                       <AlertCircle className="h-4 w-4 mr-1" />
-                      {errors.dateFin}
+                      {errors.heure_fin}
                     </p>
                   )}
                 </div>
@@ -340,6 +339,8 @@ const AddReunions = () => {
 }
 
 export default AddReunions
+
+
 
 
 

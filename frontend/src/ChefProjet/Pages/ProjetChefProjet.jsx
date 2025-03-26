@@ -1,151 +1,161 @@
-import React, { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
-import { Search, Plus, Filter, Edit, Trash2, ChevronDown,ChevronRight, Calendar, Users, Folder } from "lucide-react"
-import ProjectFilter from "../component/ProjectFilter"
-import HeaderChefProjet from "../component/HeaderChefProjet"
-import FooterChefProjet from "../component/FooterChefProjet"
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Search, Plus, Filter, Edit, Trash2, ChevronDown, ChevronRight, Calendar, Users, Folder } from "lucide-react";
+import ProjectFilter from "../component/ProjectFilter";
+import HeaderChefProjet from "../component/HeaderChefProjet";
+import FooterChefProjet from "../component/FooterChefProjet";
 
 const ProjectsPage = () => {
-  const [projects, setProjects] = useState([])
-  const [filteredProjects, setFilteredProjects] = useState([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [showFilters, setShowFilters] = useState(false)
+  const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     status: "all",
     client: "all",
     dateRange: "all",
-  })
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [projectToDelete, setProjectToDelete] = useState(null)
-  const [clients, setClients] = useState([]) // Nouveau state pour les clients
+  });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState(null);
+  const [clients, setClients] = useState([]); // Nouveau state pour les clients
+  const [userID, setUserID] = useState("");
 
-  // Effect pour charger les projets et clients
   useEffect(() => {
-    loadProjects()
-    loadClients()
-  }, [])
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setUserID(user.id); // Stocker l'ID de l'utilisateur
+    }
+  }, []);
 
-  // Effect pour filtrer les projets selon les critères
   useEffect(() => {
-    filterProjects()
-  }, [searchTerm, filters, projects])
+    if (userID) {
+      loadProjects(); // Charger les projets uniquement si userID est défini
+      loadClients();
+    }
+  }, [userID]);
+
+  useEffect(() => {
+    filterProjects();
+  }, [searchTerm, filters, projects]);
 
   const loadProjects = async () => {
+    if (!userID) return; // Ajouter une condition pour vérifier si l'ID utilisateur est défini
     try {
-      const response = await fetch("http://127.0.0.1:8000/projets")
-      const data = await response.json()
-      setProjects(data) // Définir les projets récupérés
-      setFilteredProjects(data) // Initialiser les projets filtrés
+      const response = await fetch("http://127.0.0.1:8000/projets");
+      const data = await response.json();
+      
+      // Filtrer les projets en fonction de l'ID de l'utilisateur
+      const userProjects = data.filter(project => project.user_id === userID);
+      
+      setProjects(userProjects); // Définir les projets filtrés par l'ID utilisateur
+      setFilteredProjects(userProjects); // Initialiser les projets filtrés
     } catch (error) {
-      console.error("Error fetching projects:", error)
+      console.error("Error fetching projects:", error);
     }
-  }
+  };
 
   const loadClients = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/clients") // Adapter l'URL si nécessaire
-      const data = await response.json()
-      setClients(data) // Définir les clients récupérés
+      const response = await fetch("http://127.0.0.1:8000/clients"); // Adapter l'URL si nécessaire
+      const data = await response.json();
+      setClients(data); // Définir les clients récupérés
     } catch (error) {
-      console.error("Error fetching clients:", error)
+      console.error("Error fetching clients:", error);
     }
-  }
+  };
 
   const filterProjects = () => {
-    let result = [...projects]
+    let result = [...projects];
 
     if (searchTerm) {
       result = result.filter(
         (project) =>
           project.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
           project.description.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      );
     }
 
     if (filters.status !== "all") {
-      result = result.filter((project) => project.statut === filters.status)
+      result = result.filter((project) => project.statut === filters.status);
     }
 
     if (filters.client !== "all") {
-      result = result.filter((project) => String(project.client_id) === String(filters.client))
+      result = result.filter((project) => String(project.client_id) === String(filters.client));
     }
 
     if (filters.dateRange !== "all") {
-      const now = new Date()
-      const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30))
-      const ninetyDaysAgo = new Date(now.setDate(now.getDate() - 90))
+      const now = new Date();
+      const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
+      const ninetyDaysAgo = new Date(now.setDate(now.getDate() - 90));
 
       if (filters.dateRange === "30days") {
-        result = result.filter((project) => new Date(project.dateDebut) >= thirtyDaysAgo)
+        result = result.filter((project) => new Date(project.dateDebut) >= thirtyDaysAgo);
       } else if (filters.dateRange === "90days") {
-        result = result.filter((project) => new Date(project.dateDebut) >= ninetyDaysAgo)
+        result = result.filter((project) => new Date(project.dateDebut) >= ninetyDaysAgo);
       }
     }
 
-    setFilteredProjects(result)
-  }
+    setFilteredProjects(result);
+  };
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value)
-  }
+    setSearchTerm(e.target.value);
+  };
 
   const handleFilterChange = (name, value) => {
     setFilters({
       ...filters,
       [name]: value,
-    })
-  }
+    });
+  };
 
   const handleDeleteClick = (project) => {
-    setProjectToDelete(project)
-    setShowDeleteModal(true)
-}
+    setProjectToDelete(project);
+    setShowDeleteModal(true);
+  };
 
-const confirmDelete = async () => {
+  const confirmDelete = async () => {
     if (projectToDelete) {
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/projets/${projectToDelete.id}`, {
-                method: "DELETE",
-            })
-            if (response.ok) {
-                // Mettre à jour les états après la suppression du projet
-                setProjects(projects.filter((p) => p.id !== projectToDelete.id))
-                setFilteredProjects(filteredProjects.filter((p) => p.id !== projectToDelete.id))
-                setShowDeleteModal(false)
-                setProjectToDelete(null)
-            } else {
-                // Gérer l'échec de la suppression
-                console.error("Error deleting project")
-            }
-        } catch (error) {
-            console.error("Error deleting project:", error)
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/projets/${projectToDelete.id}`, {
+          method: "DELETE",
+        });
+        if (response.ok) {
+          // Mettre à jour les états après la suppression du projet
+          setProjects(projects.filter((p) => p.id !== projectToDelete.id));
+          setFilteredProjects(filteredProjects.filter((p) => p.id !== projectToDelete.id));
+          setShowDeleteModal(false);
+          setProjectToDelete(null);
+        } else {
+          // Gérer l'échec de la suppression
+          console.error("Error deleting project");
         }
+      } catch (error) {
+        console.error("Error deleting project:", error);
+      }
     }
-}
-
-
-  
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
       case "termine":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "en cours":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "en attente":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "annule":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-blue-50">
   <div className="flex flex-col min-h-screen bg-blue-50">
   <HeaderChefProjet />
-  <div className="bg-gradient-to-r from-blue-700 to-blue-500 py-6 px-4">
+  <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-6 px-4">
     <div className="max-w-screen-xl mx-auto">
       <div className="flex items-center text-xs text-blue-100 mb-2">
         <span>Projets</span>
@@ -192,7 +202,7 @@ const confirmDelete = async () => {
             Filters
           </button>
           <Link
-  to="/addProjet"  // Make sure this matches the route for adding a project
+  to="/addProjetCf"  // Make sure this matches the route for adding a project
   className="mt-4 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700 flex items-center"
 >
   <Plus className="h-4 w-4 mr-2" />
@@ -290,7 +300,7 @@ const confirmDelete = async () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex justify-start gap-4 items-center">
-                        <Link to={`/edit/${project.id}`} className="text-blue-600 hover:text-blue-800">
+                        <Link to={`/edit-project/${project.id}`} className="text-blue-600 hover:text-blue-800">
                           <Edit className="h-5 w-5" />
                         </Link>
                         <button

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { UserPlus, Edit, Trash2, Eye, Search, ChevronRight, ChevronLeft, Filter, Users } from "lucide-react";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
-
+import { useNavigate } from "react-router-dom";
 
 const Modal = ({ isOpen, onClose, onConfirm, clientName }) => {
   if (!isOpen) return null;
@@ -56,6 +56,8 @@ const ClientsPage = () => {
       console.error("Error fetching clients:", error);
     }
   };
+  
+  const navigate = useNavigate();
 
   // Charger les clients au premier rendu
   useEffect(() => {
@@ -182,7 +184,7 @@ const ClientsPage = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {currentClients.map((client) => (
-                    <tr key={client.id} className="hover:bg-blue-50">
+                    <tr key={client.id} className="hover:bg-blue-50" onClick={() => navigate(`/DetailClient/${client.id}`)}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{client.utilisateur.nom}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.utilisateur.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.telephone}</td>
@@ -191,11 +193,7 @@ const ClientsPage = () => {
 </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-2">
-                            <Link
-                              to={`/DetailClient/${client.id}`}
-                              className="p-1.5 bg-blue-50 rounded-md text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors">
-                              <Eye className="h-4 w-4" />
-                            </Link>
+                            
                             <Link
                               to={`/editClient/${client.id}`}
                               className="p-1.5 bg-blue-50 rounded-md text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors">

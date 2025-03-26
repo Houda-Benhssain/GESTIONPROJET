@@ -19,34 +19,31 @@ import HeaderChefProjet from "../component/HeaderChefProjet"
 import FooterChefProjet from "../component/FooterChefProjet"
 import TaskFilter from "../component/TasksFilterCf"
 
-const DeleteTaskModal = ({ task, onCancel, onConfirm }) => {
+const DeleteTaskModal = ({  onCancel, onConfirm }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
-          <Trash2 className="h-6 w-6 text-red-600" />
+    <div className="fixed inset-0 bg-blue-900/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mx-auto mb-4">
+              <Trash2 className="h-6 w-6 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Confirmer la suppression</h3>
+            <p className="text-center">Êtes-vous sûr de vouloir supprimer cette tache ?</p>
+            <div className="flex justify-end mt-4 space-x-3">
+              <button
+                onClick={onCancel}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md mr-2"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={onConfirm}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Supprimer la tâche</h3>
-        <p className="text-sm text-gray-500 text-center mb-6">
-          Êtes-vous sûr de vouloir supprimer <span className="font-semibold text-blue-600">{task.nom}</span>? Cette
-          action ne peut pas être annulée.
-        </p>
-        <div className="flex justify-end space-x-3">
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-          >
-            Annuler
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700"
-          >
-            Supprimer
-          </button>
-        </div>
-      </div>
-    </div>
   )
 }
 
@@ -69,21 +66,29 @@ const TasksPage = () => {
   const [taskToDelete, setTaskToDelete] = useState(null)
 
   useEffect(() => {
-    loadTasks()
-  }, [])
-
-  useEffect(() => {
     filterTasks()
   }, [searchTerm, filters, tasks])
-
+  const [userID, setUserID] = useState("");
+  useEffect(() => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user) {
+        setUserID(user.id); // Stocker l'ID de l'utilisateur
+      }
+    }, []);
+  
+    useEffect(() => {
+      if (userID) {
+        loadTasks(); // Charger les projets uniquement si userID est défini
+      }
+    }, [userID]);
   const loadTasks = async () => {
     setLoading(true)
     try {
       const response = await fetch("http://127.0.0.1:8000/taches/");
       const data = await response.json();
-      console.log(data); // Vérifie la structure des données ici
-      setTasks(data);
-      setFilteredTasks(data);
+      const userTasks = data.filter(task => task.projet.user_id === userID);
+      setTasks(userTasks);
+      setFilteredTasks(userTasks);
     } catch (error) {
       console.error("Erreur lors du chargement des tâches:", error)
     }
@@ -213,38 +218,41 @@ const TasksPage = () => {
   }
 
   return (
-    
-    <div className="flex flex-col min-h-screen bg-blue-50">
-  <div className="flex flex-col min-h-screen bg-blue-50">
+    <div className="min-h-screen flex flex-col bg-blue-50">
       <HeaderChefProjet />
-      <div className="bg-gradient-to-r from-blue-700 to-blue-500 py-6 px-4">
-    <div className="max-w-screen-xl mx-auto">
-      <div className="flex items-center text-xs text-blue-100 mb-2">
-        <span>Projets</span>
+      <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-6 px-4">
+        <div className="max-w-screen-2xl mx-auto">
+          <div className="flex items-center text-xs text-blue-100 mb-2">
+            <span>Dashboard</span>
+            <ChevronRight className="h-3 w-3 mx-1" />
+            <span>Tâches</span>
+          </div>
+          <h1 className="text-2xl font-bold text-white">Gestion des Tâches</h1>
+        </div>
       </div>
-      <h1 className="text-2xl font-bold text-white">Gestion des Taches</h1>
-    </div>
-  </div>
-      <main className="flex-grow">
-        <div className="max-w-screen-2xl mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
 
+      <main className="flex-grow p-4 md:p-6 -mt-6">
+        <div className="max-w-screen-2xl mx-auto">
+          {/* Stats card */}
+          <div className="bg-white rounded-xl p-5 shadow-lg hover:shadow-xl transition-shadow border-l-4 border-blue-500 mb-6">
+            <div className="flex items-center">
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                <Calendar className="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold">{tasks.length}</div>
+                <div className="text-sm text-gray-500">Tâches totales</div>
+              </div>
+            </div>
+          </div>
 
-          <div className="flex items-center">
-                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
-                      
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold">{tasks.length}</div>
-                      <div className="text-sm text-gray-500">Nombre de projets</div>
-                    </div>
-                  </div>
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
             <div>
               <h2 className="text-xl font-bold text-gray-800">Liste des Tâches</h2>
               <p className="text-sm text-gray-500 mt-1">Gérez et suivez toutes vos tâches</p>
             </div>
             <Link
-              to="/create-task"
+              to="/create-task-cf"
               className="mt-4 md:mt-0 flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -391,7 +399,7 @@ const TasksPage = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-2">
                             <Link
-                              to={`/tasks/${task.id}/edit`}
+                              to={`/EditTachesCf/${task.id}`}
                               className="p-1.5 bg-blue-50 rounded-md text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                             >
                               <Edit className="h-4 w-4" />
@@ -404,21 +412,6 @@ const TasksPage = () => {
                             </button>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {task.user.nom}
-                        </td>
-                        <td className="px-4 py-3 text-sm font-medium">
-                          <div className="flex justify-start gap-4 items-center">
-                          <Link to={`/tasks/${task.id}/edit`} className="text-blue-600 hover:text-blue-800">
-                               <Edit className="h-5 w-5" />
-                           </Link>
-                          <button
-                            onClick={() => openDeleteModal(task)}
-                            className="text-red-600 hover:text-red-800"  >
-                         <Trash2 className="h-5 w-5" />
-                         </button>
-                         </div>
-                      </td>
                       </tr>
                     ))}
                   </tbody>
@@ -435,8 +428,8 @@ const TasksPage = () => {
         <DeleteTaskModal task={taskToDelete} onCancel={() => setIsModalOpen(false)} onConfirm={handleDelete} />
       )}
     </div>
-    </div>
-  );
-};
+  )
+}
+
 export default TasksPage
 

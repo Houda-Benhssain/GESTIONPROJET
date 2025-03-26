@@ -4,7 +4,7 @@ import { ArrowLeft, User, Phone, Mail, MapPin } from "lucide-react";
 import HeaderChefProjet from "./HeaderChefProjet";
 import FooterChefProjet from "./FooterChefProjet";
 
-const DetailClientcf = () => {
+const DetailClientCF = () => {
   const { id } = useParams();
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -51,11 +51,11 @@ const DetailClientcf = () => {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col bg-gray-50">
-        <Header />
+        <HeaderChefProjet />
         <main className="flex-grow p-4 md:p-6 text-center">
           <p className="text-red-600">{error}</p>
         </main>
-        <Footer />
+        <FooterChefProjet />
       </div>
     );
   }
@@ -82,7 +82,7 @@ const DetailClientcf = () => {
   const { projetsAFaire, projetsEnCours, projetsTermines } = calculateStats(client?.projets || []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-blue-50">
       <HeaderChefProjet />
       <main className="flex-grow p-4 md:p-6">
         <div className="max-w-screen-xl mx-auto">
@@ -196,7 +196,10 @@ const DetailClientcf = () => {
   );
 };
 
-export default DetailClientcf;
+export default DetailClientCF;
+
+
+
 
 
 

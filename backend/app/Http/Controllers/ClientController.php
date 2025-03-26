@@ -7,23 +7,22 @@ use Illuminate\Http\Request;
 class ClientController extends Controller
 {
     public function show($id)
-    {
-        // Récupérer le client avec ses projets et l'utilisateur
-        $client = Client::with(['utilisateur', 'projets'])->find($id);
+{
+    $client = Client::with(['utilisateur', 'projets.user'])->find($id);
 
-        // Vérifier si le client existe
-        if (!$client) {
-            return response()->json(['message' => 'Client non trouvé'], 404);
-        }
-
-        return response()->json($client);
+    if (!$client) {
+        return response()->json(['message' => 'Client non trouvé'], 404);
     }
+
+    return response()->json($client);
+}
+
     public function index()
-    {
-        $clients = Client::with('utilisateur','projets')->get();
-        // $clients = Client::with('projets')->get();
-        return response()->json($clients);
-    }
+{
+    $clients = Client::with('utilisateur', 'projets.user')->get();
+    return response()->json($clients);
+}
+
     public function update(Request $request, $id)
 {
     $client = Client::with(['utilisateur', 'projets'])->find($id);

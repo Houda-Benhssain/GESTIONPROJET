@@ -3,44 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reunion;
+use App\Models\Utilisateur;
+use App\Models\Projet;
 use Illuminate\Http\Request;
 
 class ReunionController extends Controller
 {
-    // Récupérer toutes les réunions
-    public function index()
-    {
-        $reunions = Reunion::with('projet')->get();
-
-        return response()->json($reunions);
-    }
-
-    // Ajouter une nouvelle réunion
+    // Enregistrer une réunion dans la base de données
     public function store(Request $request)
     {
-        // Validation des données envoyées
+        // Validation des données
         $request->validate([
-            'type' => 'required|in:Réunion de lancement,Réunion de planification,Réunion de suivi,Réunion de revue,Réunion de rétrospective,Réunion de clôture', // Le type de réunion doit être l'un des types définis dans l'énumération
-            'date' => 'required|date', // La date de la réunion au format YYYY-MM-DD
-            'dateDebut' => 'required|date_format:Y-m-d H:i:s', // La date et heure de début
-            'dateFin' => 'required|date_format:Y-m-d H:i:s|after:dateDebut', // La date et heure de fin, qui doit être après la date de début
-            'user_id' => 'required|exists:utilisateurs,id', // L'ID de l'utilisateur (doit exister dans la table des utilisateurs)
-            'project_id' => 'required|exists:projets,id', // L'ID du projet (doit exister dans la table des projets)
+            'type' => 'required|in:Réunion de lancement,Réunion de planification,Réunion de suivi,Réunion de revue,Réunion de rétrospective,Réunion de clôture',
+            'date' => 'required|date',
+            'heure_debut' => 'required|date_format:H:i',
+            'heure_fin' => 'required|date_format:H:i|after:heure_debut', // Vérifie que l'heure de fin est après l'heure de début
+            'user_id' => 'required|exists:utilisateurs,id',
+            'project_id' => 'required|exists:projets,id',
         ]);
 
-        // Créer la réunion dans la base de données
-        $reunion = Reunion::create([
-            'type' => $request->type,      
-            'date' => $request->date,      
-            'dateDebut' => $request->dateDebut, 
-            'dateFin' => $request->dateFin,    
-            'user_id' => $request->user_id, 
-            'project_id' => $request->project_id, 
-        ]);
+        // Créer une nouvelle réunion
+        $reunion = new Reunion();
+        $reunion->type = $request->type;
+        $reunion->date = $request->date;
+        $reunion->heure_debut = $request->heure_debut;
+        $reunion->heure_fin = $request->heure_fin;
+        $reunion->user_id = $request->user_id;
+        $reunion->project_id = $request->project_id;
+        $reunion->save();
 
-        // Retourner une réponse avec le message et les informations de la réunion créée
-        return response()->json(['message' => 'Réunion créée avec succès', 'reunion' => $reunion], 201);
+        // Retourner une réponse JSON ou rediriger
+        return response()->json([
+            'message' => 'Réunion créée avec succès!',
+            'reunion' => $reunion
+        ], 201); // Code HTTP 201 pour la création réussie
     }
+
+    
 
     // Afficher une réunion spécifique
     public function show($id)
@@ -51,52 +50,17 @@ class ReunionController extends Controller
             return response()->json(['message' => 'Réunion non trouvée'], 404);
         }
 
-        return response()->json($reunion);
-    }
-
-    // Mettre à jour une réunion
-    public function update(Request $request, $id)
-    {
-        $reunion = Reunion::find($id);
-
-        if (!$reunion) {
-            return response()->json(['message' => 'Réunion non trouvée'], 404);
-        }
-
-        // Validation des données envoyées
-        $request->validate([
-            'type' => 'required|in:Réunion de lancement,Réunion de planification,Réunion de suivi,Réunion de revue,Réunion de rétrospective,Réunion de clôture',
-            'date' => 'required|date',
-            'dateDebut' => 'required|date_format:Y-m-d H:i:s',
-            'dateFin' => 'required|date_format:Y-m-d H:i:s|after:dateDebut',
-            'user_id' => 'required|exists:utilisateurs,id',
-            'project_id' => 'required|exists:projets,id',
+        return response()->json([
+            'reunion' => $reunion
         ]);
-
-        // Mettre à jour la réunion
-        $reunion->update([
-            'type' => $request->type,
-            'date' => $request->date,
-            'dateDebut' => $request->dateDebut,
-            'dateFin' => $request->dateFin,
-            'user_id' => $request->user_id,
-            'project_id' => $request->project_id,
-        ]);
-
-        return response()->json(['message' => 'Réunion mise à jour avec succès', 'reunion' => $reunion]);
     }
+    // Afficher toutes les réunions avec les projets associés
+public function index()
+{
+    $reunions = Reunion::with('projet')->get();
 
-    // Supprimer une réunion
-    public function destroy($id)
-    {
-        $reunion = Reunion::find($id);
-
-        if (!$reunion) {
-            return response()->json(['message' => 'Réunion non trouvée'], 404);
-        }
-
-        $reunion->delete();
-
-        return response()->json(['message' => 'Réunion supprimée avec succès']);
-    }
+    return response()->json([
+        'reunions' => $reunions
+    ]);
+}
 }

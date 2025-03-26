@@ -9,19 +9,22 @@ use Illuminate\Http\Request;
 class ProjetController extends Controller
 {
     public function index()
-    {
-        $projets = Projet::with('client', 'user')->get();  // Inclure aussi la relation avec l'utilisateur
-        return response()->json($projets);
-    }
+{
+    $projets = Projet::with('client.utilisateur', 'user','taches')->get();
+    return response()->json($projets);
+}
+
+    
+
 
     public function show($id)
-    {
-        $projet = Projet::with('client', 'user')->find($id);  // Inclure la relation avec l'utilisateur
-        if (!$projet) {
-            return response()->json(['error' => 'Projet non trouvé'], 404);
-        }
-        return response()->json($projet);
+{
+    $projet = Projet::with('client.utilisateur', 'user','taches')->find($id);  // Inclure la relation avec l'utilisateur
+    if (!$projet) {
+        return response()->json(['error' => 'Projet non trouvé'], 404);
     }
+    return response()->json($projet);
+}
 
     // Ajouter un projet
     public function store(Request $request)
@@ -74,10 +77,22 @@ class ProjetController extends Controller
         return response()->json(['message' => 'Projet supprimé']);
     }
 
+    
+
     public function getClients()
     {
         $clients = Client::with('projets')->get();
         return response()->json($clients);
+    }
+    public function getTaches()
+    {
+        $taches = Tache::with('projets')->get();
+        return response()->json($taches);
+    }
+    public function getChefProjet()
+    {
+        $clients = Utilisateur::with('projets')->get();
+        return response()->json($utilisateurs);
     }
     public function reunions()
     {

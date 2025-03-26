@@ -10,6 +10,7 @@ const DetailClient = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);  // Pour gérer les erreurs
   const [activeTab, setActiveTab] = useState("overview");
+  console.log(id)
 
   useEffect(() => {
     const fetchClientDetails = async () => {

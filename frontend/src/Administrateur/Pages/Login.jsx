@@ -32,7 +32,7 @@ export default function Login() {
         if (response.data.role === "administrateur") {
           window.location.href = "/HomePageAdmine"
         } else if (response.data.role === "chef de projet") {
-          window.location.href = "/managerdashboard"
+          window.location.href = "/HomePageCF"
         }else if (response.data.role === "membre equipe") {
           window.location.href = "/memberdashboard"
         }

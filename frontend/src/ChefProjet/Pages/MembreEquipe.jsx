@@ -196,7 +196,7 @@ const MembreEquipe = () => {
       <HeaderChefProjet />
 
       {/* Blue gradient header */}
-      <div className="bg-gradient-to-r from-blue-700 to-blue-500 py-6 px-4">
+      <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-6 px-4">
         <div className="max-w-screen-xl mx-auto">
           <div className="flex items-center text-xs text-blue-100 mb-2">
             <span>Dashboard</span>

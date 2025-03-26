@@ -3,10 +3,12 @@ import { useState } from "react"
 import Header from "./Header"
 import Footer from "./Footer"
 import { Link } from "react-router-dom"
-import { CheckCircle, FileText, Calendar, Users, MessageSquare, Clock, Plus, Trash2, ChevronRight,} from "lucide-react"
-import axios from 'axios'
+import { CheckCircle, FileText, Calendar, Users, MessageSquare, Clock, Plus, Trash2, ChevronRight,
 
+
+} from "lucide-react"
 import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 const HomeBody = () => {
   const [newTask, setNewTask] = useState("")
   const [tasks, setTasks] = useState([
@@ -25,6 +27,8 @@ const HomeBody = () => {
       setNewTask("")
     }
   };
+  
+    const navigate = useNavigate();
 
   const toggleTask = (id) => {
     setTasks(tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)));
@@ -60,43 +64,6 @@ const HomeBody = () => {
     setTasks(tasks.filter((task) => !task.completed))
   }
 
-  // Team members data
-  const teamMembers = [
-    {
-      id: 1,
-      name: "Jean Dupont",
-      role: "Chef d'équipe",
-      time: "En ligne",
-      avatars: ["JD"],
-      color: "bg-blue-500",
-    },
-    {
-      id: 2,
-      name: "Marie Lefebvre",
-      role: "Développeur",
-      time: "En ligne",
-      avatars: ["ML", "JD"],
-      color: "bg-purple-500",
-    },
-    {
-      id: 3,
-      name: "Pierre Bernard",
-      role: "Designer",
-      time: "Absent",
-      avatars: ["PB", "ML", "JD"],
-      color: "bg-green-500",
-    },
-    {
-      id: 4,
-      name: "Sophie Martin",
-      role: "Marketing",
-      time: "En pause",
-      avatars: ["SM", "PB"],
-      color: "bg-amber-500",
-    },
-  ]
-
-  // Current date
   const today = new Date()
   const options = { weekday: "long", month: "short", day: "numeric", year: "numeric" }
   const formattedDate = today.toLocaleDateString("fr-FR", options)
@@ -120,6 +87,7 @@ const HomeBody = () => {
   const [teamMembersCount, setTeamMembersCount] = useState(0);
   const [projectsCount, setProjectsCount] = useState(0);
   const [meetingsCount, setMeetingsCount] = useState(0);
+  const [meetingsCountThisWeek, setMeetingsCountThisWeek] = useState(0);
 
   // Fetch data for tasks, team members, and projects
   useEffect(() => {
@@ -139,9 +107,12 @@ const HomeBody = () => {
       .then(data => setProjectsCount(data.filter(project => project.statut === 'en cours').length)); // assuming the API returns an array of projects
 
     // Fetch meetings count (if you have an API endpoint for meetings)
-    fetch('/api/meetings')
+    fetch('http://127.0.0.1:8000/reunions')
       .then(response => response.json())
-      .then(data => setMeetingsCount(data.filter(meeting => new Date(meeting.date) > new Date()).length)); // assuming the API returns an array of meetings
+      .then(data => {
+        const thisWeekMeetings = getThisWeekMeetings(data.reunions);
+        setMeetingsCountThisWeek(thisWeekMeetings.length);
+      }); // assuming the API returns an array of meetings
   }, []);
   const [userName, setUserName] = useState("")
   const [userEmail, setUserEmail] = useState("")
@@ -153,34 +124,48 @@ const HomeBody = () => {
     }
   }, [])
 
-  const [reunions, setReunions] = useState([]);
-  const [loading, setLoading] = useState(true);
+    const [reunions, setReunions] = useState([]);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const fetchReunions = async () => {
+        try {
+          const response = await fetch("http://127.0.0.1:8000/reunions");
+          const data = await response.json();
+          const thisWeekReunions = filterReunionsThisWeek(data.reunions);
+          setReunions(thisWeekReunions);
+        } catch (error) {
+          console.error("Erreur lors de la récupération des réunions", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchReunions();
+    }, []);
+  const card=reunions.length
+    // Fonction pour filtrer les réunions de la semaine
+    const filterReunionsThisWeek = (reunions) => {
+      const now = new Date();
+      const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())); // début de la semaine
+      const endOfWeek = new Date(startOfWeek); // fin de la semaine
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+  
+      return reunions.filter((reunion) => {
+        const dateReunion = new Date(reunion.date);
+        return dateReunion >= startOfWeek && dateReunion <= endOfWeek;
+      });
+    }
+    const [projets, setProjets] = useState([]);
 
   useEffect(() => {
-    // Récupérer les réunions de l'API
-    axios
-      .get("http://127.0.0.1:8000/reunions")
-      .then((response) => {
-        const thisWeekStart = startOfWeek(new Date());
-        const thisWeekEnd = endOfWeek(new Date());
-
-        // Filtrer les réunions de cette semaine
-        const filteredReunions = response.data.filter((reunion) => {
-          const reunionDate = parseISO(reunion.dateDebut); // Utilisation de 'dateDebut' pour la date de début de la réunion
-          return isWithinInterval(reunionDate, { start: thisWeekStart, end: thisWeekEnd });
-        });
-
-        setReunions(filteredReunions);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des réunions:", error);
-        setLoading(false);
+    fetch("http://127.0.0.1:8000/projets/")
+      .then((response) => response.json())
+      .then((data) => {
+        const projetsEnCours = data.filter((projet) => projet.statut === "en cours");
+        setProjets(projetsEnCours);
       });
   }, []);
-
-
-
   
 
   return (
@@ -247,7 +232,7 @@ const HomeBody = () => {
                 <Calendar className="h-6 w-6 text-amber-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{meetingsCount}</div>
+                <div className="text-2xl font-bold">{card}</div>
                 <div className="text-sm text-gray-500">Réunions prévues</div>
               </div>
             </div>
@@ -303,72 +288,48 @@ const HomeBody = () => {
           </div>
 
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-bold text-gray-800">Projets ouverts</h2>
-              <span className="text-gray-500 text-xs">Statut de vos données</span>
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-base font-bold text-gray-800">Projets ouverts</h2>
+        <span className="text-gray-500 text-xs">Statut de vos données</span>
+      </div>
+
+      <div className="space-y-2">
+        {projets.map((projet) => (
+          <div key={projet.id} className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors" onClick={() => navigate(`/detailsProjet/${projet.id}`)}>
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
             </div>
-
-            <div className="space-y-2">
-              <div className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor" >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between">
-                    <h3 className="font-semibold text-sm text-gray-800">
-                      Conception du tableau de bord administrateur
-                    </h3>
-                    <span className="text-gray-500 text-xs">Il y a 15 minutes</span>
-                  </div>
-                  <div className="flex justify-between mt-0.5">
-                    <p className="text-gray-500 text-xs">Maquette d'application web de diffusion</p>
-                    <span className="text-gray-500 text-xs">30 tâches, 5 problèmes</span>
-                  </div>
-                </div>
+            <div className="flex-1">
+              <div className="flex justify-between">
+                
+                <h3 className="font-semibold text-sm text-gray-800">{projet.nom}</h3>
+                <span className="text-gray-500 text-xs">{projet.updated_at}</span>
               </div>
-
-              <div className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors">
-                <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-500 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor" >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between">
-                    <h3 className="font-semibold text-sm text-gray-800">
-                      Conception du tableau de bord administrateur
-                    </h3>
-                    <span className="text-gray-500 text-xs">Il y a 15 minutes</span>
-                  </div>
-                  <div className="flex justify-between mt-0.5">
-                    <p className="text-gray-500 text-xs">Maquette d'application web de diffusion</p>
-                    <span className="text-gray-500 text-xs">30 tâches, 5 problèmes</span>
-                  </div>
-                </div>
+              <div className="flex justify-between mt-0.5">
+                
+                <span className="text-gray-500 text-xs">
+                  {projet.dateDebut} - {projet.dateFin}
+                </span>
               </div>
             </div>
           </div>
-        </div>
+        ))}
+      </div>
+    </div>
+        </div> 
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Modern To-Do List Section */}
@@ -454,45 +415,36 @@ const HomeBody = () => {
       </div>
 
       <div className="space-y-4">
-        {reunions.length === 0 ? (
-          <div>Aucune réunion cette semaine</div>
-        ) : (
-          reunions.map((reunion, index) => (
-            <div
-              key={index}
-              className="flex gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors"
-            >
-              <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
-                <span className="text-sm font-bold">{format(parseISO(reunion.dateDebut), "dd")}</span>
-                <span className="text-xs">{format(parseISO(reunion.dateDebut), "MMM")}</span>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-800">{reunion.type}</h3>
-                <div className="flex items-center gap-3 mt-2">
-                  <div className="flex items-center text-gray-500 text-xs">
-                    <span>{format(parseISO(reunion.dateDebut), "HH:mm")} - {format(parseISO(reunion.dateFin), "HH:mm")}</span>
-                  </div>
-                  <div className="flex items-center text-gray-500 text-xs">
-                    <span>{reunion.projet.nom}</span>
-                  </div>
+        {reunions.map((reunion) => (
+          <div key={reunion.id} className="flex gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
+              <span className="text-sm font-bold">{new Date(reunion.date).getDate()}</span>
+              <span className="text-xs">{new Date(reunion.date).toLocaleString("default", { month: "short" })}</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-800">{reunion.type}</h3>
+              <div className="flex items-center gap-3 mt-2">
+                <div className="flex items-center text-gray-500 text-xs">
+                  <Clock className="h-3 w-3 mr-1" />
+                  <span>{reunion.heure_debut} - {reunion.heure_fin}</span>
+                </div>
+                <div className="flex items-center text-gray-500 text-xs">
+                  <MessageSquare className="h-3 w-3 mr-1" />
+                  <span>{reunion.projet.nom}</span>
                 </div>
               </div>
             </div>
-          ))
-        )}
+          </div>
+        ))}
+        <Link to="/AddReunionAdmin">
+          <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
+            <Plus className="h-4 w-4 mr-2" />
+            Planifier une réunion
+          </button>
+        </Link>
       </div>
-
-      <Link to="/AddReunionAdmin">
-        <button
-          className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center"
-          aria-label="Planifier une réunion"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Planifier une réunion
-        </button>
-      </Link>
     </div>
-      </div>
+        </div>
       </div>
       <Footer />
     </div>
@@ -508,8 +460,6 @@ const Card = ({ icon, title, description }) => (
     </div>
   </div>
 );
-
-
 
 export default HomeBody;
 

@@ -15,7 +15,6 @@ import Home from "./Administrateur/Pages/Home";
 import DocumentationAdmin from "./Administrateur/Pages/DocumentationAdmin";
 import DetailClient from "./Administrateur/component/DetailClient";
 import SettingProfile from "./Administrateur/Pages/SettingProfile";
-import DetailClientCF from "./ChefProjet/component/DtailClientCF";
 import HomepageAdmin from "./Administrateur/Pages/HomePageAdmin";
 
 
@@ -24,7 +23,7 @@ import HomeChefProjet from "./ChefProjet/Pages/BodyChefProjet";
 import ProfilePageCf from "./ChefProjet/Pages/ProfileChefProjet";
 import Login from "./Administrateur/Pages/Login";
 import ProjectChefProjet from "./ChefProjet/Pages/ProjetChefProjet";
-import Add_Project_ChefProjet from "./ChefProjet/component/AddProjectChef";
+import AddProjectcf from "./ChefProjet/component/AddProjectChef";
 import EditerProchetCf from "./ChefProjet/component/EditeProjetCf";
 import ClientProjetCf from "./ChefProjet/Pages/ClientProjetCf";
 import MessagesPage from "./ChefProjet/Pages/Messages";
@@ -39,6 +38,8 @@ import EditClientCF from "./ChefProjet/component/EditClientCF";
 import EditerTaches from "./ChefProjet/component/EditerTache";
 import AddReunions from "./Administrateur/Pages/AddReunionAdmin";
 import AddReunionsCF from "./ChefProjet/Pages/AddReunionCF";
+import DetailClientCF from "./ChefProjet/component/DtailClientCF";
+import EditTachesCF from "./ChefProjet/component/EditeTaskCf";
 
 
 // Membre Equipe
@@ -60,6 +61,8 @@ import ProfileClient from "./Clients.jsx/Pages/ProfileClient";
 import ParametreProfile from "./Clients.jsx/Pages/ParametreProfile";
 import Homepage from "./Clients.jsx/Pages/HomePage";
 import HomePageCf from "./ChefProjet/Pages/HomePageCf";
+import DetailProject from "./Administrateur/component/DetailsProjects";
+import AddTaskProjectid from "./Administrateur/component/AddTaskProjectid";
 
 function App() {
   return (
@@ -109,10 +112,9 @@ function App() {
       <Route path="/dashboard" element= {<HomeChefProjet/>} />
       <Route path="/profile/chefProjet" element= {<ProfilePageCf/>} />
       <Route path="/projects/ChefProjet" element= {<ProjectChefProjet/>} />
-      <Route path="/addProjetCf" element= {<Add_Project_ChefProjet/>} />
+      <Route path="/addProjetCf" element= {<AddProjectcf/>} />
       <Route path="/clients/ChefProjet" element={<ClientProjetCf/>}/>
       <Route path="/editClientCf/:id" element={<EditClientCF/>}/>
-      <Route path="/DetailClientCF/:id" element={<DetailClientCF/>}/>
       <Route path="/edit-project/:id" element={<EditerProchetCf/>}/>
       <Route path="/tasks/edit/:id" element={<EditerTaches/>}/>
       <Route path="/chat/ChefProjet" element={<MessagesPage/>}/>
@@ -124,6 +126,12 @@ function App() {
       <Route path="/documentation" element={<Documentation/>}/>
       <Route path="/editProfile/chefProjet" element={<EditProfileCf/>}/>
       <Route path="/AddRéunionCF" element={<AddReunionsCF/>}/>
+      <Route path="/DetailClientCF/:id" element={<DetailClientCF />} />
+      <Route path="/EditTachesCf/:id" element={<EditTachesCF />} />
+      <Route path="/detailsProjet/:id" element={<DetailProject />} />
+      <Route path="/addTaskProject" element={<AddTaskProjectid />} />
+      
+
 
       {/* Route Membre Equipe */}
 

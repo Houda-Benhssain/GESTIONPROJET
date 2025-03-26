@@ -41,10 +41,9 @@ class Projet extends Model
         return $this->belongsTo(Utilisateur::class);  // Relation avec l'utilisateur
     }
 
-    // Relation avec les tâches
     public function taches()
     {
-        return $this->hasMany(Tache::class);
+        return $this->hasMany(Tache::class, 'project_id');  // Assure-toi que 'project_id' est bien la clé étrangère
     }
 
     // Accesseur pour afficher le statut lisible
