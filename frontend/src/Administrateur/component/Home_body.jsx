@@ -3,8 +3,17 @@ import { useState } from "react"
 import Header from "./Header"
 import Footer from "./Footer"
 import { Link } from "react-router-dom"
-import { CheckCircle, FileText, Calendar, Users, MessageSquare, Clock, Plus, Trash2, ChevronRight,
-
+import {
+  CheckCircle,
+  FileText,
+  Calendar,
+  Users,
+  MessageSquare,
+  Clock,
+  Plus,
+  Trash2,
+  ChevronRight,
+  Eye,
 } from "lucide-react"
 
 const HomeBody = () => {
@@ -13,6 +22,28 @@ const HomeBody = () => {
     { id: 5, text: "Meeting at 12", completed: false, color: "pink" },
     { id: 6, text: "Meeting at 10", completed: false, color: "cyan" },
   ])
+
+  // Sample meetings data with IDs for routing
+  const meetings = [
+    {
+      id: "101",
+      title: "Réunion hebdomadaire",
+      date: { day: "24", month: "Mar" },
+      time: "10:00 - 11:00",
+      location: "Salle de conférence A",
+      color: "blue",
+      attendees: [0, 1, 2],
+    },
+    {
+      id: "102",
+      title: "Revue de projet",
+      date: { day: "26", month: "Mar" },
+      time: "14:30 - 15:30",
+      location: "Visioconférence",
+      color: "purple",
+      attendees: [1, 2, 3],
+    },
+  ]
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -91,6 +122,17 @@ const HomeBody = () => {
       purple: "border-purple-400 text-purple-500 bg-purple-50",
     }
     return colorClasses[color] || colorClasses.blue
+  }
+
+  // Get gradient class for meeting cards
+  const getGradientClass = (color) => {
+    const gradientClasses = {
+      blue: "from-blue-400 to-blue-600",
+      purple: "from-purple-400 to-purple-600",
+      green: "from-green-400 to-green-600",
+      amber: "from-amber-400 to-amber-600",
+    }
+    return gradientClasses[color] || gradientClasses.blue
   }
 
   // Count completed tasks
@@ -184,12 +226,14 @@ const HomeBody = () => {
                 <path
                   d="M18 35C27.3888 35 35 27.3888 35 18C35 8.61116 27.3888 1 18 1C8.61116 1 1 8.61116 1 18C1 27.3888 8.61116 35 18 35Z"
                   stroke="#E5E7EB"
-                  strokeWidth="2" />
+                  strokeWidth="2"
+                />
                 <path
                   d="M18 35C27.3888 35 35 27.3888 35 18C35 8.61116 27.3888 1 18 1"
                   stroke="#3B82F6"
                   strokeWidth="2"
-                  strokeLinecap="round"/>
+                  strokeLinecap="round"
+                />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-gray-800 text-sm font-semibold">75%</span>
@@ -224,17 +268,19 @@ const HomeBody = () => {
             <div className="space-y-2">
               <div className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors">
                 <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
-                <svg
+                  <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
-                    stroke="currentColor" >
+                    stroke="currentColor"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
                   </svg>
                 </div>
                 <div className="flex-1">
@@ -253,17 +299,19 @@ const HomeBody = () => {
 
               <div className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors">
                 <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-500 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
-                <svg
+                  <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
-                    stroke="currentColor" >
+                    stroke="currentColor"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
                   </svg>
                 </div>
                 <div className="flex-1">
@@ -291,7 +339,8 @@ const HomeBody = () => {
               {completedTasksCount > 0 && (
                 <button
                   onClick={deleteCompletedTasks}
-                  className="flex items-center text-red-500 hover:text-red-700 text-sm font-medium px-3 py-1 bg-red-50 rounded-full" >
+                  className="flex items-center text-red-500 hover:text-red-700 text-sm font-medium px-3 py-1 bg-red-50 rounded-full"
+                >
                   <Trash2 className="h-4 w-4 mr-1" />
                   Supprimer terminées
                 </button>
@@ -301,20 +350,24 @@ const HomeBody = () => {
             {tasks.length > 0 ? (
               <div className="space-y-3 mb-6">
                 {tasks.map((task) => (
-                  <div key={task.id}
+                  <div
+                    key={task.id}
                     className={`p-4 rounded-xl flex items-center justify-between ${
                       task.completed ? "bg-gray-50" : getColorClass(task.color)
-                    } transition-colors`}>
+                    } transition-colors`}
+                  >
                     <div className="flex items-center">
                       <button
                         onClick={() => toggleTask(task.id)}
                         className={`w-6 h-6 rounded-lg ${
                           task.completed ? "bg-gray-200 text-gray-500" : `border-2 ${getColorClass(task.color)}`
-                        } flex items-center justify-center mr-3 transition-colors`}>
+                        } flex items-center justify-center mr-3 transition-colors`}
+                      >
                         {task.completed && <CheckCircle className="h-4 w-4" />}
                       </button>
                       <span
-                        className={`font-medium ${task.completed ? "line-through text-gray-400" : "text-gray-700"}`}>
+                        className={`font-medium ${task.completed ? "line-through text-gray-400" : "text-gray-700"}`}
+                      >
                         {task.text}
                       </span>
                     </div>
@@ -322,7 +375,8 @@ const HomeBody = () => {
                       {task.completed && (
                         <button
                           onClick={() => deleteTask(task.id)}
-                          className="text-red-400 hover:text-red-600 p-1 rounded-full hover:bg-red-50" >
+                          className="text-red-400 hover:text-red-600 p-1 rounded-full hover:bg-red-50"
+                        >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       )}
@@ -353,7 +407,8 @@ const HomeBody = () => {
                 />
                 <button
                   type="submit"
-                  className="bg-blue-700 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                  className="bg-blue-700 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                >
                   Ajouter
                 </button>
               </div>
@@ -367,72 +422,60 @@ const HomeBody = () => {
             </div>
 
             <div className="space-y-4">
-              <div className="flex gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
-                  <span className="text-sm font-bold">24</span>
-                  <span className="text-xs">Mar</span>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-800">Réunion hebdomadaire</h3>
-                  <div className="flex items-center gap-3 mt-2">
-                    <div className="flex items-center text-gray-500 text-xs">
-                      <Clock className="h-3 w-3 mr-1" />
-                      <span>10:00 - 11:00</span>
-                    </div>
-                    <div className="flex items-center text-gray-500 text-xs">
-                      <MessageSquare className="h-3 w-3 mr-1" />
-                      <span>Salle de conférence A</span>
-                    </div>
-                  </div>
-                  <div className="flex -space-x-2 mt-3">
-                    {teamMembers.slice(0, 3).map((member, index) => (
+              {meetings.map((meeting) => (
+                <div key={meeting.id} className="relative group">
+                  {/* Added Link wrapper around each meeting card */}
+                  <Link to={`/DetailReunion/${meeting.id}`} className="block">
+                    <div className="flex gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors">
                       <div
-                        key={index}
-                        className={`w-6 h-6 rounded-full ${member.color} flex items-center justify-center text-white text-xs border-2 border-white`} >
-                        {member.avatars[0]}
-                      </div>
-                    ))}
-                    <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs border-2 border-white">
-                      +2
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors">
-                <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
-                  <span className="text-sm font-bold">26</span>
-                  <span className="text-xs">Mar</span>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-800">Revue de projet</h3>
-                  <div className="flex items-center gap-3 mt-2">
-                    <div className="flex items-center text-gray-500 text-xs">
-                      <Clock className="h-3 w-3 mr-1" />
-                      <span>14:30 - 15:30</span>
-                    </div>
-                    <div className="flex items-center text-gray-500 text-xs">
-                      <MessageSquare className="h-3 w-3 mr-1" />
-                      <span>Visioconférence</span>
-                    </div>
-                  </div>
-                  <div className="flex -space-x-2 mt-3">
-                    {teamMembers.slice(1, 4).map((member, index) => (
-                      <div
-                        key={index}
-                        className={`w-6 h-6 rounded-full ${member.color} flex items-center justify-center text-white text-xs border-2 border-white`}
+                        className={`w-14 h-14 bg-gradient-to-br ${getGradientClass(meeting.color)} rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm`}
                       >
-                        {member.avatars[0]}
+                        <span className="text-sm font-bold">{meeting.date.day}</span>
+                        <span className="text-xs">{meeting.date.month}</span>
                       </div>
-                    ))}
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-800">{meeting.title}</h3>
+                        <div className="flex items-center gap-3 mt-2">
+                          <div className="flex items-center text-gray-500 text-xs">
+                            <Clock className="h-3 w-3 mr-1" />
+                            <span>{meeting.time}</span>
+                          </div>
+                          <div className="flex items-center text-gray-500 text-xs">
+                            <MessageSquare className="h-3 w-3 mr-1" />
+                            <span>{meeting.location}</span>
+                          </div>
+                        </div>
+                        <div className="flex -space-x-2 mt-3">
+                          {meeting.attendees.map((memberIndex) => (
+                            <div
+                              key={memberIndex}
+                              className={`w-6 h-6 rounded-full ${teamMembers[memberIndex].color} flex items-center justify-center text-white text-xs border-2 border-white`}
+                            >
+                              {teamMembers[memberIndex].avatars[0]}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+
+                  {/* View details button that appears on hover */}
+                  <div className="absolute top-1/2 right-4 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Link
+                      to={`/reunion/${meeting.id}`}
+                      className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-md"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Link>
                   </div>
                 </div>
-              </div>
-              <Link to="/AddReunionAdmin" >
-              <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
-                <Plus className="h-4 w-4 mr-2" />
-                Planifier une réunion
-              </button>
+              ))}
+
+              <Link to="/AddReunionAdmin">
+                <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Planifier une réunion
+                </button>
               </Link>
             </div>
           </div>

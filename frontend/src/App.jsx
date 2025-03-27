@@ -17,6 +17,7 @@ import DocumentationAdmin from "./Administrateur/Pages/DocumentationAdmin";
 import DetailClient from "./Administrateur/component/DetailClient";
 import SettingProfile from "./Administrateur/Pages/SettingProfile";
 import DetailClientCF from "./ChefProjet/component/DtailClientCF";
+import DetailReunion from "./Administrateur/Pages/DetailReuion";
 
 
 // chef de projet
@@ -39,6 +40,7 @@ import EditClientCF from "./ChefProjet/component/EditClientCF";
 import EditerTaches from "./ChefProjet/component/EditerTache";
 import AddReunions from "./Administrateur/Pages/AddReunionAdmin";
 import AddReunionsCF from "./ChefProjet/Pages/AddReunionCF";
+import DetailReunionPageCF from "./ChefProjet/Pages/DetailReunionCF";
 
 
 // Membre Equipe
@@ -60,6 +62,7 @@ import ProfileClient from "./Clients.jsx/Pages/ProfileClient";
 import ParametreProfile from "./Clients.jsx/Pages/ParametreProfile";
 import Homepage from "./Clients.jsx/Pages/HomePage";
 import HomePageCf from "./ChefProjet/Pages/HomePageCf";
+import TimelinePage from "./Clients.jsx/Pages/Timeline";
 
 function App() {
   return (
@@ -90,6 +93,7 @@ function App() {
        <Route path="/DetailClient/:id" element= {<DetailClient/>} /> 
        <Route path="/settings/profile" element= {<SettingProfile/>} /> 
        <Route path="/AddReunionAdmin" element= {<AddReunions/>} /> 
+       <Route path="/DetailReunion/:id" element= {<DetailReunion/>} /> 
        
 
        
@@ -113,6 +117,7 @@ function App() {
       <Route path="/documentation" element={<Documentation/>}/>
       <Route path="/editProfile/chefProjet" element={<EditProfileCf/>}/>
       <Route path="/AddRéunionCF" element={<AddReunionsCF/>}/>
+      <Route path="/DetailReunionCf/:id" element={<DetailReunionPageCF/>}/>
 
       {/* Route Membre Equipe */}
 
@@ -134,6 +139,7 @@ function App() {
       <Route path="/tasks/client" element={<TacheClient/>}/>
       <Route path="/profile/client" element={<ProfileClient/>}/>
       <Route path="/Parametre/client" element={<ParametreProfile/>}/>
+      <Route path="/timeline/client" element={<TimelinePage/>}/>
 
      
 

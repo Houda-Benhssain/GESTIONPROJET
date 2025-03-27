@@ -3,7 +3,19 @@ import { useState } from "react"
 import HeaderChefProjet from "../component/HeaderChefProjet"
 import FooterChefProjet from "../component/FooterChefProjet"
 import { Link } from "react-router-dom"
-import {CheckCircle,FileEdit,Calendar,Users,Clock,Filter,ChevronRight,BarChart2,PieChart,FileText,Plus,MessageSquare,Bell,
+import {
+  CheckCircle,
+  FileEdit,
+  Calendar,
+  Users,
+  Clock,
+  ChevronRight,
+  BarChart2,
+  PieChart,
+  FileText,
+  Plus,
+  MessageSquare,
+  Bell,
   ArrowRight,
   Briefcase,
   Target,
@@ -41,7 +53,7 @@ const HomeChefProjet = () => {
       id: 1,
       name: "Exemple Commercialisation",
       methodology: "GTMS",
-      lead: "oumaima affroukh",
+      lead: "houda benhssain",
       icon: "💼",
       color: "bg-blue-500",
       progress: 75,
@@ -54,7 +66,7 @@ const HomeChefProjet = () => {
       id: 2,
       name: "Gestion de projet",
       methodology: "SCRUM",
-      lead: "oumaima affroukh",
+      lead: "houda benhssain",
       icon: "🔄",
       color: "bg-indigo-500",
       progress: 45,
@@ -120,7 +132,6 @@ const HomeChefProjet = () => {
       mitigation: "Recruter des freelances pour les pics d'activité",
     },
   ]
-
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -200,10 +211,10 @@ const HomeChefProjet = () => {
                   </div>
                 </div>
                 <Link to="/add_project">
-                <button className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium">
-                  <Plus className="h-4 w-4 mr-1" />
-                  Nouveau projet
-                </button>
+                  <button className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    <Plus className="h-4 w-4 mr-1" />
+                    Nouveau projet
+                  </button>
                 </Link>
               </div>
             </div>
@@ -216,7 +227,8 @@ const HomeChefProjet = () => {
                       <div className="flex items-start justify-between">
                         <div className="flex items-start">
                           <div
-                            className={`w-10 h-10 ${project.color} rounded-lg flex items-center justify-center text-white mr-3 shadow-sm`}>
+                            className={`w-10 h-10 ${project.color} rounded-lg flex items-center justify-center text-white mr-3 shadow-sm`}
+                          >
                             <span>{project.icon}</span>
                           </div>
                           <div>
@@ -251,8 +263,10 @@ const HomeChefProjet = () => {
                             {/* Team members */}
                             <div className="flex -space-x-2 mt-2">
                               {project.team.map((member, index) => (
-                                <div key={index}
-                                  className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs border-2 border-white">
+                                <div
+                                  key={index}
+                                  className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs border-2 border-white"
+                                >
                                   {member}
                                 </div>
                               ))}
@@ -395,7 +409,8 @@ const HomeChefProjet = () => {
                 />
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm rounded-lg font-medium transition-colors shadow-sm">
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm rounded-lg font-medium transition-colors shadow-sm"
+                >
                   Ajouter
                 </button>
               </div>
@@ -417,13 +432,15 @@ const HomeChefProjet = () => {
                     onClick={() => toggleTask(task.id)}
                     className={`w-5 h-5 rounded-md border ${
                       task.completed ? "bg-blue-500 border-blue-500" : "border-blue-500"
-                    } flex items-center justify-center mr-3`} >
+                    } flex items-center justify-center mr-3`}
+                  >
                     {task.completed && (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-3 w-3 text-white"
                         viewBox="0 0 20 20"
-                        fill="currentColor">
+                        fill="currentColor"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -433,7 +450,8 @@ const HomeChefProjet = () => {
                     )}
                   </button>
                   <span
-                    className={`text-sm text-gray-800 flex-1 ${task.completed ? "line-through text-gray-400" : ""}`}>
+                    className={`text-sm text-gray-800 flex-1 ${task.completed ? "line-through text-gray-400" : ""}`}
+                  >
                     {task.text}
                   </span>
                   <div className="flex items-center">
@@ -443,13 +461,16 @@ const HomeChefProjet = () => {
                           ? "bg-red-100 text-red-700"
                           : task.priority === "medium"
                             ? "bg-amber-100 text-amber-700"
-                            : "bg-green-100 text-green-700"}`} >
+                            : "bg-green-100 text-green-700"
+                      }`}
+                    >
                       {task.priority === "high" ? "Haute" : task.priority === "medium" ? "Moyenne" : "Basse"}
                     </span>
                     <button
                       onClick={() => deleteTask(task.id)}
                       className="bg-red-100 hover:bg-red-200 text-red-600 p-1 rounded-md transition-colors"
-                      aria-label="Delete task" >
+                      aria-label="Delete task"
+                    >
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
@@ -486,7 +507,8 @@ const HomeChefProjet = () => {
                           {teamMembers.slice(0, 3).map((member, index) => (
                             <div
                               key={index}
-                              className={`w-6 h-6 rounded-full ${member.color} flex items-center justify-center text-white text-xs border-2 border-white`} >
+                              className={`w-6 h-6 rounded-full ${member.color} flex items-center justify-center text-white text-xs border-2 border-white`}
+                            >
                               {member.avatar}
                             </div>
                           ))}
@@ -497,8 +519,9 @@ const HomeChefProjet = () => {
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-xs font-medium text-gray-700">10:00 - 10:45</span>
-                    
-                    
+                    <Link to="/DetailReunionCf/1" className="mt-2 text-blue-600 hover:text-blue-800 text-xs font-medium">
+                      Voir détails
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -530,6 +553,9 @@ const HomeChefProjet = () => {
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-xs font-medium text-gray-700">14:30 - 15:30</span>
+                    <Link to="/DetailReunionCf/2" className="mt-2 text-blue-600 hover:text-blue-800 text-xs font-medium">
+                      Voir détails
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -560,15 +586,18 @@ const HomeChefProjet = () => {
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-xs font-medium text-gray-700">09:00 - 10:30</span>
+                    <Link to="/DetailReunionCf/3" className="mt-2 text-blue-600 hover:text-blue-800 text-xs font-medium">
+                      Voir détails
+                    </Link>
                   </div>
                 </div>
               </div>
               <Link to="/AddRéunionCF">
-              <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
-                <Plus className="h-4 w-4 mr-2" />
-                Planifier une réunion
-              </button>
-              </Link>  
+                <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Planifier une réunion
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -594,15 +623,13 @@ const HomeChefProjet = () => {
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span
-                    className="text-xs px-2 py-0.5 rounded-full " >
-                  </span>
+                  <span className="text-xs px-2 py-0.5 rounded-full "></span>
                   <div className="flex space-x-1">
-                   <Link to="/chat/ChefProjet">
-                   <button className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded transition-colors">
-                      <MessageSquare className="h-4 w-4" />
-                    </button>
-                   </Link>
+                    <Link to="/chat/ChefProjet">
+                      <button className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded transition-colors">
+                        <MessageSquare className="h-4 w-4" />
+                      </button>
+                    </Link>
                     <button className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded transition-colors">
                       <Bell className="h-4 w-4" />
                     </button>
@@ -615,7 +642,8 @@ const HomeChefProjet = () => {
           <div className="mt-4 pt-3 border-t border-blue-100">
             <a
               href="/team/ChefProjet"
-              className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center">
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center"
+            >
               Gérer les équipes
               <ArrowRight className="h-4 w-4 ml-1" />
             </a>

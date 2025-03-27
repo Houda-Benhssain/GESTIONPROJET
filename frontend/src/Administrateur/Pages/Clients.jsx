@@ -1,7 +1,7 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { UserPlus, Edit, Trash2, Eye, Search, ChevronRight, ChevronLeft, Filter, Users } from "lucide-react"
+import { UserPlus, Edit, Trash2, Eye, Search, ChevronRight,  Users } from "lucide-react"
 import Header from "../component/Header"
 import Footer from "../component/Footer"
 
