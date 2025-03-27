@@ -69,6 +69,15 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
+  const [userName, setUserName] = useState("")
+    const [userEmail, setUserEmail] = useState("")
+    useEffect(() => {
+      const user = JSON.parse(localStorage.getItem("user"))
+      if (user) {
+        setUserName(user.nom), 
+        setUserEmail(user.email) 
+      }
+    }, [])
 
 
 
@@ -90,7 +99,7 @@ export default function Header() {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-1">
               <Link
-                to="/"
+                to="/adminhome"
                 className={`px-3 py-2 rounded flex items-center ${
                   activeTab === "dashboards"
                     ? "text-blue-600 border-b-2 border-blue-600"
@@ -127,21 +136,15 @@ export default function Header() {
                 Tasks
               </Link>
               <Link
-                to="/createUser"
+                to="/users"
                 className={`px-3 py-2 rounded flex items-center ${
-                  activeTab === "User"
+                  activeTab === "users"
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                }`} >
-                Utilisateur
+                }`}
+              >
+                Utilisateurs
               </Link>
-              <Link to="/Gant" 
-                    className={`px-3 py-2 rounded flex items-center ${
-                      activeTab === "Gant"
-                        ? "text-blue-600 border-b-2 border-blue-600"
-                        : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"}`}>
-                     Gant
-                </Link>
             </nav>
           </div>
 
@@ -194,8 +197,8 @@ export default function Header() {
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 border border-gray-200">
                   <div className="py-1">
                     <div className="px-4 py-3 border-b border-gray-200">
-                      <p className="text-sm font-medium text-gray-900">Howard Smith</p>
-                      <p className="text-xs text-gray-500 mt-1">howard.smith@example.com</p>
+                      <p className="text-sm font-medium text-gray-900">{userName}</p>
+                      <p className="text-xs text-gray-500 mt-1">{userEmail}</p>
                     </div>
 
                     <Link
@@ -213,7 +216,7 @@ export default function Header() {
                     </Link>
                     <div className="border-t border-gray-200 mt-1"></div>
                     <Link
-                      to="/login"
+                      to="/"
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
                       <LogOut className="h-4 w-4 mr-2" />
                       Se déconnecter
@@ -291,7 +294,7 @@ export default function Header() {
               <input
                 type="text"
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Search"
+                placeholder="recherche"
               />
             </div>
           </div>

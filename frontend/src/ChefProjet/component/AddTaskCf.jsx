@@ -1,92 +1,138 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Calendar, Save } from 'lucide-react';
-import HeaderChefProjet from "../component/HeaderChefProjet";
-import FooterChefProjet from "../component/FooterChefProjet";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, Save, X,CheckCircle } from "lucide-react";
+import HeaderChefProjet from "./HeaderChefProjet";
+import FooterChefProjet from "./FooterChefProjet";
 
-const AddTskCf = () => {
+const AddTskCF = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [projects, setProjects] = useState([]);
-  const [users, setUsers] = useState([]);
-  
-  const [formData, setFormData] = useState({
-    nom: "",
-    description: "",
-    statut: "not-started",
-    priorite: "moyenne",
-    dateDebut: formatDateForInput(new Date()),
-    dateFin: formatDateForInput(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)), // Default to 1 week from now
-    projetId: "",
-    userId: ""
+  const [saving, setSaving] = useState(false);
+  const [tache, setTache] = useState({
+    nom: "",            // Nom de la tâche
+    statut: "", // Statut
+    priorite: "", // Priorité
+    dateDebut: "",      // Date de début
+    dateFin: "",        // Date de fin
+    project_id: "",     // ID du projet
+    user_id: "",        // ID de l'utilisateur assigné
   });
+  const [projets, setProjets] = useState([]);  // Liste des projets
+  const [utilisateurs, setUtilisateurs] = useState([]); // Liste des utilisateurs
+  const [errors, setErrors] = useState({});
 
-  // Sample data for demonstration
-  const projectsData = [
-    { id: 1, nom: "Refonte Site Web" },
-    { id: 2, nom: "Application Mobile" },
-    { id: 3, nom: "Système CRM" }
-  ];
-
-  const usersData = [
-    { id: 1, nom: "Sophie Martin" },
-    { id: 2, nom: "Thomas Dubois" },
-    { id: 3, nom: "Julie Leroy" }
-  ];
-
+  // Récupérer la liste des projets
   useEffect(() => {
-    // Load projects and users
-    loadProjectsAndUsers();
+    const fetchProjets = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/projets");
+        const data = await response.json();
+        setProjets(data); // Stocker les projets dans le state
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+
+    fetchProjets();
   }, []);
 
-  const loadProjectsAndUsers = async () => {
-    // In a real app, you would fetch this data from an API
-    setProjects(projectsData);
-    setUsers(usersData);
-    
-    // Set default values if available
-    if (projectsData.length > 0) {
-      setFormData(prev => ({ ...prev, projetId: projectsData[0].id }));
-    }
-    if (usersData.length > 0) {
-      setFormData(prev => ({ ...prev, userId: usersData[0].id }));
-    }
-  };
+  // Récupérer la liste des utilisateurs ayant le rôle "Membre équipe"
+  useEffect(() => {
+    const fetchUtilisateurs = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/utilisateurs");
+        const data = await response.json();
+        
+        // Filtrer les utilisateurs pour n'inclure que ceux avec le rôle "Membre équipe"
+        const membresEquipe = data.filter((utilisateur) => utilisateur.role === "membre equipe");
+        setUtilisateurs(membresEquipe); // Stocker les utilisateurs dans le state
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
 
-  function formatDateForInput(date) {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
+    fetchUtilisateurs();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setTache((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Clear error for this field if it exists
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!tache.nom.trim()) newErrors.nom = "Nom de la tâche requis";
+    if (!tache.dateDebut) newErrors.dateDebut = "Date de début requise";
+    if (!tache.dateFin) newErrors.dateFin = "Date de fin requise";
+    if (new Date(tache.dateDebut) > new Date(tache.dateFin)) {
+      newErrors.dateFin = "La date de fin doit être après la date de début";
+    }
+    if (!tache.user_id) newErrors.user_id = "Utilisateur assigné requis";
+    if (!tache.project_id) newErrors.project_id = "Projet requis";
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+
+    if (!validateForm()) {
+      const firstError = document.querySelector(".text-red-600");
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
+
+    setSaving(true);
+
+    // Création des données de la tâche à envoyer à l'API
+    const tacheData = {
+      nom: tache.nom,           
+      statut: tache.statut,
+      dateDebut: tache.dateDebut,  
+      dateFin: tache.dateFin,    
+      priorite: tache.priorite,  
+      project_id: tache.project_id, 
+      user_id: tache.user_id,     
+    };
 
     try {
-      // In a real app, you would send this data to an API
-      console.log("Form data to submit:", formData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Redirect back to tasks list
-      navigate("/tasks");
+      // Appel à l'API pour créer une tâche
+      const response = await fetch("http://127.0.0.1:8000/taches/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tacheData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Si l'API retourne un succès, navigue vers la page des tâches
+        setSaving(false);
+        navigate("/tasks");
+      } else {
+        // Gestion des erreurs côté serveur
+        setSaving(false);
+        setErrors(result.errors || {});
+      }
     } catch (error) {
+      setSaving(false);
       console.error("Error creating task:", error);
-      alert("Une erreur s'est produite lors de la création de la tâche.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -94,201 +140,196 @@ const AddTskCf = () => {
     <div className="flex flex-col min-h-screen">
       <HeaderChefProjet />
       <main className="flex-grow">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center mb-6">
-            <button 
-              onClick={() => navigate(-1)} 
-              className="mr-4 p-2 rounded-full hover:bg-gray-100"
-              aria-label="Retour">
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-            <h1 className="text-2xl font-bold text-gray-900">Ajouter une nouvelle tâche</h1>
-          </div>
+      <div className="max-w-screen-lg mx-auto px-4 py-6">
+          <div className="bg-white rounded-lg shadow-lg p-8 border-t-4 border-blue-600">
+            <div className="flex items-center mb-6">
+              <div className="bg-blue-100 p-3 rounded-full mr-4">
+                <CheckCircle className="h-6 w-6 text-blue-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-blue-900">Ajouter une tâche</h2>
+            </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Nom de la tâche */}
-                <div className="col-span-2">
-                  <label htmlFor="nom" className="block text-sm font-medium text-gray-700 mb-1">
-                    Nom de la tâche *
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                <div className="mb-4">
+                  <label htmlFor="nom" className="block text-sm font-medium text-blue-800 mb-1">
+                    Nom de la tâche
                   </label>
                   <input
-                    type="text"
                     id="nom"
                     name="nom"
-                    required
-                    value={formData.nom}
+                    type="text"
+                    value={tache.nom}
                     onChange={handleChange}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     placeholder="Entrez le nom de la tâche"
                   />
+                  {errors.nom && <p className="text-red-600 mt-1 text-sm">{errors.nom}</p>}
                 </div>
 
-                {/* Description */}
-                <div className="col-span-2">
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                    Description
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    rows="4"
-                    value={formData.description}
-                    onChange={handleChange}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Décrivez la tâche en détail"
-                  ></textarea>
-                </div>
-
-                {/* Projet */}
-                <div>
-                  <label htmlFor="projetId" className="block text-sm font-medium text-gray-700 mb-1">
-                    Projet *
-                  </label>
-                  <select
-                    id="projetId"
-                    name="projetId"
-                    required
-                    value={formData.projetId}
-                    onChange={handleChange}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">Sélectionnez un projet</option>
-                    {projects.map(project => (
-                      <option key={project.id} value={project.id}>
-                        {project.nom}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Assigné à */}
-                <div>
-                  <label htmlFor="userId" className="block text-sm font-medium text-gray-700 mb-1">
-                    Assigné à *
-                  </label>
-                  <select
-                    id="userId"
-                    name="userId"
-                    required
-                    value={formData.userId}
-                    onChange={handleChange}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">Sélectionnez un utilisateur</option>
-                    {users.map(user => (
-                      <option key={user.id} value={user.id}>
-                        {user.nom}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Statut */}
-                <div>
-                  <label htmlFor="statut" className="block text-sm font-medium text-gray-700 mb-1">
-                    Statut
-                  </label>
-                  <select
-                    id="statut"
-                    name="statut"
-                    value={formData.statut}
-                    onChange={handleChange}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="not-started">Non commencé</option>
-                    <option value="in-progress">En cours</option>
-                    <option value="blocked">Bloqué</option>
-                    <option value="completed">Terminé</option>
-                  </select>
-                </div>
-
-                {/* Priorité */}
-                <div>
-                  <label htmlFor="priorite" className="block text-sm font-medium text-gray-700 mb-1">
-                    Priorité
-                  </label>
-                  <select
-                    id="priorite"
-                    name="priorite"
-                    value={formData.priorite}
-                    onChange={handleChange}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="basse">Basse</option>
-                    <option value="moyenne">Moyenne</option>
-                    <option value="haute">Haute</option>
-                    <option value="critique">Critique</option>
-                  </select>
-                </div>
-
-                {/* Date de début */}
-                <div>
-                  <label htmlFor="dateDebut" className="block text-sm font-medium text-gray-700 mb-1">
-                    Date de début
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Calendar className="h-4 w-4 text-gray-400" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="statut" className=" text-sm font-medium text-blue-800 mb-1 flex items-center">
+                      <div
+                        className="w-3 h-3 rounded-full bg-gray-300 mr-2"
+                      ></div>
+                      Statut
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="statut"
+                        name="statut"
+                        value={tache.statut}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" >
+                        <option value="">Statut</option>
+                        <option value="en attente">En attente</option>
+                        <option value="en cours">En cours</option>
+                        <option value="terminee">Terminé</option>
+                        <option value="annulee">Annulé</option>
+                      </select>
                     </div>
-                    <input
-                      type="date"
-                      id="dateDebut"
-                      name="dateDebut"
-                      value={formData.dateDebut}
-                      onChange={handleChange}
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    />
+                    {errors.statut && <p className="text-red-600 mt-1 text-sm">{errors.statut}</p>}
                   </div>
-                </div>
 
-                {/* Date de fin */}
-                <div>
-                  <label htmlFor="dateFin" className="block text-sm font-medium text-gray-700 mb-1">
-                    Date d'échéance *
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Calendar className="h-4 w-4 text-gray-400" />
+                  <div>
+                    <label
+                      htmlFor="priorite"
+                      className=" text-sm font-medium text-blue-800 mb-1 flex items-center">
+                      <div
+                        className="w-3 h-3 rounded-full  mr-2"
+                      ></div>
+                      Priorité
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="priorite"
+                        name="priorite"
+                        value={tache.priorite}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      >
+                        <option value="basse">Basse</option>
+                        <option value="moyenne">Moyenne</option>
+                        <option value="haute">Haute</option>
+                        <option value="critique">Critique</option>
+                      </select>
                     </div>
-                    <input
-                      type="date"
-                      id="dateFin"
-                      name="dateFin"
-                      required
-                      value={formData.dateFin}
-                      onChange={handleChange}
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    />
+                    {errors.priorite && <p className="text-red-600 mt-1 text-sm">{errors.priorite}</p>}
                   </div>
                 </div>
               </div>
 
-              <div className="mt-8 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => navigate(-1)}
-                  className="mr-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  Annuler
-                </button>
+              <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                <h3 className="text-lg font-medium text-blue-800 mb-4">Dates</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="dateDebut" className="block text-sm font-medium text-blue-800 mb-1">
+                      Date de début
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="dateDebut"
+                        name="dateDebut"
+                        type="date"
+                        value={tache.dateDebut}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" />
+                    </div>
+                    {errors.dateDebut && <p className="text-red-600 mt-1 text-sm">{errors.dateDebut}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="dateFin" className="block text-sm font-medium text-blue-800 mb-1">
+                      Date de fin
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="dateFin"
+                        name="dateFin"
+                        type="date"
+                        value={tache.dateFin}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
+                    </div>
+                    {errors.dateFin && <p className="text-red-600 mt-1 text-sm">{errors.dateFin}</p>}
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                <h3 className="text-lg font-medium text-blue-800 mb-4">Assignation</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="project_id" className="block text-sm font-medium text-blue-800 mb-1">
+                      Projet
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="project_id"
+                        name="project_id"
+                        value={tache.project_id}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      >
+                        <option value="">Sélectionner un projet</option>
+                        {projets.map((project) => (
+                          <option key={project.id} value={project.id}>
+                            {project.nom}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    {errors.project_id && <p className="text-red-600 mt-1 text-sm">{errors.project_id}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="user_id" className="block text-sm font-medium text-blue-800 mb-1">
+                      Attribuer à
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="user_id"
+                        name="user_id"
+                        value={tache.user_id}
+                        onChange={handleChange}
+                        className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" >
+                        <option value="">Sélectionner un utilisateur</option>
+                        {utilisateurs.map((user) => (
+                          <option key={user.id} value={user.id}>
+                            {user.nom}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    {errors.user_id && <p className="text-red-600 mt-1 text-sm">{errors.user_id}</p>}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center pt-4 border-t border-blue-100">
                 <button
                   type="submit"
-                  disabled={loading}
-                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                  className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors shadow-md flex items-center"
+                  disabled={saving}
                 >
-                  <Save className="h-4 w-4 mr-2" />
-                  {loading ? "Enregistrement..." : "Enregistrer"}
+                  {saving ? "Enregistrement en cours..." : "Sauvegarder les modifications"}
                 </button>
+                <Link
+                  to="/tasks/ChefProjet"
+                  className="text-blue-600 hover:text-blue-800 px-4 py-2 rounded-md border border-blue-200 hover:bg-blue-50 transition-colors flex items-center">
+                  Annuler
+                </Link>
               </div>
             </form>
           </div>
         </div>
+        
+          
       </main>
       <FooterChefProjet />
     </div>
   );
 };
 
-export default AddTskCf;
+export default AddTskCF;

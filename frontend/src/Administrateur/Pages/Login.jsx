@@ -30,8 +30,10 @@ export default function Login() {
 
         // Redirection selon le rôle
         if (response.data.role === "administrateur") {
-          window.location.href = "/adminhome"
-        } else if (response.data.role === "membre equipe") {
+          window.location.href = "/HomePageAdmine"
+        } else if (response.data.role === "chef de projet") {
+          window.location.href = "/HomePageCF"
+        }else if (response.data.role === "membre equipe") {
           window.location.href = "/memberdashboard"
         }
       } else {

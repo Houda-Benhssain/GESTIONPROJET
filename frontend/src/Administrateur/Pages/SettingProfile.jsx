@@ -9,10 +9,10 @@ const EditProfile = () => {
   const [profile, setProfile] = useState({
     name: "",
     email: "",
-    address: "",
+    password: "",
     role: "",
-    avatar: null,
-  })
+  });
+  
 
   const [previewAvatar, setPreviewAvatar] = useState(null)
 
@@ -24,12 +24,12 @@ const EditProfile = () => {
       setProfile({
         name: storedUser.nom || "Chef de Projet",
         email: storedUser.email || "chef.projet@example.com",
-        address: storedUser.address || "123 Rue de la Gestion, 75001 Paris",
         role: storedRole || "Project Manager",
-        avatar: storedUser.avatar || null,
       })
+      console.log(storedUser)
     }
   }, [])
+
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -54,26 +54,43 @@ const EditProfile = () => {
     }
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
-    // Get existing user data
-    const storedUser = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
-
-    // Update with new profile data
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    const storedUser = JSON.parse(localStorage.getItem("user")) || {};
+    const userId = storedUser.id;
+  
     const updatedUser = {
-      ...storedUser,
-      nom: profile.name,
+      name: profile.name,
       email: profile.email,
-      address: profile.address,
-      avatar: profile.avatar,
+      password: profile.password || undefined, // N'inclure que si un nouveau mot de passe est saisi
+      role: profile.role,
+    };
+  
+    try {
+      const response = await fetch(`http://ton-api.com/api/users/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Si nécessaire
+        },
+        body: JSON.stringify(updatedUser),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Erreur lors de la mise à jour");
+      }
+  
+      const data = await response.json();
+      localStorage.setItem("user", JSON.stringify(data)); // Mettre à jour les infos stockées
+      alert("Profil mis à jour avec succès !");
+    } catch (error) {
+      console.error("Erreur:", error);
+      alert("Échec de la mise à jour du profil");
     }
-
-    // Save to localStorage
-    localStorage.setItem("user", JSON.stringify(updatedUser))
-    localStorage.setItem("role", profile.role)
-  }
-
+  };
+  
+  
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden m-0 p-0">
       <Header />
@@ -183,18 +200,20 @@ const EditProfile = () => {
               </div>
 
               <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                  Address *
-                </label>
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  value={profile.address}
-                  onChange={handleChange}
-                  className="block w-full rounded-md border border-gray-300 shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  required/>
-              </div>
+  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+    Nouveau mot de passe
+  </label>
+  <input
+    type="password"
+    id="password"
+    name="password"
+    value={profile.password}
+    onChange={handleChange}
+    className="block w-full rounded-md border border-gray-300 shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+    placeholder="Laisser vide si inchangé"
+  />
+</div>
+
               <div className="flex justify-end">
                 <button
                   type="submit"

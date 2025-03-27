@@ -254,8 +254,8 @@ const EditClientCF = () => {
       </main>
       <FooterChefProjet />
     </div>
-  )
-}
+  );
+};
 
-export default EditClientCF
+export default EditClientCF;
 

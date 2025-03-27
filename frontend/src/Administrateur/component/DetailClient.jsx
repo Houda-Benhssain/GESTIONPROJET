@@ -1,80 +1,38 @@
-import React from "react"
-import { useState, useEffect } from "react"
-import { useParams, Link } from "react-router-dom"
-import {ArrowLeft,User,Phone,Mail,MapPin,
-} from "lucide-react"
-import Header from "../component/Header"
-import Footer from "../component/Footer"
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { ArrowLeft, User, Phone, Mail, MapPin } from "lucide-react";
+import Header from "../component/Header";
+import Footer from "../component/Footer";
 
 const DetailClient = () => {
-  const { id } = useParams()
-  const [client, setClient] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState("overview")
+  const { id } = useParams();
+  const [client, setClient] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);  // Pour gérer les erreurs
+  const [activeTab, setActiveTab] = useState("overview");
+  console.log(id)
 
   useEffect(() => {
-    const fetchClientDetails = () => {
-      setLoading(true)
+    const fetchClientDetails = async () => {
+      setLoading(true);
+      setError(null);  // Reset error state before new fetch
 
-      // Mock data for a specific client
-      setTimeout(() => {
-        const clientData = {
-          id: Number.parseInt(id),
-          utilisateur: {
-            nom: "Jean Dupont",
-            prenom: "Jean",
-            nom_famille: "Dupont",
-            email: "jean.dupont@example.com",
-            date_inscription: "2022-05-15",
-            avatar: null,
-          },
-          telephone: "0612345678",
-          status: "active",
-          adresse: {
-            rue: "123 Rue de la Paix",
-            ville: "Paris",
-            code_postal: "75001",
-            pays: "France",
-          },
-          projets: [
-            {
-              id: 1,
-              nom: "Site Web E-commerce",
-              status: "in-progress",
-              date_debut: "2023-01-10",
-              date_fin_estimee: "2023-04-30",
-              budget: 15000,
-              description:
-                "Création d'un site e-commerce complet avec système de paiement intégré et gestion des stocks.",
-            },
-            {
-              id: 2,
-              nom: "Application Mobile",
-              status: "planning",
-              date_debut: "2023-05-15",
-              date_fin_estimee: "2023-08-30",
-              budget: 25000,
-              description:
-                "Développement d'une application mobile iOS et Android pour la gestion des commandes clients.",
-            },
-          ],
-         
-          statistiques: {
-            valeur_totale_projets: 40000,
-            projets_completes: 1,
-            projets_en_cours: 2,
-            projets_AFaire: 5,
-          
-          },
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/clients/${id}`);  // Remplace l'URL par celle de ton API
+        if (!response.ok) {
+          throw new Error("Erreur lors de la récupération des données");
         }
+        const data = await response.json();
+        setClient(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        setClient(clientData)
-        setLoading(false)
-      }, 800)
-    }
-
-    fetchClientDetails()
-  }, [id])
+    fetchClientDetails();
+  }, [id]);
 
   if (loading) {
     return (
@@ -88,14 +46,41 @@ const DetailClient = () => {
         </main>
         <Footer />
       </div>
-    )
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        <Header />
+        <main className="flex-grow p-4 md:p-6 text-center">
+          <p className="text-red-600">{error}</p>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" }
-    return new Date(dateString).toLocaleDateString("fr-FR", options)
-  }
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString("fr-FR", options);
+  };
 
+  // Calcul des statistiques
+  const calculateStats = (projets) => {
+    if (!projets || !Array.isArray(projets)) {
+      return { projetsAFaire: 0, projetsEnCours: 0, projetsTermines: 0 };
+    }
+
+    const projetsAFaire = projets.filter((projet) => projet.statut === "en attente").length;
+    const projetsEnCours = projets.filter((projet) => projet.statut === "en cours").length;
+    const projetsTermines = projets.filter((projet) => projet.statut === "termine").length;
+
+    return { projetsAFaire, projetsEnCours, projetsTermines };
+  };
+
+  // Vérification de l'existence des projets
+  const { projetsAFaire, projetsEnCours, projetsTermines } = calculateStats(client?.projets || []);
 
   return (
     <div className="min-h-screen flex flex-col bg-blue-50">
@@ -116,12 +101,12 @@ const DetailClient = () => {
                 onClick={() => setActiveTab("overview")}
                 className="border-transparent text-gray-500 hover:text-blue-600 hover:border-blue-500">
                 Vue d'ensemble
-              </button>  
+              </button>
             </nav>
           </div>
 
           {/* Overview Tab */}
-          {activeTab === "overview" && (
+          {activeTab === "overview" && client && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Contact Information */}
               <div className="bg-white rounded-lg shadow-sm p-6">
@@ -131,9 +116,7 @@ const DetailClient = () => {
                     <User className="h-5 w-5 text-gray-400 mt-0.5 mr-3" />
                     <div>
                       <p className="text-sm text-gray-500">Nom complet</p>
-                      <p className="text-gray-800">
-                        {client.utilisateur.prenom} {client.utilisateur.nom_famille}
-                      </p>
+                      <p className="text-gray-800">{client.utilisateur?.nom}</p>
                     </div>
                   </div>
 
@@ -141,7 +124,7 @@ const DetailClient = () => {
                     <Mail className="h-5 w-5 text-gray-400 mt-0.5 mr-3" />
                     <div>
                       <p className="text-sm text-gray-500">Email</p>
-                      <p className="text-gray-800">{client.utilisateur.email}</p>
+                      <p className="text-gray-800">{client.utilisateur?.email}</p>
                     </div>
                   </div>
 
@@ -157,10 +140,7 @@ const DetailClient = () => {
                     <MapPin className="h-5 w-5 text-gray-400 mt-0.5 mr-3" />
                     <div>
                       <p className="text-sm text-gray-500">Adresse</p>
-                      <p className="text-gray-800">{client.adresse.rue}</p>
-                      <p className="text-gray-800">
-                        {client.adresse.code_postal} {client.adresse.ville}
-                      </p>
+                      <p className="text-gray-800">{client.adresse}</p>
                     </div>
                   </div>
                 </div>
@@ -174,18 +154,18 @@ const DetailClient = () => {
                   <div className="bg-blue-50 rounded-lg p-4">
                     <p className="text-sm text-blue-700 mb-1">Projets À faire</p>
                     <p className="text-xl font-bold text-blue-900">
-                    {client.statistiques.projets_AFaire}
+                      {projetsAFaire}
                     </p>
                   </div>
 
                   <div className="bg-green-50 rounded-lg p-4">
                     <p className="text-sm text-green-700 mb-1">Projets terminés</p>
-                    <p className="text-xl font-bold text-green-900">{client.statistiques.projets_completes}</p>
+                    <p className="text-xl font-bold text-green-900">{projetsTermines}</p>
                   </div>
 
                   <div className="bg-purple-50 rounded-lg p-4">
                     <p className="text-sm text-purple-700 mb-1">Projets en cours</p>
-                    <p className="text-xl font-bold text-purple-900">{client.statistiques.projets_en_cours}</p>
+                    <p className="text-xl font-bold text-purple-900">{projetsEnCours}</p>
                   </div>
                 </div>
               </div>
@@ -195,28 +175,29 @@ const DetailClient = () => {
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Activité récente</h2>
 
                 <div className="space-y-4">
-                  {client.projets.length > 0 && (
+                  {client.projets?.length > 0 && (
                     <div className="border-l-2 border-blue-500 pl-4 py-1">
                       <p className="text-sm font-medium text-gray-800">Nouveau projet: {client.projets[0].nom}</p>
-                      <p className="text-xs text-gray-500">{formatDate(client.projets[0].date_debut)}</p>
+                      <p className="text-xs text-gray-500">{formatDate(client.projets[0].dateDebut)}</p>
                     </div>
                   )}
 
                   <div className="border-l-2 border-gray-300 pl-4 py-1">
                     <p className="text-sm font-medium text-gray-800">Client créé</p>
-                    <p className="text-xs text-gray-500">{formatDate(client.utilisateur.date_inscription)}</p>
+                    <p className="text-xs text-gray-500">{client.created_at}</p>
                   </div>
                 </div>
               </div>
             </div>
           )}
-
         </div>
       </main>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default DetailClient
+export default DetailClient;
+
+
 

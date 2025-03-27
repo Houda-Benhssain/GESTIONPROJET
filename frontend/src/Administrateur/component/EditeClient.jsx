@@ -1,7 +1,6 @@
-import React from "react"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { ArrowLeft, Save, User, Mail, Phone, MapPin, Building, AlertCircle } from "lucide-react"
+import {  ArrowLeft, Save, User, Mail, Phone, MapPin, Building, AlertCircle } from "lucide-react"
 import Header from "./Header"
 import Footer from "./Footer"
 
@@ -26,7 +25,7 @@ const EditClient = () => {
 
   const fetchClientData = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/clients/${id}`)
+      const response = await fetch(`http://127.0.0.1:8000/clients/${id}`) // Correction ici avec backticks
       if (response.ok) {
         const clientData = await response.json()
         setClient(clientData)
@@ -77,7 +76,7 @@ const EditClient = () => {
     }
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/clients/${id}`, {
+      const response = await fetch(`http://127.0.0.1:8000/clients/${id}`, { // Correction ici avec backticks
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -139,6 +138,9 @@ const EditClient = () => {
                         Nom complet <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <User className="h-5 w-5 text-blue-400" />
+                                                  </div>
                         <input
                           type="text"
                           name="utilisateur.nom"
@@ -155,6 +157,9 @@ const EditClient = () => {
                         Email <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <Mail className="h-5 w-5 text-blue-400" />
+                                                  </div>
                         <input
                           type="email"
                           name="utilisateur.email"
@@ -170,6 +175,9 @@ const EditClient = () => {
                     <div>
                       <label className="block text-sm font-medium text-blue-800 mb-1">Téléphone</label>
                       <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <Phone className="h-5 w-5 text-blue-400" />
+                                                  </div>
                         <input
                           type="text"
                           name="telephone"
@@ -191,7 +199,12 @@ const EditClient = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-blue-800 mb-1">Adresse complète</label>
+                    
+                    
                     <div className="relative">
+                      <div className="absolute top-3 left-3 flex items-start pointer-events-none">
+                                                <MapPin className="h-5 w-5 text-blue-400" />
+                                              </div>
                       <textarea
                         name="adresse"
                         rows="3"
@@ -233,4 +246,10 @@ const EditClient = () => {
 }
 
 export default EditClient
+
+
+
+
+
+
 

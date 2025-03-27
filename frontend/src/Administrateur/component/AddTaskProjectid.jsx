@@ -1,39 +1,46 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, X,CheckCircle } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { CheckCircle } from "lucide-react";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
 
-const AddTache = () => {
+const AddTaskProjectid = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const projectId = params.get("project_id");
+  const projectName = params.get("project_name");
+  const [successMessage, setSuccessMessage] = useState("");
+
   const [saving, setSaving] = useState(false);
   const [tache, setTache] = useState({
-    nom: "",            // Nom de la tâche
-    statut: "", // Statut
-    priorite: "", // Priorité
-    dateDebut: "",      // Date de début
-    dateFin: "",        // Date de fin
-    project_id: "",     // ID du projet
-    user_id: "",        // ID de l'utilisateur assigné
+    nom: "",
+    statut: "",
+    priorite: "",
+    dateDebut: "",
+    dateFin: "",
+    project_id: projectId || "", // Pré-rempli si l'ID du projet est présent dans l'URL
+    user_id: "",
   });
-  const [projets, setProjets] = useState([]);  // Liste des projets
-  const [utilisateurs, setUtilisateurs] = useState([]); // Liste des utilisateurs
+  const [projet, setProjet] = useState(null); // Stocker un seul projet
+  const [utilisateurs, setUtilisateurs] = useState([]);
   const [errors, setErrors] = useState({});
 
-  // Récupérer la liste des projets
+  // Récupérer les informations du projet
   useEffect(() => {
-    const fetchProjets = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/projets");
-        const data = await response.json();
-        setProjets(data); // Stocker les projets dans le state
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    };
-
-    fetchProjets();
-  }, []);
+    if (projectId) {
+      const fetchProjet = async () => {
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/projets/${projectId}`);
+          const data = await response.json();
+          setProjet(data); // Stocker les détails du projet
+        } catch (error) {
+          console.error("Erreur lors de la récupération du projet :", error);
+        }
+      };
+      fetchProjet();
+    }
+  }, [projectId]);
 
   // Récupérer la liste des utilisateurs ayant le rôle "Membre équipe"
   useEffect(() => {
@@ -41,12 +48,12 @@ const AddTache = () => {
       try {
         const response = await fetch("http://127.0.0.1:8000/utilisateurs");
         const data = await response.json();
-        
-        // Filtrer les utilisateurs pour n'inclure que ceux avec le rôle "Membre équipe"
+
+        // Filtrer les utilisateurs avec le rôle "Membre équipe"
         const membresEquipe = data.filter((utilisateur) => utilisateur.role === "membre equipe");
-        setUtilisateurs(membresEquipe); // Stocker les utilisateurs dans le state
+        setUtilisateurs(membresEquipe);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Erreur lors de la récupération des utilisateurs :", error);
       }
     };
 
@@ -60,7 +67,6 @@ const AddTache = () => {
       [name]: value,
     }));
 
-    // Clear error for this field if it exists
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -80,7 +86,7 @@ const AddTache = () => {
     }
     if (!tache.user_id) newErrors.user_id = "Utilisateur assigné requis";
     if (!tache.project_id) newErrors.project_id = "Projet requis";
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -98,50 +104,61 @@ const AddTache = () => {
 
     setSaving(true);
 
-    // Création des données de la tâche à envoyer à l'API
     const tacheData = {
-      nom: tache.nom,           
+      nom: tache.nom,
       statut: tache.statut,
-      dateDebut: tache.dateDebut,  
-      dateFin: tache.dateFin,    
-      priorite: tache.priorite,  
-      project_id: tache.project_id, 
-      user_id: tache.user_id,     
+      dateDebut: tache.dateDebut,
+      dateFin: tache.dateFin,
+      priorite: tache.priorite,
+      project_id: tache.project_id,
+      user_id: tache.user_id,
     };
 
     try {
-      // Appel à l'API pour créer une tâche
-      const response = await fetch("http://127.0.0.1:8000/taches/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(tacheData),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        // Si l'API retourne un succès, navigue vers la page des tâches
+        const response = await fetch("http://127.0.0.1:8000/taches/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(tacheData),
+        });
+    
+        const result = await response.json();
+    
+        if (response.ok) {
+          setSaving(false);
+          setSuccessMessage("Tâche ajoutée avec succès !");
+          setTache({  // Réinitialiser le formulaire après enregistrement
+            nom: "",
+            statut: "",
+            priorite: "",
+            dateDebut: "",
+            dateFin: "",
+            project_id: "",
+            user_id: "",
+          });
+        } else {
+          setSaving(false);
+          setErrors(result.errors || {});
+        }
+      } catch (error) {
         setSaving(false);
-        navigate("/tasks");
-      } else {
-        // Gestion des erreurs côté serveur
-        setSaving(false);
-        setErrors(result.errors || {});
+        console.error("Erreur lors de la création de la tâche :", error);
       }
-    } catch (error) {
-      setSaving(false);
-      console.error("Error creating task:", error);
-    }
-  };
+    };
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
+        
       <div className="max-w-screen-lg mx-auto px-4 py-6">
           <div className="bg-white rounded-lg shadow-lg p-8 border-t-4 border-blue-600">
+          {successMessage && (
+  <div className="bg-green-100 text-green-700 p-4 rounded-md mb-4">
+    {successMessage}
+  </div>
+)}
             <div className="flex items-center mb-6">
               <div className="bg-blue-100 p-3 rounded-full mr-4">
                 <CheckCircle className="h-6 w-6 text-blue-600" />
@@ -261,27 +278,18 @@ const AddTache = () => {
                 <h3 className="text-lg font-medium text-blue-800 mb-4">Assignation</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="project_id" className="block text-sm font-medium text-blue-800 mb-1">
-                      Projet
-                    </label>
-                    <div className="relative">
-                      <select
-                        id="project_id"
-                        name="project_id"
-                        value={tache.project_id}
-                        onChange={handleChange}
-                        className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      >
-                        <option value="">Sélectionner un projet</option>
-                        {projets.map((project) => (
-                          <option key={project.id} value={project.id}>
-                            {project.nom}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    {errors.project_id && <p className="text-red-600 mt-1 text-sm">{errors.project_id}</p>}
-                  </div>
+                  <div>
+                <label htmlFor="project_id" className="block text-sm font-medium text-blue-800">
+                  Projet
+                </label>
+                <input
+                  name="project_id"
+                  value={projet ? projet.nom : ""}
+                  disabled
+                  className="w-full px-4 py-2 border border-blue-200 rounded-md bg-gray-100"
+                />
+              </div>
+              </div>
 
                   <div>
                     <label htmlFor="user_id" className="block text-sm font-medium text-blue-800 mb-1">
@@ -316,12 +324,13 @@ const AddTache = () => {
                   {saving ? "Enregistrement en cours..." : "Sauvegarder les modifications"}
                 </button>
                 <Link
-                  to="/tasks"
+                  to="/projects"
                   className="text-blue-600 hover:text-blue-800 px-4 py-2 rounded-md border border-blue-200 hover:bg-blue-50 transition-colors flex items-center">
                   Annuler
                 </Link>
               </div>
             </form>
+            
           </div>
         </div>
         
@@ -332,4 +341,4 @@ const AddTache = () => {
   );
 };
 
-export default AddTache;
+export default AddTaskProjectid;

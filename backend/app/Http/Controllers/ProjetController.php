@@ -1,25 +1,30 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Projet;
+use App\Models\Client;  // Assure-toi d'inclure le modèle Client si nécessaire
 use Illuminate\Http\Request;
 
 class ProjetController extends Controller
 {
     public function index()
 {
-    $projets = Projet::with('client.utilisateur')->get(); 
+    $projets = Projet::with('client.utilisateur', 'user','taches')->get();
     return response()->json($projets);
 }
 
+    
+
+
     public function show($id)
-    {
-        $projet = Projet::with('client.utilisateur')->find($id); 
-        if (!$projet) {
-            return response()->json(['error' => 'Projet non trouvé'], 404);
-        }
-        return response()->json($projet);
+{
+    $projet = Projet::with('client.utilisateur', 'user','taches')->find($id);  // Inclure la relation avec l'utilisateur
+    if (!$projet) {
+        return response()->json(['error' => 'Projet non trouvé'], 404);
     }
+    return response()->json($projet);
+}
 
     // Ajouter un projet
     public function store(Request $request)
@@ -30,7 +35,8 @@ class ProjetController extends Controller
             'dateDebut' => 'required|date',
             'dateFin' => 'nullable|date',
             'statut' => 'required|in:en attente,en cours,termine,annule',
-            'client_id' => 'required|exists:clients,id'
+            'client_id' => 'required|exists:clients,id',
+            'user_id' => 'required|exists:utilisateurs,id',  // Ajout de la validation pour user_id
         ]);
 
         $projet = Projet::create($request->all());
@@ -51,7 +57,8 @@ class ProjetController extends Controller
             'dateDebut' => 'sometimes|date',
             'dateFin' => 'sometimes|date',
             'statut' => 'sometimes|in:en attente,en cours,termine,annule',
-            'client_id' => 'sometimes|exists:clients,id'
+            'client_id' => 'sometimes|exists:clients,id',
+            'user_id' => 'sometimes|exists:utilisateurs,id',  // Ajout de la validation pour user_id
         ]);
 
         $projet->update($request->all());
@@ -70,10 +77,27 @@ class ProjetController extends Controller
         return response()->json(['message' => 'Projet supprimé']);
     }
 
+    
+
     public function getClients()
-{
-    $clients = Client::with('projets')->get();
-    return response()->json($clients);
+    {
+        $clients = Client::with('projets')->get();
+        return response()->json($clients);
+    }
+    public function getTaches()
+    {
+        $taches = Tache::with('projets')->get();
+        return response()->json($taches);
+    }
+    public function getChefProjet()
+    {
+        $clients = Utilisateur::with('projets')->get();
+        return response()->json($utilisateurs);
+    }
+    public function reunions()
+    {
+        return $this->hasMany(Reunion::class);
+    }
 }
-}
+
 

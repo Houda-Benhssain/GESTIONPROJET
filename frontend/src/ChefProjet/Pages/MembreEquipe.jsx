@@ -92,8 +92,8 @@ const MembreEquipe = () => {
   ]
 
   useEffect(() => {
-    loadTeamMembers()
-  }, [])
+    loadTeamMembers();
+  }, []);
 
   useEffect(() => {
     filterMembers()
@@ -106,15 +106,15 @@ const MembreEquipe = () => {
   }
 
   const filterMembers = () => {
-    let result = [...teamMembers]
+    let result = [...teamMembers];
 
     if (searchTerm) {
       result = result.filter(
         (member) =>
           member.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
           member.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          member.email.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
+          member.email.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
 
     setFilteredMembers(result)
@@ -125,15 +125,15 @@ const MembreEquipe = () => {
   }
 
   const handleMessageClick = (member) => {
-    setSelectedMember(member)
-    setShowMessageModal(true)
-  }
+    setSelectedMember(member);
+    setShowMessageModal(true);
+  };
 
   const handleSendMessage = () => {
-    if (!messageText.trim()) return
-    console.log(`Message to ${selectedMember.nom}: ${messageText}`)
-    setMessageText("")
-    setShowMessageModal(false)
+    if (!messageText.trim()) return;
+    console.log(`Message to ${selectedMember.nom}: ${messageText}`);
+    setMessageText("");
+    setShowMessageModal(false);
 
     alert(`Message envoyé à ${selectedMember.nom}`)
   }
@@ -163,23 +163,23 @@ const MembreEquipe = () => {
   }
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString()
-  }
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
 
   // Calculate team statistics
   const calculateTeamStats = () => {
-    if (!teamMembers.length) return { activeMembers: 0, avgCompletion: 0, totalCompleted: 0, totalPending: 0 }
+    if (!teamMembers.length) return { activeMembers: 0, avgCompletion: 0, totalCompleted: 0, totalPending: 0 };
 
-    const activeMembers = teamMembers.filter((m) => m.status === "active").length
-    const totalCompleted = teamMembers.reduce((sum, m) => sum + m.completedTasks, 0)
-    const totalPending = teamMembers.reduce((sum, m) => sum + m.pendingTasks, 0)
-    const avgCompletion = Math.round(teamMembers.reduce((sum, m) => sum + m.taskCompletionRate, 0) / teamMembers.length)
+    const activeMembers = teamMembers.filter((m) => m.status === "active").length;
+    const totalCompleted = teamMembers.reduce((sum, m) => sum + m.completedTasks, 0);
+    const totalPending = teamMembers.reduce((sum, m) => sum + m.pendingTasks, 0);
+    const avgCompletion = Math.round(teamMembers.reduce((sum, m) => sum + m.taskCompletionRate, 0) / teamMembers.length);
 
-    return { activeMembers, avgCompletion, totalCompleted, totalPending }
-  }
+    return { activeMembers, avgCompletion, totalCompleted, totalPending };
+  };
 
-  const teamStats = calculateTeamStats()
+  const teamStats = calculateTeamStats();
 
   // Get initials from name
   const getInitials = (name) => {
@@ -196,7 +196,7 @@ const MembreEquipe = () => {
       <HeaderChefProjet />
 
       {/* Blue gradient header */}
-      <div className="bg-gradient-to-r from-blue-700 to-blue-500 py-6 px-4">
+      <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-6 px-4">
         <div className="max-w-screen-xl mx-auto">
           <div className="flex items-center text-xs text-blue-100 mb-2">
             <span>Dashboard</span>
@@ -447,8 +447,7 @@ const MembreEquipe = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default MembreEquipe
-
+export default MembreEquipe;

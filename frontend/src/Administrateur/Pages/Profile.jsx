@@ -185,11 +185,8 @@ const ProfileEquipe = () => {
           </div>
         </div>
         <div className="max-w-screen-xl mx-auto px-4 py-8">
-          <div className="flex items-center mb-8">
-            <Link
-              to="/Home/Equipe"
-              className="text-gray-500 hover:text-primary transition-colors mr-4 flex items-center gap-1"
-            >
+          <div className="flex items-center mb-6">
+            <Link to="/adminhome" className="text-gray-500 hover:text-gray-700 mr-4">
               <ArrowLeft className="h-5 w-5" />
               <span>Back to Dashboard</span>
             </Link>
@@ -236,15 +233,7 @@ const ProfileEquipe = () => {
                       <p className="text-gray-800 font-medium">{profile.role}</p>
                     </div>
                   </div>
-                  <div className="flex items-start">
-                    <div className="bg-primary/10 p-3 rounded-lg mr-4">
-                      <MapPin className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Address</p>
-                      <p className="text-gray-800 font-medium">{profile.address}</p>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>

@@ -1,152 +1,212 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, X,CheckCircle } from "lucide-react";
-import Header from "../component/Header";
-import Footer from "../component/Footer";
+import React from "react"
+import { useState, useEffect } from "react"
+import { useParams, useNavigate, Link } from "react-router-dom"
+import { ArrowLeft, X, Save, Calendar, Flag, User, Briefcase, CheckCircle } from "lucide-react"
+import HeaderChefProjet from "./HeaderChefProjet"
+import FooterChefProjet from "./FooterChefProjet"
 
-const AddTache = () => {
-  const navigate = useNavigate();
-  const [saving, setSaving] = useState(false);
-  const [tache, setTache] = useState({
-    nom: "",            // Nom de la tâche
-    statut: "", // Statut
-    priorite: "", // Priorité
-    dateDebut: "",      // Date de début
-    dateFin: "",        // Date de fin
-    project_id: "",     // ID du projet
-    user_id: "",        // ID de l'utilisateur assigné
-  });
-  const [projets, setProjets] = useState([]);  // Liste des projets
-  const [utilisateurs, setUtilisateurs] = useState([]); // Liste des utilisateurs
-  const [errors, setErrors] = useState({});
+const EditTachesCF = () => {
+  const { id } = useParams()
+  console.log(id)
+  const navigate = useNavigate()
+  const [saving, setSaving] = useState(false)
+  const [notFound, setNotFound] = useState(false)
+  const [task, setTask] = useState({
+    nom: "",
+    statut: "",
+    dateDebut: "",
+    dateFin: "",
+    priorite: "",
+    project_id: "",
+    user_id: "",
+  })
+  const [loading, setLoading] = useState(false);
 
-  // Récupérer la liste des projets
+  const [projects, setProjects] = useState([])
+  const [users, setUsers] = useState([])
+  const [errors, setErrors] = useState({})
+
   useEffect(() => {
-    const fetchProjets = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/projets");
-        const data = await response.json();
-        setProjets(data); // Stocker les projets dans le state
-      } catch (error) {
-        console.error("Error fetching projects:", error);
+    fetchTaskAndOptions()
+  }, [id])
+
+  const fetchTaskAndOptions = async () => {
+    setLoading(true)
+
+    try {
+      const taskResponse = await fetch(`http://127.0.0.1:8000/taches/${id}`)
+      const taskData = await taskResponse.json()
+
+      if (!taskResponse.ok) {
+        setNotFound(true)
+        setLoading(false)
+        return
       }
-    };
 
-    fetchProjets();
-  }, []);
+      // Set task data directly from the response
+      setTask({
+        nom: taskData.nom,
+        statut: taskData.statut,
+        dateDebut: taskData.dateDebut,
+        dateFin: taskData.dateFin,
+        priorite: taskData.priorite,
+        project_id: taskData.project_id, // Project ID from response
+        user_id: taskData.user_id, // User ID from response
+      })
 
-  // Récupérer la liste des utilisateurs ayant le rôle "Membre équipe"
-  useEffect(() => {
-    const fetchUtilisateurs = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/utilisateurs");
-        const data = await response.json();
-        
-        // Filtrer les utilisateurs pour n'inclure que ceux avec le rôle "Membre équipe"
-        const membresEquipe = data.filter((utilisateur) => utilisateur.role === "membre equipe");
-        setUtilisateurs(membresEquipe); // Stocker les utilisateurs dans le state
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
+      // Fetch projects and users (filter users by role "membre")
+      const projectsResponse = await fetch("http://127.0.0.1:8000/projets")
+      const usersResponse = await fetch("http://127.0.0.1:8000/utilisateurs")
+      const projectsData = await projectsResponse.json()
+      const usersData = await usersResponse.json()
 
-    fetchUtilisateurs();
-  }, []);
+      // Filter users with role "membre"
+      const filteredUsers = usersData.filter((user) => user.role === "membre equipe")
+
+      setProjects(projectsData)
+      setUsers(filteredUsers)
+
+      setLoading(false)
+    } catch (error) {
+      setNotFound(true)
+      setLoading(false)
+    }
+  }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTache((prev) => ({
+    const { name, value } = e.target
+    setTask((prev) => ({
       ...prev,
       [name]: value,
-    }));
+    }))
 
-    // Clear error for this field if it exists
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
         [name]: undefined,
-      }));
+      }))
     }
-  };
+  }
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors = {}
+    if (!task.nom.trim()) newErrors.nom = "Le nom de la tâche est requis."
+    if (!task.statut) newErrors.statut = "Le statut est requis."
+    if (!task.dateDebut) newErrors.dateDebut = "La date de début est requise."
+    if (!task.dateFin) newErrors.dateFin = "La date de fin est requise."
+    if (!task.priorite) newErrors.priorite = "La priorité est requise."
+    if (!task.project_id) newErrors.project_id = "Le projet est requis."
+    if (!task.user_id) newErrors.user_id = "Le responsable est requis."
 
-    if (!tache.nom.trim()) newErrors.nom = "Nom de la tâche requis";
-    if (!tache.dateDebut) newErrors.dateDebut = "Date de début requise";
-    if (!tache.dateFin) newErrors.dateFin = "Date de fin requise";
-    if (new Date(tache.dateDebut) > new Date(tache.dateFin)) {
-      newErrors.dateFin = "La date de fin doit être après la date de début";
-    }
-    if (!tache.user_id) newErrors.user_id = "Utilisateur assigné requis";
-    if (!tache.project_id) newErrors.project_id = "Projet requis";
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!validateForm()) {
-      const firstError = document.querySelector(".text-red-600");
+      const firstError = document.querySelector(".text-red-600")
       if (firstError) {
-        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" })
       }
-      return;
+      return
     }
 
-    setSaving(true);
-
-    // Création des données de la tâche à envoyer à l'API
-    const tacheData = {
-      nom: tache.nom,           
-      statut: tache.statut,
-      dateDebut: tache.dateDebut,  
-      dateFin: tache.dateFin,    
-      priorite: tache.priorite,  
-      project_id: tache.project_id, 
-      user_id: tache.user_id,     
-    };
+    setSaving(true)
 
     try {
-      // Appel à l'API pour créer une tâche
-      const response = await fetch("http://127.0.0.1:8000/taches/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(tacheData),
-      });
+      const response = await fetch(`http://127.0.0.1:8000/taches/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          nom: task.nom,
+          statut: task.statut,
+          dateDebut: task.dateDebut,
+          dateFin: task.dateFin,
+          priorite: task.priorite,
+          project_id: task.project_id,
+          user_id: task.user_id,
+        }),
+        headers: { "Content-Type": "application/json" },
+      })
 
-      const result = await response.json();
-
-      if (response.ok) {
-        // Si l'API retourne un succès, navigue vers la page des tâches
-        setSaving(false);
-        navigate("/tasks");
-      } else {
-        // Gestion des erreurs côté serveur
-        setSaving(false);
-        setErrors(result.errors || {});
-      }
+      const updatedTask = await response.json()
+      setSaving(false)
+      navigate("/tasks")
     } catch (error) {
-      setSaving(false);
-      console.error("Error creating task:", error);
+      setSaving(false)
+      console.error(error)
     }
-  };
+  }
+
+  // Get status color
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "en attente":
+        return "bg-blue-100 text-blue-800"
+      case "en cours":
+        return "bg-blue-500 text-white"
+      case "terminee":
+        return "bg-green-500 text-white"
+      case "annulee":
+        return "bg-gray-500 text-white"
+      default:
+        return "bg-blue-100 text-blue-800"
+    }
+  }
+
+  // Get priority color
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "basse":
+        return "bg-blue-100 text-blue-800"
+      case "moyenne":
+        return "bg-blue-300 text-blue-800"
+      case "haute":
+        return "bg-blue-500 text-white"
+      case "critique":
+        return "bg-red-500 text-white"
+      default:
+        return "bg-blue-100 text-blue-800"
+    }
+  }
+
+
+  // if (notFound) {
+  //   return (
+  //     <div className="flex flex-col min-h-screen bg-blue-50">
+  //       <Header />
+  //       <main className="flex-grow">
+  //         <div className="max-w-screen-lg mx-auto px-4 py-8">
+  //           <div className="bg-white rounded-lg shadow-lg p-8 text-center border-t-4 border-blue-600">
+  //             <h2 className="text-2xl font-bold text-blue-900 mb-4">Tâche non trouvée</h2>
+  //             <p className="text-blue-700 mb-6">La tâche que vous recherchez n'existe pas ou a été supprimée</p>
+  //             <Link
+  //               to="/tasks"
+  //               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors shadow-md"
+  //             >
+  //               <ArrowLeft className="h-4 w-4 mr-2" />
+  //               Retour aux tâches
+  //             </Link>
+  //           </div>
+  //         </div>
+  //       </main>
+  //       <Footer />
+  //     </div>
+  //   )
+  // }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
+    <div className="flex flex-col min-h-screen bg-blue-50">
+      <HeaderChefProjet />
       <main className="flex-grow">
-      <div className="max-w-screen-lg mx-auto px-4 py-6">
+        <div className="max-w-screen-lg mx-auto px-4 py-6">
           <div className="bg-white rounded-lg shadow-lg p-8 border-t-4 border-blue-600">
             <div className="flex items-center mb-6">
               <div className="bg-blue-100 p-3 rounded-full mr-4">
                 <CheckCircle className="h-6 w-6 text-blue-600" />
               </div>
-              <h2 className="text-2xl font-bold text-blue-900">Ajouter une tâche</h2>
+              <h2 className="text-2xl font-bold text-blue-900">Modifier la tâche</h2>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -159,7 +219,7 @@ const AddTache = () => {
                     id="nom"
                     name="nom"
                     type="text"
-                    value={tache.nom}
+                    value={task.nom}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     placeholder="Entrez le nom de la tâche"
@@ -171,7 +231,7 @@ const AddTache = () => {
                   <div>
                     <label htmlFor="statut" className=" text-sm font-medium text-blue-800 mb-1 flex items-center">
                       <div
-                        className="w-3 h-3 rounded-full bg-gray-300 mr-2"
+                        className={`w-3 h-3 rounded-full ${task.statut ? getStatusColor(task.statut).split(" ")[0] : "bg-gray-300"} mr-2`}
                       ></div>
                       Statut
                     </label>
@@ -179,10 +239,9 @@ const AddTache = () => {
                       <select
                         id="statut"
                         name="statut"
-                        value={tache.statut}
+                        value={task.statut}
                         onChange={handleChange}
                         className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" >
-                        <option value="">Statut</option>
                         <option value="en attente">En attente</option>
                         <option value="en cours">En cours</option>
                         <option value="terminee">Terminé</option>
@@ -197,7 +256,7 @@ const AddTache = () => {
                       htmlFor="priorite"
                       className=" text-sm font-medium text-blue-800 mb-1 flex items-center">
                       <div
-                        className="w-3 h-3 rounded-full  mr-2"
+                        className={`w-3 h-3 rounded-full ${task.priorite ? getPriorityColor(task.priorite).split(" ")[0] : "bg-gray-300"} mr-2`}
                       ></div>
                       Priorité
                     </label>
@@ -205,7 +264,7 @@ const AddTache = () => {
                       <select
                         id="priorite"
                         name="priorite"
-                        value={tache.priorite}
+                        value={task.priorite}
                         onChange={handleChange}
                         className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                       >
@@ -232,7 +291,7 @@ const AddTache = () => {
                         id="dateDebut"
                         name="dateDebut"
                         type="date"
-                        value={tache.dateDebut}
+                        value={task.dateDebut}
                         onChange={handleChange}
                         className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" />
                     </div>
@@ -248,7 +307,7 @@ const AddTache = () => {
                         id="dateFin"
                         name="dateFin"
                         type="date"
-                        value={tache.dateFin}
+                        value={task.dateFin}
                         onChange={handleChange}
                         className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
                     </div>
@@ -268,12 +327,12 @@ const AddTache = () => {
                       <select
                         id="project_id"
                         name="project_id"
-                        value={tache.project_id}
+                        value={task.project_id}
                         onChange={handleChange}
                         className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                       >
                         <option value="">Sélectionner un projet</option>
-                        {projets.map((project) => (
+                        {projects.map((project) => (
                           <option key={project.id} value={project.id}>
                             {project.nom}
                           </option>
@@ -291,11 +350,11 @@ const AddTache = () => {
                       <select
                         id="user_id"
                         name="user_id"
-                        value={tache.user_id}
+                        value={task.user_id}
                         onChange={handleChange}
                         className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-md appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" >
                         <option value="">Sélectionner un utilisateur</option>
-                        {utilisateurs.map((user) => (
+                        {users.map((user) => (
                           <option key={user.id} value={user.id}>
                             {user.nom}
                           </option>
@@ -316,7 +375,7 @@ const AddTache = () => {
                   {saving ? "Enregistrement en cours..." : "Sauvegarder les modifications"}
                 </button>
                 <Link
-                  to="/tasks"
+                  to="/tasks/ChefProjet"
                   className="text-blue-600 hover:text-blue-800 px-4 py-2 rounded-md border border-blue-200 hover:bg-blue-50 transition-colors flex items-center">
                   Annuler
                 </Link>
@@ -324,12 +383,11 @@ const AddTache = () => {
             </form>
           </div>
         </div>
-        
-          
       </main>
-      <Footer />
+      <FooterChefProjet />
     </div>
-  );
-};
+  )
+}
 
-export default AddTache;
+export default EditTachesCF
+

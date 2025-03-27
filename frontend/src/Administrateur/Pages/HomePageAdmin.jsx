@@ -19,7 +19,7 @@ export default function HomepageAdmin() {
                 Libérez tout le potentiel de vos projets grâce à notre plateforme riche en fonctionnalités
               </p>
               <div className="flex flex-col sm:flex-row gap-4 max-w-md">
-                <Link to="/">
+                <Link to="/adminhome">
                 <button className="px-4 py-2 rounded-md bg-white text-blue-600 hover:bg-white/90 font-medium transition-colors">
                   Commencer
                 </button>

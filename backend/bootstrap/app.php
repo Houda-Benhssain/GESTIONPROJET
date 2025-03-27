@@ -50,6 +50,31 @@ return Application::configure(basePath: dirname(__DIR__))
             'http://example.com/foo/bar',
             'http://example.com/foo/*',
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'utilisateurs/*',
+            'http://example.com/foo/bar',
+            'http://example.com/foo/*',
+        ]);
+        $middleware->validateCsrfTokens(except: [
+            'utilisateurs/',
+            'http://example.com/foo/bar',
+            'http://example.com/foo/*',
+        ]);
+        $middleware->validateCsrfTokens(except: [
+            'login/',
+            'http://example.com/foo/bar',
+            'http://example.com/foo/*',
+        ]);
+        $middleware->validateCsrfTokens(except: [
+            'reunions/',
+            'http://example.com/foo/bar',
+            'http://example.com/foo/*',
+        ]);
+        $middleware->validateCsrfTokens(except: [
+            'reunions/*',
+            'http://example.com/foo/bar',
+            'http://example.com/foo/*',
+        ]);
 
         //
     })

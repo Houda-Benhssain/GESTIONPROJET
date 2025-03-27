@@ -7,6 +7,7 @@ import Footer from "../component/Footer"
 
 const EditTaches = () => {
   const { id } = useParams()
+  console.log(id)
   const navigate = useNavigate()
   const [saving, setSaving] = useState(false)
   const [notFound, setNotFound] = useState(false)
@@ -19,6 +20,8 @@ const EditTaches = () => {
     project_id: "",
     user_id: "",
   })
+  const [loading, setLoading] = useState(false);
+
   const [projects, setProjects] = useState([])
   const [users, setUsers] = useState([])
   const [errors, setErrors] = useState({})

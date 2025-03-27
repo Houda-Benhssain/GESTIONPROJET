@@ -18,4 +18,17 @@ class Utilisateur  extends Authenticatable
 
     protected $hidden = ['password'];
 
+    
+    public function projets()
+    {
+        return $this->hasMany(Projet::class);
+    }
+   
+    // Relation avec Client (si un utilisateur peut être un client)
+    public function clients()
+    {
+        return $this->hasMany(Client::class);
+    }
+
 }
+ // Relation avec Projet

@@ -1,10 +1,12 @@
 import React from "react"
 import  { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { Search, Plus, Filter, Edit, Trash2, ChevronDown,ChevronRight, Calendar, Users, Folder } from "lucide-react"
+import { Search, Plus, Filter, Edit, Trash2, ChevronDown,ChevronRight, Calendar, Users, Folder,Eye } from "lucide-react"
 import ProjectFilter from "../component/FilterProjet"
 import Header from "../component/Header"
 import Footer from "../component/Footer"
+import { useNavigate } from "react-router-dom";
+
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState([])
@@ -19,6 +21,8 @@ const ProjectsPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [projectToDelete, setProjectToDelete] = useState(null)
   const [clients, setClients] = useState([]) // Nouveau state pour les clients
+
+const navigate = useNavigate();
 
   // Effect pour charger les projets et clients
   useEffect(() => {
@@ -146,7 +150,7 @@ const confirmDelete = async () => {
     <div className="flex flex-col min-h-screen bg-blue-50">
   <div className="flex flex-col min-h-screen bg-blue-50">
   <Header />
-  <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-8 px-4 sm:px-6 lg:px-8">
+  <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-6 px-4">
     <div className="max-w-screen-xl mx-auto">
       <div className="flex items-center text-xs text-blue-100 mb-2">
         <span>Projets</span>
@@ -263,7 +267,7 @@ const confirmDelete = async () => {
               {filteredProjects.map((project) => {
                 const client = clients.find((client) => client.id === project.client_id)
                 return (
-                  <tr key={project.id} className="hover:bg-blue-50">
+                  <tr key={project.id} className="hover:bg-blue-50" onClick={() => navigate(`/detailsProjet/${project.id}`)}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center text-blue-600 font-bold">
@@ -291,6 +295,10 @@ const confirmDelete = async () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex justify-start gap-4 items-center">
+                        <Link to={`/addTaskProject?project_id=${project.id}&project_name=${project.nom}`} className="text-blue-600 hover:text-blue-800">
+                          <Plus className="h-5 w-5" />
+                        </Link>
+                        
                         <Link to={`/edit/${project.id}`} className="text-blue-600 hover:text-blue-800">
                           <Edit className="h-5 w-5" />
                         </Link>
@@ -300,6 +308,7 @@ const confirmDelete = async () => {
                         >
                           <Trash2 className="h-5 w-5" />
                         </button>
+                        
                       </div>
                     </td>
                   </tr>

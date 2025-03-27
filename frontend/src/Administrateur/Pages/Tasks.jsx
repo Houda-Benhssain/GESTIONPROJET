@@ -19,43 +19,40 @@ import Header from "../component/Header"
 import Footer from "../component/Footer"
 import TaskFilter from "../component/TaskFilter"
 
-const DeleteTaskModal = ({ task, onCancel, onConfirm }) => {
+const DeleteTaskModal = ({  onCancel, onConfirm }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
-          <Trash2 className="h-6 w-6 text-red-600" />
+    <div className="fixed inset-0 bg-blue-900/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mx-auto mb-4">
+              <Trash2 className="h-6 w-6 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Confirmer la suppression</h3>
+            <p className="text-center">Êtes-vous sûr de vouloir supprimer cette tache ?</p>
+            <div className="flex justify-end mt-4 space-x-3">
+              <button
+                onClick={onCancel}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md mr-2"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={onConfirm}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Supprimer la tâche</h3>
-        <p className="text-sm text-gray-500 text-center mb-6">
-          Êtes-vous sûr de vouloir supprimer <span className="font-semibold text-blue-600">{task.nom}</span>? Cette
-          action ne peut pas être annulée.
-        </p>
-        <div className="flex justify-end space-x-3">
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-          >
-            Annuler
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700"
-          >
-            Supprimer
-          </button>
-        </div>
-      </div>
-    </div>
   )
 }
 
 const TasksPage = () => {
-  const [tasks, setTasks] = useState([])
-  const [filteredTasks, setFilteredTasks] = useState([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [showFilters, setShowFilters] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [filters, setFilters] = useState({
     statut: "all",
@@ -79,15 +76,17 @@ const TasksPage = () => {
   const loadTasks = async () => {
     setLoading(true)
     try {
-      const response = await fetch("http://127.0.0.1:8000/taches/")
-      const data = await response.json()
-      setTasks(data)
-      setFilteredTasks(data)
+      const response = await fetch("http://127.0.0.1:8000/taches/");
+      const data = await response.json();
+      console.log(data); // Vérifie la structure des données ici
+      setTasks(data);
+      setFilteredTasks(data);
     } catch (error) {
       console.error("Erreur lors du chargement des tâches:", error)
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
+  
 
   const filterTasks = () => {
     let result = [...tasks]
@@ -392,7 +391,7 @@ const TasksPage = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-2">
                             <Link
-                              to={`/tasks/${task.id}/edit`}
+                              to={`/tasks/${task.id}`}
                               className="p-1.5 bg-blue-50 rounded-md text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors"
                             >
                               <Edit className="h-4 w-4" />

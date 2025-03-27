@@ -3,6 +3,7 @@ import { useState } from "react"
 import Header from "./Header"
 import Footer from "./Footer"
 import { Link } from "react-router-dom"
+<<<<<<< HEAD
 import {
   CheckCircle,
   FileText,
@@ -15,7 +16,14 @@ import {
   ChevronRight,
   Eye,
 } from "lucide-react"
+=======
+import { CheckCircle, FileText, Calendar, Users, MessageSquare, Clock, Plus, Trash2, ChevronRight,
 
+>>>>>>> c077959f328c92d01affe27a85b24fca8bebb763
+
+} from "lucide-react"
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 const HomeBody = () => {
   const [newTask, setNewTask] = useState("")
   const [tasks, setTasks] = useState([
@@ -46,7 +54,7 @@ const HomeBody = () => {
   ]
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (newTask.trim() !== "") {
       // Assign a random color from the available colors
       const colors = ["blue", "green", "orange", "pink", "cyan", "purple"]
@@ -55,58 +63,44 @@ const HomeBody = () => {
       setTasks([...tasks, { id: Date.now(), text: newTask, completed: false, color: randomColor }])
       setNewTask("")
     }
-  }
+  };
+  
+    const navigate = useNavigate();
 
   const toggleTask = (id) => {
-    setTasks(tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)))
-  }
+    setTasks(tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)));
+  };
 
   const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id))
-  }
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const calculateSummary = (projects) => {
+    const now = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(now.getDate() - 7);
+
+    let createdCount = 0;
+    let updatedCount = 0;
+    let completedCount = 0;
+
+    projects.forEach((project) => {
+      const createdAt = project.created_at ? new Date(project.created_at) : null;
+      const updatedAt = project.updated_at ? new Date(project.updated_at) : null;
+
+      if (createdAt && createdAt >= sevenDaysAgo) createdCount++;
+      if (updatedAt && updatedAt >= sevenDaysAgo) updatedCount++;
+      if (project.statut === "termine" && updatedAt && updatedAt >= sevenDaysAgo) completedCount++;
+    });
+
+    setSummary({ created: createdCount, updated: updatedCount, completed: completedCount });
+  };
 
   // Delete all completed tasks
   const deleteCompletedTasks = () => {
     setTasks(tasks.filter((task) => !task.completed))
   }
 
-  // Team members data
-  const teamMembers = [
-    {
-      id: 1,
-      name: "Jean Dupont",
-      role: "Chef d'équipe",
-      time: "En ligne",
-      avatars: ["JD"],
-      color: "bg-blue-500",
-    },
-    {
-      id: 2,
-      name: "Marie Lefebvre",
-      role: "Développeur",
-      time: "En ligne",
-      avatars: ["ML", "JD"],
-      color: "bg-purple-500",
-    },
-    {
-      id: 3,
-      name: "Pierre Bernard",
-      role: "Designer",
-      time: "Absent",
-      avatars: ["PB", "ML", "JD"],
-      color: "bg-green-500",
-    },
-    {
-      id: 4,
-      name: "Sophie Martin",
-      role: "Marketing",
-      time: "En pause",
-      avatars: ["SM", "PB"],
-      color: "bg-amber-500",
-    },
-  ]
-
-  // Current date
   const today = new Date()
   const options = { weekday: "long", month: "short", day: "numeric", year: "numeric" }
   const formattedDate = today.toLocaleDateString("fr-FR", options)
@@ -137,11 +131,95 @@ const HomeBody = () => {
 
   // Count completed tasks
   const completedTasksCount = tasks.filter((task) => task.completed).length
+  const [tasksCount, setTasksCount] = useState(0);
+  const [teamMembersCount, setTeamMembersCount] = useState(0);
+  const [projectsCount, setProjectsCount] = useState(0);
+  const [meetingsCount, setMeetingsCount] = useState(0);
+  const [meetingsCountThisWeek, setMeetingsCountThisWeek] = useState(0);
+
+  // Fetch data for tasks, team members, and projects
+  useEffect(() => {
+    // Fetch tasks count
+    fetch('http://127.0.0.1:8000/taches/')
+      .then(response => response.json())
+      .then(data => setTasksCount(data.filter(tsk => tsk.statut === 'terminee').length));
+    
+    // Fetch team members count
+    fetch('http://127.0.0.1:8000/utilisateurs/')
+      .then(response => response.json())
+      .then(data => setTeamMembersCount(data.filter(member => member.role === 'membre equipe').length));  // assuming the API returns an array of team members
+    
+    // Fetch projects count
+    fetch('http://127.0.0.1:8000/projets/')
+      .then(response => response.json())
+      .then(data => setProjectsCount(data.filter(project => project.statut === 'en cours').length)); // assuming the API returns an array of projects
+
+    // Fetch meetings count (if you have an API endpoint for meetings)
+    fetch('http://127.0.0.1:8000/reunions')
+      .then(response => response.json())
+      .then(data => {
+        const thisWeekMeetings = getThisWeekMeetings(data.reunions);
+        setMeetingsCountThisWeek(thisWeekMeetings.length);
+      }); // assuming the API returns an array of meetings
+  }, []);
+  const [userName, setUserName] = useState("")
+  const [userEmail, setUserEmail] = useState("")
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"))
+    if (user) {
+      setUserName(user.nom), 
+      setUserEmail(user.email) 
+    }
+  }, [])
+
+    const [reunions, setReunions] = useState([]);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const fetchReunions = async () => {
+        try {
+          const response = await fetch("http://127.0.0.1:8000/reunions");
+          const data = await response.json();
+          const thisWeekReunions = filterReunionsThisWeek(data.reunions);
+          setReunions(thisWeekReunions);
+        } catch (error) {
+          console.error("Erreur lors de la récupération des réunions", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchReunions();
+    }, []);
+  const card=reunions.length
+    // Fonction pour filtrer les réunions de la semaine
+    const filterReunionsThisWeek = (reunions) => {
+      const now = new Date();
+      const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())); // début de la semaine
+      const endOfWeek = new Date(startOfWeek); // fin de la semaine
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+  
+      return reunions.filter((reunion) => {
+        const dateReunion = new Date(reunion.date);
+        return dateReunion >= startOfWeek && dateReunion <= endOfWeek;
+      });
+    }
+    const [projets, setProjets] = useState([]);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/projets/")
+      .then((response) => response.json())
+      .then((data) => {
+        const projetsEnCours = data.filter((projet) => projet.statut === "en cours");
+        setProjets(projetsEnCours);
+      });
+  }, []);
+  
 
   return (
     <div className="min-h-screen bg-blue-50">
       <Header />
-      {/* Modern gradient header */}
+      
       <div className="bg-gradient-to-r from-blue-800 to-blue-600 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-screen-2xl mx-auto">
           <div className="flex items-center justify-between">
@@ -166,7 +244,7 @@ const HomeBody = () => {
                 <CheckCircle className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">12</div>
+                <div className="text-2xl font-bold">{tasksCount}</div>
                 <div className="text-sm text-gray-500">Tâches terminées</div>
               </div>
             </div>
@@ -178,7 +256,7 @@ const HomeBody = () => {
                 <Users className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">5</div>
+                <div className="text-2xl font-bold">{teamMembersCount}</div>
                 <div className="text-sm text-gray-500">Membres d'équipe</div>
               </div>
             </div>
@@ -190,7 +268,7 @@ const HomeBody = () => {
                 <FileText className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">3</div>
+                <div className="text-2xl font-bold">{projectsCount}</div>
                 <div className="text-sm text-gray-500">Projets en cours</div>
               </div>
             </div>
@@ -202,7 +280,7 @@ const HomeBody = () => {
                 <Calendar className="h-6 w-6 text-amber-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">2</div>
+                <div className="text-2xl font-bold">{card}</div>
                 <div className="text-sm text-gray-500">Réunions prévues</div>
               </div>
             </div>
@@ -215,7 +293,7 @@ const HomeBody = () => {
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
             <div className="border-b border-gray-200 pb-4 mb-5">
               <div className="text-sm text-blue-600 font-medium">{formattedDate}</div>
-              <h2 className="text-2xl font-bold text-gray-800">Bonjour, Houda!</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Bonjour, {userName|| 'Invité'}!</h2>
             </div>
 
             <h2 className="text-base font-bold mb-4 text-gray-800">Historique des transactions</h2>
@@ -260,10 +338,31 @@ const HomeBody = () => {
           </div>
 
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-bold text-gray-800">Projets ouverts</h2>
-              <span className="text-gray-500 text-xs">Statut de vos données</span>
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-base font-bold text-gray-800">Projets ouverts</h2>
+        <span className="text-gray-500 text-xs">Statut de vos données</span>
+      </div>
+
+      <div className="space-y-2">
+        {projets.map((projet) => (
+          <div key={projet.id} className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors" onClick={() => navigate(`/detailsProjet/${projet.id}`)}>
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
             </div>
+<<<<<<< HEAD
 
             <div className="space-y-2">
               <div className="flex gap-2 hover:bg-gray-50 p-1.5 rounded-lg transition-colors">
@@ -326,10 +425,26 @@ const HomeBody = () => {
                     <span className="text-gray-500 text-xs">30 tâches, 5 problèmes</span>
                   </div>
                 </div>
+=======
+            <div className="flex-1">
+              <div className="flex justify-between">
+                
+                <h3 className="font-semibold text-sm text-gray-800">{projet.nom}</h3>
+                <span className="text-gray-500 text-xs">{projet.updated_at}</span>
+              </div>
+              <div className="flex justify-between mt-0.5">
+                
+                <span className="text-gray-500 text-xs">
+                  {projet.dateDebut} - {projet.dateFin}
+                </span>
+>>>>>>> c077959f328c92d01affe27a85b24fca8bebb763
               </div>
             </div>
           </div>
-        </div>
+        ))}
+      </div>
+    </div>
+        </div> 
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Modern To-Do List Section */}
@@ -417,9 +532,18 @@ const HomeBody = () => {
 
           {/* Réunions Section (Added as requested) */}
           <div className="w-full lg:w-1/2 bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
-            <div className="flex justify-between items-center mb-5">
-              <h2 className="text-xl font-bold text-gray-800">Prochaines réunions</h2>
+      <div className="flex justify-between items-center mb-5">
+        <h2 className="text-xl font-bold text-gray-800">Prochaines réunions</h2>
+      </div>
+
+      <div className="space-y-4">
+        {reunions.map((reunion) => (
+          <div key={reunion.id} className="flex gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex flex-col items-center justify-center shrink-0 text-white shadow-sm">
+              <span className="text-sm font-bold">{new Date(reunion.date).getDate()}</span>
+              <span className="text-xs">{new Date(reunion.date).toLocaleString("default", { month: "short" })}</span>
             </div>
+<<<<<<< HEAD
 
             <div className="space-y-4">
               {meetings.map((meeting) => (
@@ -477,14 +601,53 @@ const HomeBody = () => {
                   Planifier une réunion
                 </button>
               </Link>
+=======
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-800">{reunion.type}</h3>
+              <div className="flex items-center gap-3 mt-2">
+                <div className="flex items-center text-gray-500 text-xs">
+                  <Clock className="h-3 w-3 mr-1" />
+                  <span>{reunion.heure_debut} - {reunion.heure_fin}</span>
+                </div>
+                <div className="flex items-center text-gray-500 text-xs">
+                  <MessageSquare className="h-3 w-3 mr-1" />
+                  <span>{reunion.projet.nom}</span>
+                </div>
+              </div>
+>>>>>>> c077959f328c92d01affe27a85b24fca8bebb763
             </div>
           </div>
+        ))}
+        <Link to="/AddReunionAdmin">
+          <button className="w-full py-3 text-blue-700 hover:text-indigo-800 text-sm font-medium border border-dashed border-indigo-300 rounded-xl hover:bg-indigo-50 transition-colors flex items-center justify-center">
+            <Plus className="h-4 w-4 mr-2" />
+            Planifier une réunion
+          </button>
+        </Link>
+      </div>
+    </div>
         </div>
       </div>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default HomeBody
+const Card = ({ icon, title, description }) => (
+  <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+    <div className="flex items-center">{icon}</div>
+    <div>
+      <div className="text-lg font-semibold">{title}</div>
+      <div className="text-sm text-gray-500">{description}</div>
+    </div>
+  </div>
+);
+
+export default HomeBody;
+
+
+
+
+
+
 

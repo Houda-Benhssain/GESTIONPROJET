@@ -7,13 +7,15 @@ use App\Http\Controllers\ProjetController;
 use App\Http\Controllers\UtilisateurController;
 
 Route::prefix('clients')->group(function () {
+    Route::get('/', [ClientController::class, 'index'])->name('clients.index');
+    Route::get('{id}', [ClientController::class, 'show'])->name('clients.show');
+    Route::get('create', [ClientController::class, 'create'])->name('clients.create');
+    Route::post('/', [ClientController::class, 'store'])->name('clients.store');
+    Route::get('edit/{id}', [ClientController::class, 'edit'])->name('clients.edit');
+    Route::put('{id}', [ClientController::class, 'update'])->name('clients.update');
+    Route::delete('{id}', [ClientController::class, 'destroy'])->name('clients.destroy');  // Route pour supprimer un client
+});
 
-Route::get('/', [ClientController::class, 'index'])->name('clients.index');
-Route::get('{id}', [ClientController::class, 'show'])->name('clients.show');
-Route::get('create', [ClientController::class, 'create'])->name('clients.create');
-Route::post('/', [ClientController::class, 'store'])->name('clients.store');
-Route::get('edit/{id}', [ClientController::class, 'edit'])->name('clients.edit');
-Route::put('{id}', [ClientController::class, 'update'])->name('clients.update');});
 
 Route::get('/login', [AuthController::class, 'login'])->withoutMiddleware('auth');
 Route::get('/taches', [TacheController::class, 'index']);
@@ -22,8 +24,6 @@ Route::post('/taches', [TacheController::class, 'store']);
 Route::get('/taches/{id}', [TacheController::class, 'show']);
 Route::put('/taches/{id}', [TacheController::class, 'update']);
 Route::delete('/taches/{id}', [TacheController::class, 'destroy']);
-
-
 
 Route::get('/projets', [ProjetController::class, 'index']);
 Route::get('/projets/{id}', [ProjetController::class, 'show']);
@@ -47,3 +47,14 @@ Route::get('/utilisateurs/{id}', [UtilisateurController::class, 'show']);
 Route::post('/utilisateurs', [UtilisateurController::class, 'store']);
 Route::put('/utilisateurs/{id}', [UtilisateurController::class, 'update']);
 Route::delete('/utilisateurs/{id}', [UtilisateurController::class, 'destroy']);
+
+use App\Http\Controllers\ReunionController;
+
+
+Route::prefix('/reunions')->group(function () {
+    Route::get('/', [ReunionController::class, 'index']); 
+    Route::post('/', [ReunionController::class, 'store']);
+    Route::get('/{id}', [ReunionController::class, 'show']);  
+    Route::put('/{id}', [ReunionController::class, 'update']); 
+    Route::delete('/{id}', [ReunionController::class, 'destroy']); 
+});

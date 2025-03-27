@@ -1,138 +1,122 @@
+<<<<<<< HEAD
 import React from "react"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { UserPlus, Edit, Trash2, Eye, Search, ChevronRight,  Users } from "lucide-react"
 import Header from "../component/Header"
 import Footer from "../component/Footer"
+=======
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { UserPlus, Edit, Trash2, Eye, Search, ChevronRight, ChevronLeft, Filter, Users } from "lucide-react";
+import Header from "../component/Header";
+import Footer from "../component/Footer";
+import { useNavigate } from "react-router-dom";
 
-const DeleteClientModal = ({ client, onCancel, onConfirm }) => {
+const Modal = ({ isOpen, onClose, onConfirm, clientName }) => {
+  if (!isOpen) return null;
+>>>>>>> c077959f328c92d01affe27a85b24fca8bebb763
+
   return (
-    <div className="fixed inset-0  flex items-center justify-center z-50 ">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mx-auto mb-4">
-          <Trash2 className="h-6 w-6 text-red-600" />
+        <div className="fixed inset-0 bg-blue-900/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mx-auto mb-4">
+              <Trash2 className="h-6 w-6 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Confirmer la suppression</h3>
+            <p className="text-center">Êtes-vous sûr de vouloir supprimer le client <strong>{clientName}</strong></p>
+            <div className="flex justify-end mt-4 space-x-3">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md mr-2"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={onConfirm}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 text-center mb-2">Supprimer le client</h3>
-        <p className="text-sm text-gray-500 text-center mb-6">
-          Êtes-vous sûr de vouloir supprimer
-          <span className="font-semibold text-blue-600">{client.utilisateur.nom}</span>? Cette action ne peut pas être
-          annulée.
-        </p>
-        <div className="flex justify-end space-x-3">
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-            Annuler
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700" >
-            Supprimer
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
+  );
+};
 
+// Page des Clients avec Intégration du Modal
 const ClientsPage = () => {
-  const [clients, setClients] = useState([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
-  const [clientToDelete, setClientToDelete] = useState(null)
+  const [clients, setClients] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState(null);
+  const itemsPerPage = 10;
 
+  // Charger les clients depuis l'API
+  const loadClients = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/clients"); // Adapter l'URL si nécessaire
+      const data = await response.json();
+      console.log(data); // Vérification des données reçues
+      setClients(data); // Définir les clients récupérés
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+    }
+  };
+  
+  const navigate = useNavigate();
+
+  // Charger les clients au premier rendu
   useEffect(() => {
-    const mockClients = [
-      {
-        id: 1,
-        utilisateur: {
-          nom: "Jean Dupont",
-          email: "jean.dupont@example.com",
-        },
-        telephone: "0612345678",
-        status: "active",
-        projets: [
-          { id: 1, nom: "Site Web E-commerce" },
-          { id: 2, nom: "Application Mobile" },
-        ],
-      },
-      {
-        id: 2,
-        utilisateur: {
-          nom: "Marie Martin",
-          email: "marie.martin@example.com",
-        },
-        telephone: "0687654321",
-        status: "active",
-        projets: [{ id: 3, nom: "Refonte Site Vitrine" }],
-      },
-      {
-        id: 3,
-        utilisateur: {
-          nom: "Pierre Durand",
-          email: "pierre.durand@example.com",
-        },
-        telephone: "0698765432",
-        status: "inactive",
-        projets: [],
-      },
-      {
-        id: 4,
-        utilisateur: {
-          nom: "Sophie Leroy",
-          email: "sophie.leroy@example.com",
-        },
-        telephone: "0654321987",
-        status: "active",
-        projets: [{ id: 4, nom: "Application Web" }],
-      },
-      {
-        id: 5,
-        utilisateur: {
-          nom: "Thomas Bernard",
-          email: "thomas.bernard@example.com",
-        },
-        telephone: "0632165498",
-        status: "inactive",
-        projets: [{ id: 5, nom: "Maintenance" }],
-      },
-    ]
+    loadClients();
+  }, []);
 
-    setClients(mockClients)
-  }, [])
-
-  // Filter clients based on search term and status
   const filteredClients = clients.filter((client) => {
     const matchesSearch =
       client.utilisateur.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
       client.telephone.toString().includes(searchTerm) ||
-      client.utilisateur.email.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = statusFilter === "all" || client.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
+      client.utilisateur.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || client.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   // Pagination
-  const indexOfLastClient = currentPage * itemsPerPage
-  const indexOfFirstClient = indexOfLastClient - itemsPerPage
-  const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClient)
+  const indexOfLastClient = currentPage * itemsPerPage;
+  const indexOfFirstClient = indexOfLastClient - itemsPerPage;
+  const currentClients = filteredClients.slice(indexOfFirstClient, indexOfLastClient);
 
-  const handleDeleteClick = (client) => {
-    setClientToDelete(client)
-  }
-
-  const cancelDelete = () => {
-    setClientToDelete(null)
-  }
-
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (clientToDelete) {
-      setClients(clients.filter((client) => client.id !== clientToDelete.id))
-      // Close the modal
-      setClientToDelete(null)
+      try {
+        // Envoyer une requête DELETE à l'API pour supprimer le client
+        const response = await fetch(`http://127.0.0.1:8000/clients/${clientToDelete.id}`, {
+          method: 'DELETE',
+        });
+  
+        if (response.ok) {
+          // Si la suppression a réussi, mettre à jour la liste des clients
+          setClients(clients.filter((client) => client.id !== clientToDelete.id));
+          setModalOpen(false); // Fermer le modal après la suppression
+        } else {
+          console.error("Erreur lors de la suppression du client");
+        }
+      } catch (error) {
+        console.error("Erreur de connexion avec l'API", error);
+      }
     }
-  }
+  };
+  
+  const cancelDelete = () => {
+    setClientToDelete(null);
+  };
+
+
+  const handleDelete = (clientId, clientName) => {
+    setClientToDelete({ id: clientId, name: clientName });
+    setModalOpen(true); // Ouvrir le modal
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-blue-50">
@@ -188,7 +172,8 @@ const ClientsPage = () => {
                   placeholder="Rechercher des clients..."
                   className="pl-10 pr-4 py-2 w-full border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)} />
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
             </div>
           </div>
@@ -199,87 +184,63 @@ const ClientsPage = () => {
               <table className="min-w-full divide-y divide-blue-100">
                 <thead className="bg-blue-50">
                   <tr>
-                    <th
-                      className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider" >
-                      Client
-                    </th>
-                    <th
-                      className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider hidden md:table-cell">
-                      Contact
-                    </th>
-                    <th
-                      className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider hidden lg:table-cell">
-                      Projet
-                    </th>
-                    <th
-                      className="px-6 py-3 text-right text-xs font-medium text-blue-700 uppercase tracking-wider" >
-                      Actions
-                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Nom</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Téléphone</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Projet</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-blue-50">
-                  {currentClients.length > 0 ? (
-                    currentClients.map((client) => (
-                      <tr key={client.id} className="hover:bg-blue-50 transition-colors">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">{client.utilisateur.nom}</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
-                          <div className="text-sm text-gray-900">{client.telephone}</div>
-                          <div className="text-sm text-gray-500">{client.utilisateur.email}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
-                            {client.projets.map((projet) => (
-                              <div key={projet.id} className="text-blue-600 mb-1">
-                                {projet.nom}
-                              </div>))}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentClients.map((client) => (
+                    <tr key={client.id} className="hover:bg-blue-50" onClick={() => navigate(`/DetailClient/${client.id}`)}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{client.utilisateur.nom}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.utilisateur.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.telephone}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+  {client.projets.length > 0 ? client.projets.map((projet) => projet.nom).join(", ") : "Aucun projet"}
+</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-2">
-                            <Link
-                              to={`/DetailClient/${client.id}`}
-                              className="p-1.5 bg-blue-50 rounded-md text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors">
-                              <Eye className="h-4 w-4" />
-                            </Link>
+                            
                             <Link
                               to={`/editClient/${client.id}`}
                               className="p-1.5 bg-blue-50 rounded-md text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors">
                               <Edit className="h-4 w-4" />
                             </Link>
                             <button
-                              onClick={() => handleDeleteClick(client)}
-                              className="p-1.5 bg-red-50 rounded-md text-red-600 hover:bg-red-100 hover:text-red-700 transition-colors">
-                              <Trash2 className="h-4 w-4" />
-                            </button>
+  onClick={() => handleDelete(client.id, client.utilisateur.nom)}
+  className="text-red-600 hover:text-red-800">
+  <Trash2 className="h-4 w-4" />
+</button>
+
                           </div>
                         </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5" className="px-6 py-10 text-center text-sm text-gray-500">
-                        Aucun client trouvé
-                      </td>
                     </tr>
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
           </div>
-
-          {/* Delete  */}
-          {clientToDelete && (
-            <DeleteClientModal client={clientToDelete} onCancel={cancelDelete} onConfirm={confirmDelete} /> )}
         </div>
+        
       </main>
-      <Footer />
-    </div>
-  )
-}
 
-export default ClientsPage
+      <Footer />
+      {/* Modal de confirmation */}
+      {modalOpen && (
+        <Modal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onConfirm={confirmDelete}
+          clientName={clientToDelete ? clientToDelete.name : ""}
+        />
+      )}
+    </div>
+  );
+};
+
+export default ClientsPage;
+
+
 

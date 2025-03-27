@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save } from "lucide-react";
-import Header from "./Header";
-import Footer from "./Footer";
+import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { ArrowLeft, Save } from "lucide-react"
+import Header from "./Header"
+import Footer from "./Footer"
+import React from "react"
 
 const EditProject = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [formError, setFormError] = useState("");
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [formError, setFormError] = useState("")
   const [project, setProject] = useState({
     nom: "",
     description: "",
@@ -20,21 +21,21 @@ const EditProject = () => {
     teamSize: 0,
     budget: "",
     priority: "",
-  });
-  const [clients, setClients] = useState([]);  // Etat pour la liste des clients
+  })
+  const [clients, setClients] = useState([]) // Etat pour la liste des clients
 
   // Charger les informations du projet depuis l'API
   useEffect(() => {
-    loadProject();
-    loadClients();  // Charger les clients
-  }, [id]);
+    loadProject()
+    loadClients() // Charger les clients
+  }, [id])
 
   const loadProject = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await fetch(`http://127.0.0.1:8000/projets/${id}`);
+      const response = await fetch(`http://127.0.0.1:8000/projets/${id}`)
       if (response.ok) {
-        const projectData = await response.json();
+        const projectData = await response.json()
         setProject({
           nom: projectData.nom,
           description: projectData.description,
@@ -45,46 +46,46 @@ const EditProject = () => {
           teamSize: projectData.teamSize,
           budget: projectData.budget,
           priority: projectData.priority,
-        });
+        })
       } else {
-        setFormError("Project not found");
+        setFormError("Project not found")
       }
     } catch (error) {
-      setFormError("Error loading project: " + error.message);
+      setFormError("Error loading project: " + error.message)
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   const loadClients = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/clients");  // URL de l'API des clients
+      const response = await fetch("http://127.0.0.1:8000/clients") // URL de l'API des clients
       if (response.ok) {
-        const clientsData = await response.json();
-        setClients(clientsData);
+        const clientsData = await response.json()
+        setClients(clientsData)
       }
     } catch (error) {
-      setFormError("Error loading clients: " + error.message);
+      setFormError("Error loading clients: " + error.message)
     }
-  };
+  }
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setProject({
       ...project,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    setFormError("");
+    e.preventDefault()
+    setSaving(true)
+    setFormError("")
 
     // Validation du formulaire
     if (!project.nom || !project.client_id || !project.statut) {
-      setFormError("Please fill in all required fields");
-      setSaving(false);
-      return;
+      setFormError("Please fill in all required fields")
+      setSaving(false)
+      return
     }
 
     // Mise à jour du projet via l'API
@@ -95,38 +96,43 @@ const EditProject = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(project),
-      });
+      })
 
       if (response.ok) {
-        setSaving(false);
-        navigate("/projects");
+        setSaving(false)
+        navigate("/projects")
       } else {
-        setFormError("Failed to update project");
-        setSaving(false);
+        setFormError("Failed to update project")
+        setSaving(false)
       }
     } catch (error) {
-      setFormError("Error updating project: " + error.message);
-      setSaving(false);
+      setFormError("Error updating project: " + error.message)
+      setSaving(false)
     }
-  };
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow bg-blue-50">
         <div className="max-w-screen-xl mx-auto px-4 py-6">
-          <div className="flex items-center mb-6">
-            <ArrowLeft className="h-5 w-5" onClick={() => navigate("/projects")} />
-            <h1 className="text-2xl font-bold text-gray-900">Modifier le projet</h1>
+          <div className="flex items-center mb-6 space-x-3">
+            <button
+              onClick={() => navigate("/projects")}
+              className="text-blue-600 hover:text-blue-800 transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <h1 className="text-2xl font-bold text-blue-900">Modifier le projet</h1>
           </div>
 
           {loading ? (
-            <div className="bg-white rounded-lg shadow p-8 text-center">
+            <div className="bg-white rounded-lg shadow p-8 text-center border border-blue-100">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-              <p className="mt-4 text-gray-500">Chargement des détails du projet...</p>
+              <p className="mt-4 text-blue-500">Chargement des détails du projet...</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow">
+            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow border border-blue-100">
               {formError && (
                 <div className="p-4 mb-4 bg-red-50 border-l-4 border-red-500 text-red-700">
                   <p>{formError}</p>
@@ -135,8 +141,8 @@ const EditProject = () => {
 
               <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label htmlFor="nom" className="block text-sm font-medium text-gray-700 mb-1">
-                  Nom du projet <span className="text-red-500">*</span>
+                  <label htmlFor="nom" className="block text-sm font-medium text-blue-700 mb-1">
+                    Nom du projet <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -144,13 +150,13 @@ const EditProject = () => {
                     name="nom"
                     value={project.nom}
                     onChange={handleInputChange}
-                    className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="block w-full border border-blue-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     required
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="description" className="block text-sm font-medium text-blue-700 mb-1">
                     Description
                   </label>
                   <textarea
@@ -159,12 +165,12 @@ const EditProject = () => {
                     rows="3"
                     value={project.description}
                     onChange={handleInputChange}
-                    className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="block w-full border border-blue-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   ></textarea>
                 </div>
 
                 <div>
-                  <label htmlFor="client_id" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="client_id" className="block text-sm font-medium text-blue-700 mb-1">
                     Client <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -172,20 +178,20 @@ const EditProject = () => {
                     name="client_id"
                     value={project.client_id}
                     onChange={handleInputChange}
-                    className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="block w-full border border-blue-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     required
                   >
                     <option value="">Sélectionner un client</option>
                     {clients.map((client) => (
                       <option key={client.id} value={client.id}>
-                        {client.utilisateur.nom} {/* Affiche le nom du client */}
+                        {client.utilisateur.nom}
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label htmlFor="statut" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="statut" className="block text-sm font-medium text-blue-700 mb-1">
                     Statut <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -193,7 +199,7 @@ const EditProject = () => {
                     name="statut"
                     value={project.statut}
                     onChange={handleInputChange}
-                    className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="block w-full border border-blue-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     required
                   >
                     <option value="">Sélectionner le statut</option>
@@ -205,8 +211,8 @@ const EditProject = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="dateDebut" className="block text-sm font-medium text-gray-700 mb-1">
-                  Date de début
+                  <label htmlFor="dateDebut" className="block text-sm font-medium text-blue-700 mb-1">
+                    Date de début
                   </label>
                   <input
                     type="date"
@@ -214,13 +220,13 @@ const EditProject = () => {
                     name="dateDebut"
                     value={project.dateDebut}
                     onChange={handleInputChange}
-                    className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="block w-full border border-blue-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="dateFin" className="block text-sm font-medium text-gray-700 mb-1">
-                  Date de fin
+                  <label htmlFor="dateFin" className="block text-sm font-medium text-blue-700 mb-1">
+                    Date de fin
                   </label>
                   <input
                     type="date"
@@ -228,7 +234,7 @@ const EditProject = () => {
                     name="dateFin"
                     value={project.dateFin}
                     onChange={handleInputChange}
-                    className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="block w-full border border-blue-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
               </div>
@@ -236,10 +242,16 @@ const EditProject = () => {
               <div className="px-6 py-4 flex justify-end">
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-blue-700 transition-colors flex items-center"
                   disabled={saving}
                 >
-                  {saving ? "Saving..." : <Save className="inline mr-2 h-5 w-5" />} Enregistrer
+                  {saving ? (
+                    "Saving..."
+                  ) : (
+                    <>
+                      <Save className="mr-2 h-5 w-5" /> Enregistrer
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -248,8 +260,7 @@ const EditProject = () => {
       </main>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default EditProject;
-
+export default EditProject
